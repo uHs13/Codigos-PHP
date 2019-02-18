@@ -1,17 +1,9 @@
 <?php 
+require_once "../config/Autoloader.php";
 
-interface Veiculo{
-
-	
-	public function desligar();//Em interfaces somente a assinatura do método;
-	public function ligar();
-	public function acelerar($nmr);
-	public function frear();
-	//public function marcha():bool;
-
-}
-
-class Carro implements Veiculo{
+Autoloader::register();//Quando precisarmor de uma interface para implementar uma classe devemos chamar o autoloader no arquivo;
+//require_once "interface/Veiculo.php";
+class CarroVeiculo implements Veiculo{
 
 	private $ligado=false;
 	private $nome;
@@ -101,13 +93,5 @@ class Carro implements Veiculo{
 	
 
 }
-
-$uno = new Carro("golzin g4");
-$uno->ligar()."<br>";
-$uno->acelerar(130)."<br>";
-$uno->frear();
-echo $uno."<br>";
-
-
 
 ?>

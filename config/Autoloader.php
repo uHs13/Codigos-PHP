@@ -8,8 +8,10 @@ class Autoloader{
 
 			if(file_exists("../classes". DIRECTORY_SEPARATOR. $class.'.php') === true){
 				require_once("../classes". DIRECTORY_SEPARATOR. $class.'.php');
+			}else{
+				require_once("../classes/interface". DIRECTORY_SEPARATOR. $class.'.php');
 			}
-
+			
 		});
 	}
 }
