@@ -20,6 +20,6 @@ $funcao = function($frase){
 
 };
 
-$funcao("Look");
+$funcao("Oh look... a gun");//Carl jhonson, remember that!
 
 ?>

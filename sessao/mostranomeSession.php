@@ -29,7 +29,7 @@ if(isset($_GET)){//get - vetor , index - nome do input, value - o que for digita
 		echo "<th >Idade</th>";
 		echo "</tr>";
 		
-		session_regenerate_id();
+		session_regenerate_id();//Atribui outro id ao usuário que está entrando no site;
 		
 		echo "<p class='text-center text-info'>ID da sessão: "." ".session_id()."</p>";
 		echo "<p class='text-center text-warning'> Path: "." ".session_save_path()."</p>";

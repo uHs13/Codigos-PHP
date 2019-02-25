@@ -1,6 +1,6 @@
 <?php 
 
-class Carro implements{
+class Carro{
 
 	private $montadora;
 	private $modelo;

@@ -37,7 +37,15 @@
 	echo var_dump(13);//int
 	echo var_dump(13.13);//float
 	echo var_dump(true);//bool
-	echo "<a href='../negocios'>Voltar</a>";
+	echo "<a href='../negocios'>Voltar</a><br>";
+	
+	$x =13;
 
+	function mostraX(){
+		 global $x;
+		 echo $x;
+	}
+	
+	mostraX();
 
-?>
+	?>
