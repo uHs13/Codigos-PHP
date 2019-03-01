@@ -70,7 +70,7 @@ select nome as nombre from Cliente where cpf like '1%';/*Selecionar nome do Clie
 
 select nome as nombre from Cliente where cpf like '%1';/* onde cpf começa com qualquer coisa e termina com 1*/
 
-select nome as nombre from Cliente where cpf like '%8%';/*retorna todos que tem 8 no cpf. Mesmo o cpf sendo em números temos que deicar entre aspas para usar o %*/
+select nome as nombre from Cliente where cpf like '%8%';/*retorna todos que tem 8 no cpf. Mesmo o cpf sendo em números temos que deixar entre aspas para usar o %*/
 
 select count(nome) as nmrClientes from Cliente;/* conta e devolve a quantidade de nomes existentes na tabela cliente. Como cada cliente é obrigado a ter um nome, é valido fazer assim*/
 
@@ -161,7 +161,7 @@ create table endereco(
 /*
 	Foreign Key é a chave primária de uma tabela que vai até outra fazer referência
 	
-	Em relacionamentos 1x1 a chave estrangeira fica na tabela mais fraca;
+	Em relacionamentos 1x1 a chave estrangeira fica na tabela mais fraca, a que não faz sentido existir sem a outra ( Ex.: Endereço sem nenhum cliente );
 	
 	Em relacionamentos 1xn a chave estrangeira fica na tabela n;
 */
@@ -234,7 +234,7 @@ on cliente.idCliente = endereco.id_Cliente
 inner join telefone
 on cliente.idCliente = telefone.id_Cliente
 where cliente.sexo='m';
--- como temos mais de uma tupla de telefone relacionada com o mesmo cliente ( um cliente pode ter mais de um número ) vão ser retornadas mais de uma linha com o mesmo cliente, mas não é erro de redundância ( O computador está sempre certo ).
+-- como podemos ter mais de uma tupla de telefone relacionada com o mesmo cliente ( um cliente pode ter mais de um número ) vão ser retornadas mais de uma linha com o mesmo cliente, mas não é erro de redundância ( O computador está sempre certo ).
 
 select c.nome, e.bairro, t.ddd, t.tipo, t.numero
 from cliente c -- damos nomes reduzidos para as tabelas para podermos referenciá-las de maneira mais fácil;
@@ -407,7 +407,7 @@ select c.nome, c.email, t.ddd , t.numero
 from cliente c
 inner join telefone t
 on c.idCliente = t.id_Cliente
-inner join endereco e 
+inner join endereco e -- Chama a tabela endereço mesmo ela não sendo usada na projeção porque ela é usada na seleção, onde o bairro for 'Eldorado'. 
 on c.idCliente = e.id_Cliente
 where c.sexo='f' and bairro='eldorado';
 
@@ -423,7 +423,7 @@ where c.sexo='f' and bairro='eldorado';
 
 */
 
--- Função Ifnull()
+-- Função Ifnull() - recebe como parâmetro a coluna que pode retornar um valor nulo e um valor para substituir o null caso ele seja retornado; 
 
 select c.nome, 
 	   ifnull(c.email,' - ') as Email, -- tem que colocar o alias pra não ficar a função e os parâmetros como nome da coluna; 
@@ -452,7 +452,7 @@ where c.sexo='f' and bairro='eldorado';
 
 -- VIEWS - Em questão de performance a view é lenta, na view estamos acessando uma query através de outra;
 
---Criar o nome da view com v_ para direfenciál-las das tabelas;  NÃO CONSEGUIMOS EXCLUIR NEM INSERIR DADOS EM VIEWS;
+--Criar o nome da view com v_ para direfenciá-las das tabelas;  NÃO CONSEGUIMOS EXCLUIR NEM INSERIR DADOS EM VIEWS;
 create view v_oficina as
 select c.nome as 'Cliente',cr.montadora,cr.modelo,cor.nome as 'Cor',s.nome as 'Servico',s.preco as 'Preco',t.ddd,t.numero
 from cliente c
@@ -467,7 +467,7 @@ on c.idCliente = t.id_Cliente;
 
 /*Pequena observação: usar select * from tabela é ruim e lento. Embora tenhamos que digitar mais passando coluna por coluna, a query fica mais rápida;
 	
-	select * from oficina;
+	select * from v_oficina;
 	+-----------------+-------------+---------------+------------------------------------+-----------------------------+-------+------+----------+
 	| Cliente         | montadora   | modelo        | Cor                                | Servico                     | Preco | ddd  | numero   |
 	+-----------------+-------------+---------------+------------------------------------+-----------------------------+-------+------+----------+
@@ -478,7 +478,7 @@ on c.idCliente = t.id_Cliente;
 	3 rows in set (0.08 sec) <---
 	
 	
-	select Cliente,montadora,modelo,Cor,Servico,Preco,ddd,numero from oficina;
+	select Cliente,montadora,modelo,Cor,Servico,Preco,ddd,numero from v_oficina;
 	+-----------------+-------------+---------------+------------------------------------+-----------------------------+-------+------+----------+
 	| Cliente         | montadora   | modelo        | Cor                                | Servico                     | Preco | ddd  | numero   |
 	+-----------------+-------------+---------------+------------------------------------+-----------------------------+-------+------+----------+
@@ -591,7 +591,7 @@ inner join telefone t
 on c.idCliente = t.id_Cliente
 inner join endereco e
 on c.idCliente = e.id_Cliente
-order by 7;
+order by 7; -- Ordena a coluna rua;
 
 /*
 	+--------+-------------------------------+---------+------+-----------+----------+------------+
@@ -614,3 +614,332 @@ order by 7;
    DELIMITER símbolo -> troca o delimitador pelo símbolo passado;
 
 */
+
+/* PROCEDURES */
+/* O delimitador foi trocado de ; para $ */
+
+--estrutura básica das procedures:
+create procedure nome()
+begin
+	comandos;
+end
+$
+
+create procedure allData()
+begin
+
+select c.nome,c.sexo,ifnull(c.email,' - ')as 'email',c.cpf,t.tipo,t.ddd,t.numero,e.rua,e.bairro,e.cidade,e.estado
+from cliente c
+inner join telefone t
+on c.idCliente = t.id_Cliente
+inner join endereco e
+on c.idCliente = e.id_Cliente
+order by c.nome;
+
+end
+$
+
+/* Chamando a procedure*/
+
+call nomeProcedure()$
+
+call allData()$
+
+/* Apagagando a procedure*/
+drop procedure nome$
+drop procedure allData$
+
+/* Procedure com parâmetros */
+                         --colocar o p_ na frente para indicar que é um parâmetro
+create procedure allData(p_sexo char)
+begin
+
+select c.nome,c.sexo,ifnull(c.email,' - ')as 'email',c.cpf,t.tipo,t.ddd,t.numero,e.rua,e.bairro,e.cidade,e.estado
+from cliente c
+inner join telefone t
+on c.idCliente = t.id_Cliente
+inner join endereco e
+on c.idCliente = e.id_Cliente
+where c.sexo = p_sexo --Só retorna os clientes com o sexo determinado no parâmetro;
+order by c.nome;
+
+end
+$
+
+/* Tabela Produto*/
+--Não precisa colocar not null em primary key que já é auto_increment, toda vez que cadastrar o banco já vai colocar um valor automaticamente;
+create table produto(
+	
+	idProduto int primary key auto_increment,
+	nome varchar(20) not null,
+	valor float(5,2) not null
+	
+);
+
+/* Tabela Compra*/
+create table compra(
+	
+	idCompra int primary key auto_increment,
+	valor float(10,2) not null,
+	dtCompra timestamp not null default current_timestamp, --current_timestamp retorna a data e hora atuais. Nesse caso vai registrar a data e a hora que o registro foi inserido no banco; 
+	id_Produto int not null,
+	id_Cliente int unique not null,
+	
+	foreign key (id_Produto)
+	references produto(idProduto),
+	
+	foreign key (id_Cliente)
+	references cliente(idCliente)
+	
+);
+
+/* Inserts */
+
+insert into produto(nome,valor) values ('margarina',5);
+insert into produto(nome,valor) values ('arroz',16);
+insert into produto(nome,valor) values ('feijao',8);
+insert into produto(nome,valor) values ('pao',9.99);
+
+insert into compra(valor,id_Produto,id_Cliente) values (50,1,2);
+insert into compra(valor,id_Produto,id_Cliente) values (160,2,1);
+insert into compra(valor,id_Produto,id_Cliente) values (6.50,4,3);
+insert into compra(valor,id_Produto,id_Cliente) values (80,3,4);
+
+/* Query*/
+
+
+/* Procedure para cadastrar uma compra*/              --colocar o p_ na frente para indicar que é um parâmetro;
+create procedure newPurchase(p_moneySpent float(10,2),p_productId int(3),p_clientId int(3))
+begin
+	insert into compra(valor,id_Produto,id_Cliente) values (p_moneySpent,p_productId,p_clientId);
+end
+$
+
+call newPurchase(200,4,5);
+
+/* Procedure para visualizar as compras*/
+create procedure showPurchases()
+begin
+	select c.nome,p.nome as 'Produto',cm.valor as 'Total da Compra',cm.dtCompra as 'Data'
+	from cliente c
+	inner join compra cm
+	on c.idCliente = cm.id_Cliente
+	inner join produto p
+	on p.idProduto = cm.id_Produto
+	order by c.nome;
+end
+$
+
+call showPurchases();
+
+/* FUNÇÕES DE AGREGAÇÃO */
+
+/* MAX(coluna) retorna o maior valor da coluna especificada*/
+select max(cp.valor) as 'Maior compra' 
+from compra cp;
+
+--Retorna o valor da maior compra e o nome do cliente que a fez
+set @mx = (select max(cp.valor) from compra cp);
+select @mx as 'Maior compra',c.nome
+    from compra cp
+    inner join cliente c
+    on cp.id_Cliente = c.idCliente
+	where cp.valor = @mx;
+	/*
+		+--------------+-------+
+		| Maior compra | nome  |
+		+--------------+-------+
+		|          200 | celia |
+		+--------------+-------+
+	*/
+
+
+/* MIN(coluna) retorna o menor valor da coluna especificada*/
+select min(cp.valor) as 'Menor compra' 
+from compra cp;
+
+-- Retorna o valor da menor compra e o nome do cliente que a fez
+set @mx = (select min(cp.valor) from compra cp);
+select @mx as 'Menor compra',c.nome
+    from compra cp
+    inner join cliente c
+    on cp.id_Cliente = c.idCliente
+	where cp.valor = @mx;
+	
+	/*
+		+--------------+------+
+		| Menor compra | nome |
+		+--------------+------+
+		|          6.5 | ana  |
+		+--------------+------+	
+	*/
+		
+
+/* AVG(coluna) retorna a média de todos os valores da coluna específicada*/
+--truncate(valor,casas decimais) -> retona o valor com o número de casas decimais específicadas;
+select truncate(avg(cp.valor),2) as 'Media de gastos'
+from compra cp;
+
+	/*
+		+-----------------+
+		| Media de gastos |
+		+-----------------+
+		|           99.30 |
+		+-----------------+
+	*/
+
+/* SUM(coluna) retorna todos os valores somados */
+select sum(cp.valor) as 'Total de gastos' 
+from compra cp;
+
+	/*
+		+-----------------+
+		| Total de gastos |
+		+-----------------+
+		|          496.50 |
+		+-----------------+
+
+	*/
+	
+/* Um banco de dados serve para pegar dados e gerar informações com esses dados*/
+
+/*Valor gasto por sexo*/
+select c.sexo, sum(cp.valor)  as 'Gastos'
+from compra cp
+inner join cliente c
+on c.idCliente = cp.id_Cliente
+group by c.sexo;
+
+	/*
+		+------+--------+
+		| sexo | Gastos |
+		+------+--------+
+		| m    | 210.00 |
+		| f    | 286.50 |
+		+------+--------+
+	*/
+	
+	
+/*Quem gastou mais que a média */
+set @md = (select avg(cp.valor) from compra cp);
+select c.nome, cp.valor, @md as 'Media de compra' 
+from cliente c
+inner join compra cp
+on c.idCliente = cp.id_Cliente
+where cp.valor > @md
+order by c.nome;
+
+	/* 
+		+-------+--------+-----------------+
+		| nome  | valor  | Media de compra |
+		+-------+--------+-----------------+
+		| celia | 200.00 |            99.3 |
+		| joao  | 160.00 |            99.3 |
+		+-------+--------+-----------------+
+	*/
+
+--Usando subQuery
+
+select c.nome, cp.valor, @md as 'Media de compra' -- Outer query  - Query de fora
+from cliente c
+inner join compra cp
+on c.idCliente = cp.id_Cliente
+where cp.valor > (select avg(cp.valor) from compra cp) -- ( Inner query ) query dentro de outra query - subSelect;
+order by c.nome;
+	/*
+		+-------+--------+-----------------+
+		| nome  | valor  | Media de compra |
+		+-------+--------+-----------------+
+		| celia | 200.00 |            99.3 |
+		| joao  | 160.00 |            99.3 |
+		+-------+--------+-----------------+
+	*/
+
+/* Operações na linha */
+select c.nome, 
+	   cp.valor,
+	  (cp.valor *.3) as 'Desconto de 30%',
+	  (cp.valor - (cp.valor *.3)) as 'Total a pagar'
+from cliente c
+inner join compra cp
+on c.idCliente = cp.id_Cliente  --sempre colocar o on; 
+where cp.valor > (select avg(cp.valor) from compra cp);
+
+	/*
+		+-------+--------+-----------------+---------------+
+		| nome  | valor  | Desconto de 30% | Total a pagar |
+		+-------+--------+-----------------+---------------+
+		| joao  | 160.00 |           48.00 |        112.00 |
+		| celia | 200.00 |           60.00 |        140.00 |
+		+-------+--------+-----------------+---------------+
+
+	*/
+	
+/* Reescrevendo a procedure showPurchases() */
+create procedure showPurchases()
+begin
+	select c.nome, 
+		   cp.valor,
+	      (cp.valor *.3) as 'Desconto de 30%',
+	      (cp.valor - (cp.valor *.3)) as 'Total a pagar'
+    from cliente c
+    inner join compra cp
+    on c.idCliente = cp.id_Cliente   
+    where cp.valor > (select avg(cp.valor) from compra cp);
+end
+$
+
+/* ALTERANDO TABELAS */
+create table Colunas(
+	coluna1 varchar(30),
+	coluna2 varchar(30),
+	coluna3 varchar(30)
+);
+
+--Adicionando uma chave primária:
+alter table nomeTabela
+add primary key (nome_coluna);
+
+alter table Colunas
+add primary key (coluna1); -- Não dá pra colocar auto_increment quando colocamos a primary key por fora ( com alter table ), só na hora de criar;
+
+--Adicionando uma coluna sem posição específica ( Fazendo desta maneira, por padrão, a coluna vai pra última posição da tabela ):
+alter table nomeTabela
+add nomeColuna tipodeDado(tamanho) --Sempre coolocar o tipo de dado;
+
+alter table Colunas
+add coluna varchar(30);
+
+alter table colunas
+add coluna13 int;
+
+--Adicionando uma coluna com posição específica:
+alter table colunas
+add coluna11 varchar(30) not null unique 
+after coluna;
+
+--Modificando o tipo de um campo:
+alter table nomeTabela
+modify nomeColuna novoTipodeDado(tamanho) not null unique;
+
+alter table colunas 
+modify coluna13 varchar(30) not null; --para modificar a estrutura de um campo os valores têm de ser compatíveis ( uma coluna char ou varchar com o valor 'carl' não pode ser modificada pra int. Mas uma coluna char com o valor '13' pode ser trocado pra int ) ou então o campo tem que estar vazio, sem nenhum dado cadastrado;
+
+--Adicionando uma FK:
+
+--Como a FK tem que ser do mesmo tipo da PK da tabela que vai ser importada e não temos um campo int, vamos realterar a coluna 13;
+alter table colunas
+modify coluna13 int(2);
+
+alter table colunas
+add foreign key (coluna13)
+references cliente(idCliente);
+
+--Renomeando a tabela:
+alter table Colunas
+rename coluna;
+
+--Ver as chaves de uma tabela:
+SHOW CREATE TABLE nomeTabela;
+
+SHOW CREATE TABLE coluna;
