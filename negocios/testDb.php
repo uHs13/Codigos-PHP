@@ -18,7 +18,8 @@ echo "<a href='../negocios' class='btn btn-outline-warning text-secondary' style
 //dbname,host,user,pass;
 $var = new BdPdo('php7','127.0.0.1','root','');
 
-$var->toTable();
+$var->deleteUser(4);
+$var->userstoTable();
 
 echo "<a href='../negocios' class='btn btn-outline-warning text-secondary ' style='margin-left:45%;margin-top:13px;'>Voltar</a>";
 
