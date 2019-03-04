@@ -477,6 +477,7 @@ on c.idCliente = t.id_Cliente;
 	+-----------------+-------------+---------------+------------------------------------+-----------------------------+-------+------+----------+
 	3 rows in set (0.08 sec) <---
 	
+	//CONSULTANDO OS DADOS DA VIEW;
 	
 	select Cliente,montadora,modelo,Cor,Servico,Preco,ddd,numero from v_oficina;
 	+-----------------+-------------+---------------+------------------------------------+-----------------------------+-------+------+----------+
@@ -943,3 +944,83 @@ rename coluna;
 SHOW CREATE TABLE nomeTabela;
 
 SHOW CREATE TABLE coluna;
+
+/* Convenção de criação de PK e FK -  Constraints ( Regra de integridade referencial ) */
+-- A PK garante que o registro seja único na tabela e a FK garante que não vamos ter nenhum registro solto ou 'orfão';
+
+
+
+/* Não é uma boa prática criarmos as chaves ( PK e FK ) juntamente com a tabela.  */
+
+
+create database convencao;
+
+use convencao;
+
+create table cliente(
+	
+	idCliente int,
+	nome varchar(10) not null
+	
+);
+
+create table telefone(
+
+	idTelefone int,
+	tipo enum('cel','res','com') not null,
+	numero varchar(10) not null,
+	id_Cliente int
+	
+);
+
+alter table cliente add constraint pk_cliente  -- Adicionando PK e FK a parte;
+primary key (idCliente);
+
+alter table telefone add constraint fk_cliente_telefone
+foreign key (id_Cliente) references cliente(idCliente);
+
+show create table telefone;
+
+/*  
+| telefone | CREATE TABLE `telefone` (
+  `idTelefone` int(11) DEFAULT NULL,
+  `tipo` enum('cel','res','com') NOT NULL,
+  `numero` varchar(10) NOT NULL,
+  `id_Cliente` int(11) DEFAULT NULL,
+  KEY `fk_cliente_telefone` (`id_Cliente`),
+  CONSTRAINT `fk_cliente_telefone` FOREIGN KEY (`id_Cliente`) REFERENCES `cliente` (`idCliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
+*/
+
+/* Acessando dicionário de dados*/
+
+use information_schema; --Banco com as informações de todos os bancos criados;
+
+desc table_constraints; --Tabela com as constraints ( regras ) de todos os bancos;
+
+select constraint_schema as "Banco de Origem", --projeção
+	   table_name as "Tabela",
+	   constraint_name as "Nome da Regra",
+	   constraint_type as "Tipo de Chave"
+	   from table_constraints
+	   where constraint_schema='projeto'; -- seleção;
+	   
+
+/*
+	+-----------------+----------+---------------------+---------------+
+	| Banco de Origem | Tabela   | Nome da Regra       | Tipo de Chave |
+	+-----------------+----------+---------------------+---------------+
+	| convencao       | cliente  | PRIMARY             | PRIMARY KEY   |
+	| convencao       | telefone | fk_cliente_telefone | FOREIGN KEY   |
+	+-----------------+----------+---------------------+---------------+
+*/
+
+/* Apagando Constraints*/
+
+use convencao
+
+alter table telefone
+drop foreign key fk_cliente_telefone;
+
+
+
