@@ -1017,7 +1017,7 @@ select constraint_schema as "Banco de Origem", --projeção
 
 /* Apagando Constraints*/
 
-use convencao
+use convencao;
 
 alter table telefone
 drop foreign key fk_cliente_telefone;

@@ -1,12 +1,14 @@
 <?php 
+
 include_once "../tools/bootstrap.php";
+
 class BdPdo{
 
 	private $conn;//Variável que estabelece a conexão com o Banco de Dados;
 	private $statement;//Variável que vai armazenar a query;
 	private $dbData=array();//array que armazena o DataSet das consultas;
 	private $statementStarted = false;//armazena um booleano que indica se o statement já foi preaprado. False == não, True == sim;
-
+	
 	function __construct($dbName, $host,$user,$pass){
 
 		$this->startConnection($dbName, $host,$user,$pass);
@@ -27,6 +29,7 @@ class BdPdo{
 		return $this->conn;
 
 	}
+
 	private function setdbData($value){
 
 		array_push($this->dbData,$value);
@@ -117,7 +120,6 @@ class BdPdo{
 
 		$this->execStatement();
 	
-
 	}
 
 	private function prepareUpdate($id,$pass){
@@ -131,8 +133,6 @@ class BdPdo{
 		$this->swapStatement();
 
 		$this->execStatement();
-
-
 
 	}	
 
@@ -167,7 +167,7 @@ class BdPdo{
 
 	public function userstoTable(){//Retorna os dados dos usuários cadastrados no banco em forma de tabela;
 
-		$this->getData("select login,dtRegister,pass from Usuario order by login");
+		$this->getData("select login,dtRegister,pass from Usuario order by login");//Função para retirada de dados da base;
 
 		echo "<table class='table table-dark table-bordered w-50 p-3 mx-auto align-middle mt-5 '>";
 		echo '<tr class="text-center text-warning">';
