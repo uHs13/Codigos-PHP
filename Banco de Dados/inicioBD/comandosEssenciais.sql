@@ -1023,4 +1023,141 @@ alter table telefone
 drop foreign key fk_cliente_telefone;
 
 
+/* TRIGGER */
+
+use convencao;
+
+create table cliente(
+
+	idCliente int primary key auto_increment,
+	nome varchar(10) not null,
+	login varchar(20) not null,
+	senha varchar(100) not null
+		
+);
+
+create table bkp_cliente(
+	
+	idBkp int primary key auto_increment,
+	idUsuario int,
+	nome varchar(10),
+	login varchar(20)
+
+);
+
+
+insert into cliente (nome,login,senha) values ('Benzema','k9bzm','halamadrid');
+insert into cliente (nome,login,senha) values ('lukaku','lukatk','reddevils');
+insert into cliente (nome,login,senha) values ('Higuain','gonzalo','milan123');
+insert into cliente (nome,login,senha) values ('Heitor','uHs13','hector');
+insert into cliente (nome,login,senha) values ('Arthur','arthur','bolazul');
+insert into cliente (nome,login,senha) values ('Cebastia1','ElBoladon','123cabron');
+
+
+/* Criando a trigger */
+
+Create trigger nome
+before/after insert/update/delete on nometabela
+for each row
+begin
+ ...
+end
+$
+
+
+create trigger bkp_cliente_delete
+before delete on cliente
+for each row
+begin
+
+	insert into backup.bkp_cliente (idCliente,nome,login,autor,evento) values (old.idCliente,old.nome,old.login,current_user(),'DELETE');
+	
+end
+$
+
+create database backup; --Backup lógico;  Backup físico seria backup em outro servidor, em fita;
+
+use backup;
+
+create table bkp_cliente(
+	
+	idBkp int primary key auto_increment,
+	idCliente int,
+	nome varchar(10),
+	login varchar(20),
+	
+);
+
+
+-- Comunicação entre bancos 
+
+--Estamos no banco backup e inserindo dados na tabela cliente do banco convencao;
+insert into convencao.cliente (nome,login,senha) values ('Higuain','gonzalo','milan123');
+
+
+/* Trigger para comunicacao */
+
+use convencao$
+
+create trigger backup_cliente_insert
+after insert on cliente
+for each row
+begin
+	insert into backup.bkp_cliente(idCliente,nome,login,autor,evento) values(new.idCliente,new.nome,new.login,current_user(),'INSERT');
+end
+$
+
+insert into convencao.cliente(nome,login,senha) values ('Heitor','uHs13','hector');
+
+--Excluir um trigger
+
+drop trigger nomeTrigger;
+
+drop trigger backup_cliente;
+
+--Adicionando coluna de Evento a tabela de backup
+--Isso foi feito antes da alteração que adicionou o campo direto pelo código de criação da tabela;
+alter table backup.bkp_cliente
+add Action varchar(7);
+
+/*
+
+	drop trigger bkp_cliente;
+	drop table backup.bkp_cliente;
+
+*/
+
+--refatoração da tabela bkp_cliente. Os triggers foram também refatorados;
+
+use backup;
+
+create table bkp_cliente(
+	
+	idBkp int primary key auto_increment,
+	idCliente int,
+	nome varchar(10),
+	login varchar(20),
+	dt timestamp default current_timestamp,
+	autor varchar(30),
+	evento varchar(7)
+	
+);
+
+use convencao;
+
+delimiter $
+
+create trigger bkp_cliente_update
+before update on cliente
+for each row
+begin
+	
+	insert into backup.bkp_cliente(idCliente,nome,login,autor,evento) values (old.idCliente,old.nome,new.login,current_user(),'UPDATE');
+end
+$
+
+delimiter ;
+
+
+
 
