@@ -36,7 +36,7 @@ $user = Usuario::search('dmx');
 echo json_encode($user);
 */
 
-/* Retorna os dados de um usuário se o login e a senha passadas como parâmetro estiverem corretas
+/*Retorna os dados de um usuário se o login e a senha passadas como parâmetro estiverem corretas
 
 $user = new Usuario();
 
@@ -46,5 +46,30 @@ echo $user;
 
 */
 
+/*(Inserindo um novo usuário 
+$user = new Usuario('Big Smoke','followthedmantraincj');
+
+$user->insert();
+
+echo $user;
+*/
+
+/* Atualizando dados de um usuário 
+$user = new Usuario();
+$user->loadById(15);
+$user->update('Heitor','1313');
+
+echo $user;
+*/
+
+/* Excluindo um usuario
+$user = new Usuario();
+
+$user->loadById(16);
+
+$user->delete();
+
+echo $user;
+*/
 
 ?>

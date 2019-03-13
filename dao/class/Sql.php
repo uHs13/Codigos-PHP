@@ -8,14 +8,14 @@ class Sql extends PDO{
 
 		$this->setConnection();
 
-	}
+	}//fim construct
 
 	private function setConnection(){
 	//Método que liga a nossa classe ao banco de dados
 
 		$this->connection = new PDO('mysql:host=127.0.0.1;dbname=php7','root','');
 
-	}
+	}//Fim setConnection
 
 
 	private function getConnection(){
@@ -23,7 +23,7 @@ class Sql extends PDO{
 
 		return $this->connection;
 
-	}
+	}//fim getConnection
 
 	public function query($rawQuery,$parameters = array()){//Prepara a query e a executa
 
@@ -37,7 +37,7 @@ class Sql extends PDO{
 		return $statement;
 
 
-	}
+	}//fim query
 
 	private function setParameters($statement,$parameters = array() ){
 	//criamos um método para iniciar os parâmetros da query porque é uma etapa presente nas ações para inserir , alterar ou ler dados do banco; Se vamos usar um trecho de código mais de uma vez convém criarmos um método;
@@ -51,7 +51,7 @@ class Sql extends PDO{
 
 		
 
-	}
+	}//fim setParameters
 
 	private function setParam($statement,$key,$value){
 	//Precisamos desse método porque nem todas as vezes vamos passar vários parâmetros para a query;
@@ -61,7 +61,7 @@ class Sql extends PDO{
 		
 		
 		
-	}
+	}//fim setParam
 
 	//Select
 	public function select($rawQuery, $parameters = array()):array{
@@ -71,7 +71,7 @@ class Sql extends PDO{
 
 		return $dataSet->fetchAll(PDO::FETCH_ASSOC);
 
-	}
+	}//Fim select
 
 
 
