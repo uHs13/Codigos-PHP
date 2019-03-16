@@ -1159,5 +1159,64 @@ $
 delimiter ;
 
 
+/* Auto Relacionamento */
+
+use convencao
+
+create table curso(
+
+	idCurso int primary key auto_increment,
+	nome varchar(30) not null,
+	valor float(8,2) not null,
+	horas int(3) not null,
+	id_Curso int
+
+);
+
+alter table curso
+add constraint fk_curso_curso
+foreign key (id_Curso)
+references curso(idCurso);
+
+/* Inserts */
+
+insert into curso (nome,valor,horas,id_Curso) values ('logica de programacao',50,30,null);
+insert into curso (nome,valor,horas,id_Curso) values ('C',100,30,1);
+insert into curso (nome,valor,horas,id_Curso) values ('C++',150,40,2);
+insert into curso (nome,valor,horas,id_Curso) values ('Java',100,90,1);
+insert into curso (nome,valor,horas,id_Curso) values ('PHP',23,30,1);
+insert into curso (nome,valor,horas,id_Curso) values ('JavaScript',23,30,1);
+
+/* Query */
+
+delimiter $
+
+select c.idCurso,c.nome,c.valor,c.horas,ar.nome as 'pre-requisito'
+from curso c
+inner join curso ar
+on ar.idCurso = c.id_Curso;
+
+
+create procedure showCourses()
+begin 
+
+	select c.idCurso,c.nome,c.valor,c.horas,ar.nome as 'pre-requisito'
+	from curso c
+	inner join curso ar
+	on ar.idCurso = c.id_Curso;
+
+end
+$
+
+
+
+
+
+
+
+
+
+
+
 
 
