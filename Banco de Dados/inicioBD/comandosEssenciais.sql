@@ -1194,22 +1194,105 @@ delimiter $
 select c.idCurso,c.nome,c.valor,c.horas,ar.nome as 'pre-requisito'
 from curso c
 inner join curso ar
-on ar.idCurso = c.id_Curso;
+on c.id_Curso = ar.idCurso;
 
 
 create procedure showCourses()
 begin 
 
-	select c.idCurso,c.nome,c.valor,c.horas,ar.nome as 'pre-requisito'
-	from curso c
-	inner join curso ar
+	select c.idCurso,
+		   c.nome,
+		   c.valor,
+		   c.horas,
+		   ifnull(ar.nome,"---") as 'pre-requisito'
+		   
+	from curso c left join curso ar -- left join considera até os cursos que não têm pré requisito
 	on ar.idCurso = c.id_Curso;
+	
 
 end
 $
 
+/* CURSORES */
+
+use convencao
+
+create table vendedor(
+
+	idVendedor int primary key auto_increment,
+	nome varchar(30) not null,
+	jan int not null,
+	fev int not null,
+	mar int not null	
+
+);
+
+create table vendedor_stats(
+	
+	nome varchar(30) not null,
+	jan int not null,
+	fev int not null,
+	mar int not null,
+	media int not null,
+	total int not null	
+
+);
 
 
+insert into vendedor (nome,jan,fev,mar) values ('Joaquim',100000,89541,122330);
+insert into vendedor (nome,jan,fev,mar) values ('Barbara',113000,95178,197340);
+insert into vendedor (nome,jan,fev,mar) values ('Rafaela',452001,92258,332547);
+insert into vendedor (nome,jan,fev,mar) values ('Eustaquio',630000,25000,157121);
+
+select idVendedor, 
+	   nome, 
+	   (jan+fev+mar) as 'Total',
+	   (jan+fev+mar)/3 as 'Media'
+from vendedor;
+
+-- criando um cursor para inserir todos os dados presentes na tabela vendedor na vendedor_stats juntamente com a media e o total
+-- Cursor é uma programação dentro de uma procedure
+
+delimiter $
+
+create procedure cursor_insertData()
+begin
+	
+	declare fim int default 0;
+	declare vmes1,vmes2,vmes3,vtotal,vmedia int; 
+	declare vnome varchar(30);
+	
+	declare rgst cursor for(
+	
+		select nome, jan, fev, mar from vendedor
+	
+	);
+	
+	declare continue handler for not found set fim = 1;
+	
+	open rgst;
+	
+	repeat
+	
+		fetch rgst into vnome, vmes1, vmes2, vmes3;
+		
+		if not fim then
+			
+			set vtotal = vmes1 + vmes2 + vmes3;
+			set vmedia = vtotal / 3;
+			
+			insert into vendedor_stats (nome,jan,fev,mar,total,media) values (vnome,vmes1,vmes2,vmes3,vtotal,vmedia);
+			
+		end if;
+		
+	until fim end repeat;
+	
+	close rgst;
+			
+end
+$
+
+--Outro exemplo de cursor no banco oficina ( arquivo Oficina.sql);
 
 
 

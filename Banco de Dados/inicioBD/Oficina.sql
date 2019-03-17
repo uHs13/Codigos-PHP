@@ -152,6 +152,7 @@ insert into telefone(tipo,numero,id_Cliente) values ('cel',25674530,3);
 		
 
 /* Query */
+
 create procedure showData()
 begin
 	select 	c.nome as "Cliente",
@@ -180,9 +181,87 @@ begin
 end
 $
 
+/* Criando view para exibição dos dados */
+
+create view v_showData as
+	select 	c.nome as "Cliente",
+			tel.numero as "Telefone", 
+			modl.nome as "Modelo", 
+			mar.nome as "Marca" ,
+			car.vin as "Chassi",
+			cr.nome as "Cor" ,
+			s.nome as "Servico", 
+			s.preco as "Preco"
+	from cliente c
+	inner join telefone tel 
+	on c.idCliente = tel.id_Cliente
+	inner join carro car 
+	on car.idCarro = c.id_Carro
+	inner join modelo modl
+	on modl.idModelo  = car.id_Modelo
+	inner join marca mar 
+	on modl.id_Marca = mar.idMarca
+	inner join carro_cor c_c		
+	on c_c.id_Carro = car.idCarro
+	inner join cor cr
+	on cr.idCor = c_c.id_Cor
+	inner join servico s
+	on s.id_Carro = car.idCarro;
 
 
 
+/* Criando um cursor para inserir em outra tabela ( pagamento ) o nome do cliente, o servico, o valor total, o numero máximo de parcelas permitidas para o valor*/
+
+create table pagamento(
 		
+		idPagamento int primary key auto_increment,
+		nome varchar(10) not null,
+		valor int(5) not null,
+		maxParcelas int(2) not null	
+
+);
+
+delimiter $
+
+create procedure cursor_showPayment()
+begin
+	
+	declare fim int default 0;
+	declare vnome varchar(10);
+	declare vvalor int(5);
+	declare vparcelas int(2);
+	
+	declare rgst cursor for(
+		
+		select Cliente,Preco from v_showData
+	
+	);
+	
+	declare continue handler for not found set fim = 1;
+	
+	open rgst;
+	
+	repeat
+	
+		fetch rgst into vnome, vvalor;
+			
+		if not fim then
+			
+			if vvalor > 150 then set vparcelas = 3;
+			
+			else set vparcelas = 2;
+			
+			end if;
+			
+			insert into pagamento (nome,valor,maxParcelas) values (vnome,vvalor,vparcelas);
+	
+		end if;
+	
+	until fim end repeat;
+	
+	close rgst;
+	
+end
+$		
 		
 
