@@ -4,9 +4,79 @@ require_once 'config/Autoloader.php';
 
 Autoloader::register();
 
-$user = new Usuario('Heitor','heitorhenriquedias@gmail.com');
+/*
+$user = new UsuarioDB();
 
-$file = new Arquivo('file/first.txt','a');
+$usuarios = UsuarioDB::search('Vialpando');
+//O método search retorna um array de arrays, logo temos que fazer um foreach para percorrer cada usuário encontrado e montar o objeto com os valores;
 
+
+foreach($usuarios as $data){
+
+	
+	$user->setUserData($data);	
+	//monta um objeto UsuarioDB com os dados retornados do banco
+
+
+}
+
+$file = new Arquivo('file/first.txt','a+');
+
+//Adiciona o objeto no arquivo
 $file->write($user);
+*/
+/*
+$sql = new Sql();
+$file = new Arquivo('file/users.csv','w+');
+*/
+
+// $Db_csv = new Db_csv('file/users.csv','w+','select idUsuario,login,pass,dtRegister from usuario');
+//Dir::createDir('_res');
+
+//$arq = new Arquivo('_exclude/teste.csv','w');
+
+//$arq->createSeveral('_exclude',array('teste1.txt','teste2.txt','teste3.txt','teste4.txt'));
+
+/*	removendo um diretório com arquivos ( Somente Arquivos ) dentro
+$dir = new Dir();
+
+
+$dir->removeDir('_exclude');
+*/
+
+/* lendo um csv 
+$file = new Arquivo('file/users.csv','a+');
+
+
+
+$json = json_encode($file->readCsv());
+
+echo $json;
+*/
+
+$arq = new Arquivo('_res/racionais.jpg','r+');
+
+
+$img = $arq->showImage();
+
+
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+		
+	body{
+		/*Renderiza a imagem na tela usando o base64*/
+		background: url(<?=$img?>) no-repeat left top fixed;
+		background-size:cover;
+	}
+
+	</style>
+</head>
+<body>
+
+</body>
+</html>

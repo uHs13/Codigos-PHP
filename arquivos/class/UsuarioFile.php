@@ -1,22 +1,23 @@
 <?php 
 
-class Usuario{
+class UsuarioFile{
 
-	private $nome;
+	private $name;
 	private $email;
 	private $dateRegister;
+	private $password;
 
 	//GETTERS AND SETTERS
 
-	public function getNome(){
+	public function getName(){
 
-		return $this->nome;
+		return $this->name;
 
 	}
 
-	public function setNome($name){
+	public function setName($name){
 
-		$this->nome = $name ;
+		$this->name = $name ;
 
 	}
 
@@ -44,13 +45,28 @@ class Usuario{
 
 	}
 
+	public function getPassword(){
+
+		return $this->password;
+
+	}
+
+	public function setPassword($pass){
+
+		$this->password = $pass;
+
+	}
+
+
 	//FIM GETTERS AND SETTERS
 
-	public function __construct($name,$email){
+	public function __construct($name,$email,$pass){
 
-		$this->setNome($name);
+		$this->setName($name);
 
 		$this->setEmail($email);
+
+		$this->setPassword($pass);
 
 		$this->setDateRegister();
 
@@ -60,9 +76,10 @@ class Usuario{
 
 		return json_encode(array(
 
-			'Nome' => $this->getNome(),
+			'Name' => $this->getName(),
 			'Email' => $this->getEmail(),
-			'Registro' => $this->getDateRegister()
+			'Password' => $this->getPassword(),
+			'Register' => $this->getDateRegister()
 		));
 
 	}

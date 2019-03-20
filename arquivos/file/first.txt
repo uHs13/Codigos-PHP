@@ -1,1 +1,1 @@
-{"Nome":"Heitor","Email":"heitorhenriquedias@gmail.com","Registro":"13\/03\/2019 19:46:02"}
+{"idUsuario":"4","login":"Vialpando","pass":"varrios","dtRegister":"26\/02\/2019 08:02:26"}
