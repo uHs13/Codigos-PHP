@@ -203,7 +203,7 @@ class Arquivo{
 
 	}
 
-	//DANDO ERRO DE ACESSO NEGADO. NÃO TROCA OS ARQUIVOS DE LUGAR
+	
 	public static function swapFilePath($originPath,$destinationPath){
 		//path é o caminho do arquivo pasta/nome.extensao;
 
