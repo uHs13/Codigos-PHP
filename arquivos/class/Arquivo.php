@@ -43,6 +43,8 @@ class Arquivo{
 	}
 	//FIM GETTERS AND SETTERS
 
+
+
 	public function __construct($path,$mode){
 
 		$this->setFileName($path);
@@ -56,6 +58,8 @@ class Arquivo{
 		fclose($this->filePointer);
 
 	}
+
+
 
 
 	public function write($value){
@@ -164,6 +168,64 @@ class Arquivo{
 
 	}
 
+	public static function upload ($path,$destiny){
+
+		if(move_uploaded_file($path,$destiny)){
+
+			return true;
+		}
+
+	}
+
+	public static function download($url,$destination){
+
+		//Temos que pegar o conteúdo bruto do arquivo
+		//file_get_contents lê todo o conteúdo de um arquivo para uma string
+		$content = file_get_contents($url);
+
+		//interpretamos a url para trabalhar com seus componentes
+		//parseurl retorna a url dividida nas chaves 'shema'(protocolo) ,'host'(dominio) e 'path'(caminho do arquivo)
+		$parse = parse_url($url);
+
+		//pegamos apenas o nome da imagem 
+		$basename = basename($parse['path']);
+
+		Dir::createDir($destination);
+
+		$arq = new Arquivo($destination.DIRECTORY_SEPARATOR.$basename,'w+');
+
+		//passamos o conteúdo bruto da imagem para o nosso arquivo
+		$arq->write($content);
+
+		//retornamos o base64 do arquivo que contem a imagem
+		return $arq->showImage();
+
+
+	}
+
+	//DANDO ERRO DE ACESSO NEGADO. NÃO TROCA OS ARQUIVOS DE LUGAR
+	public static function swapFilePath($originPath,$destinationPath){
+		//path é o caminho do arquivo pasta/nome.extensao;
+
+		//mostra o nome do diretório pai
+		$pathname = dirname($originPath);
+
+		//mostra o nome do arquivo
+		$basename = basename($originPath);
+
+
+		//temos que mudar o arquivo criando um com o mesmo nome do antigo, porém com o novo path.
+		rename(
+
+			$originPath,
+			$destinationPath.DIRECTORY_SEPARATOR.$basename
+		);
+		
+
+		
+
+		
+	}	
 
 }
 

@@ -14,8 +14,7 @@ class Autoloader{
 
 				require_once($file);
 
-			}
-
+			} 
 
 		});
 

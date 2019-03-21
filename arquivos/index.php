@@ -54,29 +54,33 @@ $json = json_encode($file->readCsv());
 echo $json;
 */
 
-$arq = new Arquivo('_res/racionais.jpg','r+');
+// $arq = new Arquivo('_res/racionais.jpg','r+');
+// $arq->showImage
+
+ //Upload de arquivos 
+
+//Guarda qual o tipo da solicitação enviada
 
 
-$img = $arq->showImage();
+/* Como trabalha o parse_url
+
+$url = 'https://pages.stolaf.edu/americanmusic/wp-content/uploads/sites/593/2018/05/ice-cube-and-nwa.jpg';
+
+$parse = parse_url($url);
+
+echo json_encode($parse);
+
+*/
+
+
+/*Movendo arquivos
+
+Arquivo::swapFilePath('folder_01/teste.txt','folder_02');
+
+*/
+
 
 
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-	<style>
-		
-	body{
-		/*Renderiza a imagem na tela usando o base64*/
-		background: url(<?=$img?>) no-repeat left top fixed;
-		background-size:cover;
-	}
 
-	</style>
-</head>
-<body>
-
-</body>
-</html>
