@@ -1153,6 +1153,7 @@ for each row
 begin
 	
 	insert into backup.bkp_cliente(idCliente,nome,login,autor,evento) values (old.idCliente,old.nome,new.login,current_user(),'UPDATE');
+
 end
 $
 
@@ -1294,12 +1295,193 @@ $
 
 --Outro exemplo de cursor no banco oficina ( arquivo Oficina.sql);
 
+/* SEGUNDA E TERCEIRA FORMAS NORMAIS
+
+	Se aplicam em situações que tem a presença de uma chave composta.
+	
+	 2ª - Para atender a segunda forma normal qualquer chave que não seja chave tem que depender da totalidade do conjunto união das chaves associativas
+	
+	 3ª - Dependência transitiva - Campos não chave que dependem de outros campos não chave, a relação entre eles vira outra tabela
+
+*/
+
+create database consultorio;
+
+use consultorio;
+
+create table paciente(
+	
+	idPaciente int primary key auto_increment,
+	nome varchar(30) not null,
+	cpf char(11) not null unique,
+	sexo enum('m','f') not null,
+	email varchar(50) not null unique,
+	dtRegistro timestamp default current_timestamp
+	
+); 
+
+create table especialidade(
+	
+	idEspecialidade int primary key auto_increment,
+	nome varchar(30) not null unique
+
+);
+
+create table medico(
+	
+	idMedico int primary key auto_increment,
+	nome varchar(30) not null,
+	cpf char(11) not null unique,
+	sexo enum('m','f') not null,
+	funcionario enum('s','n') not null,
+	id_Especialidade int not null
+
+);
+
+create table hospital(
+	
+	idHospital int primary key auto_increment,
+	nome varchar(30) not null unique
+
+);
 
 
+create table consulta(
 
+	idConsulta int primary key auto_increment,
+	dtRegistro timestamp default current_timestamp,
+	diagnostico varchar(30) not null,
+	id_Paciente int not null,
+	id_Medico int not null,
+	id_Hospital int not null
 
+);
 
+create table internacao(
 
+	idInternacao int primary key auto_increment,
+	entrada timestamp default current_timestamp,
+	saida timestamp default current_timestamp,
+	quarto int not null,
+	observacoes varchar(50),
+	id_Consulta int not null unique	
 
+);
+
+/* Constraints */
+
+alter table medico
+add constraint FK_MEDICO_ESPECIALIDADE
+foreign key(id_Especialidade) references especialidade(idEspecialidade);
+
+alter table consulta
+add constraint FK_CONSULTA_PACIENTE
+foreign key(id_Paciente) references paciente(idPaciente);
+
+alter table consulta
+add constraint FK_CONSULTA_MEDICO
+foreign key(id_Medico) references medico(idMedico);
+
+alter table consulta
+add constraint FK_CONSULTA_HOSPITAL
+foreign key(id_Hospital) references hospital(idHospital);
+
+alter table internacao
+add constraint FK_INTERNACAO_CONSULTA
+foreign key(id_Consulta) references consulta(idConsulta);
+
+/* Inserts */
+
+-- paciente -- 
+insert into paciente(nome,cpf,sexo,email) values ('Eustaquio',11122255598,'m','eu_stack_io@gmail.com');
+insert into paciente(nome,cpf,sexo,email) values ('Karmen',33344488819,'f','kk.123.98@gmail.com');
+
+-- especialidade -- 
+insert into especialidade(nome) values ('Cardiologia');
+insert into especialidade(nome) values ('Pneumologia');
+
+-- medico --
+insert into medico(nome,cpf,sexo,funcionario,id_Especialidade) values ('Francisca',15478932812,'f','s',2);
+insert into medico(nome,cpf,sexo,funcionario,id_Especialidade) values ('Geraldo',98465132470,'m','s',1);
+
+-- hospital --
+insert into hospital (nome) value ('TouchDown');
+
+-- consulta -- 
+insert into consulta (diagnostico,id_Paciente,id_Medico,id_Hospital) values ('Bronquite',1,2,1);
+insert into consulta (diagnostico,id_Paciente,id_Medico,id_Hospital) values ('Arritmia',3,1,1); 
+
+-- internacao -- 
+insert into internacao (quarto,observacoes,id_Consulta) values (13,'impedir o agravamento do quadro',1); 
+insert into internacao (quarto,observacoes,id_Consulta) values (47,'Acompanhamento de progresso do tratamento',2);
+
+/* Query */
+
+-- nome paciente, nome do medico, nome especialidade, nome hospital, diagnostico, data de consulta, 
+
+DELIMITER $
+
+create procedure showMedicalCheck()
+begin
+
+	select p.nome as 'Paciente',
+		   h.nome as 'Hospital',
+		   e.nome as 'Especialidade',
+		   m.nome as 'Medico',
+		   c.diagnostico as 'Diagnostico',
+		   c.dtRegistro as 'Data' 
+	from consulta c 
+	inner join paciente p
+	on c.id_Paciente = p.idPaciente
+	inner join hospital h
+	on c.id_Hospital = h.idHospital
+	inner join medico m
+	on c.id_Medico = m.idMedico 
+	inner join especialidade e 
+	on m.id_Especialidade = e.idEspecialidade;
+	  
+end
+$
+
+-- mostra os detalhes das internações ocorridas
+
+delimiter $
+
+create procedure report_hospitalization()
+begin 
+	select p.nome as 'Paciente',
+		   h.nome as 'Hospital',
+		   e.nome as 'Especialidade',
+		   m.nome as 'Medico',
+		   c.diagnostico as 'Diagnostico',
+		   i.quarto as 'Quarto',
+		   i.observacoes as 'Observacoes',
+		   i.entrada as 'Entrada',
+		   i.saida as 'saida'
+	from internacao i 
+	inner join consulta c 
+	on i.id_Consulta = c.idConsulta
+	inner join paciente p
+	on c.id_Paciente = p.idPaciente
+	inner join hospital h
+	on c.id_Hospital = h.idHospital
+	inner join medico m
+	on c.id_Medico = m.idMedico 
+	inner join especialidade e 
+	on m.id_Especialidade = e.idEspecialidade;
+end
+$	
+
+/* SQL SERVER*/
+
+-- comentário é a mesma coisa /**/ -- 
+
+-- Delimitador GO - Quebra os comandos em pacotes tcp ip independentes que chegam em ordem para a execução. Tem que ter quebra de linha antes de usar o GO
+
+-- ctrl + r -> esconde e mostra o painel 
+
+/* Criando um banco de dados  */
+
+ 
 
 
