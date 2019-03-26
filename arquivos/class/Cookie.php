@@ -40,7 +40,7 @@ class Cookie{
 
 		//time() -> retorna o timestamp do momento da criação
 		setcookie($this->getName(),json_encode($this->getContent()),time() + $time_in_seconds);
-
+		//setcookie(nomeCookie,value,tempo_em_segundos)
 
 	}
 
