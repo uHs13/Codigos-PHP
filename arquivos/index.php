@@ -79,7 +79,9 @@ Arquivo::swapFilePath('folder_01/teste.txt','folder_02');
 
 */
 
+$v = ['heitor'=>'Souza','idade'=>18];
 
+echo json_encode($v);
 
 ?>
 
