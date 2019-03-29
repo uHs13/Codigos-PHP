@@ -1482,6 +1482,62 @@ $
 
 /* Criando um banco de dados  */
 
+create database sql_teste
+go 
+
+use sql_teste 
+go 
+
+create table usuario(
+
+	idUsuario int primary key identity,
+	nome varchar(30) not null,
+	email varchar(100) not null unique
+);
+go
+
+--inserts
+insert into usuario (nome,email) values ('Heitor','heitorhenriquedias@gmail.com')
+go
+
+--query 
+select idUsuario, nome, email from usuario
+go
+
+/* Arquitetura 
+
+	 Como se coportam os arquivos que compo~em o banco de dados
+	 
+	 NOME LÓGICO : nome que vemos o arquivo no management studio
+	 NOME DO ARQUIVO : como está salvo no HD
+	 
+	 Pasta DATA : Guarda os arquivos referentes a todos os bancos de dados que temos no mangement studio
+	 
+	 .mdf : Master Data File ( Guarda dados ) 
+	 
+	 .ldf : Log Data File  ( guarda logs ) 
+	 
+	 Sempre que criamos um banco sem alterar as configurações são gerados .mdf e.ldf 
+	 
+	 Quando adicionamos dados em uma tabela estamos adicionando no .mdf.  Quando estamos preenchendo o .mdf estamos gerando uma transação,
+	 transação é um grupo lógico que é utilizado para garantir a integridade dos dados. Esse grupo lógico pode ser executado ou não. 
+	 Tudo que é executado em uma transação fica salvo no .ldf ( arquivo de log ) para garantir que possa ser desfeito, garantir que
+	 a transação possa voltar ( Todos os comando da transação pertencem a um unico bloco, pricipio da atomicidade ). Assim que a transação
+	 é confirmada os dados do .ldf ( arquivo de log ) são escritos no .mdf. Se a transação for cancelada os dados são apagados do arquivo
+	 de log e nada ocorre
+	 
+	 
+	 É uma boa prática deixa o .mdf apenas para dados do sistema ( dicionaário de dados )
+	 Usamos .ndf para armazenar os dados
+	 Criamos grupos de arquivos para separar os .ndf -> organização lógica
+	 Fazemos uma separação lógica e também física
+	 
+
+*/
+
+
+
+
  
 
 

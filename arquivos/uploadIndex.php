@@ -64,7 +64,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 					
 				<section class='tp'>
 					
-				<!-- enctype permite definirmos qual o tipo de informação estamos enviando pelo formulário. Por padrão o formulário envia apenas strings, porém, neste caso estaremos enviando dados binários. Se não colocarmos esse atributo o upload não funcionárá, o servidor reveberá apenas o nome do arquivo ao invés de seu conteúdo-->
+				<!-- enctype permite definirmos qual o tipo de informação estamos enviando pelo formulário. Por padrão o formulário envia apenas strings ( O método padrão de envio de dados de um formulário é o GET, esse método é limitado aos caracteres da tabela ASCII ), porém, neste caso estaremos enviando dados binários. Se não colocarmos esse atributo ( o atributo permite usar o padrão  UCS( Universal Multiple-Octet Coded Character Set ) ) o upload não funcionárá, o servidor reveberá apenas o nome do arquivo ao invés de seu conteúdo-->
 
 						<form method='POST' enctype='multipart/form-data'>
 
