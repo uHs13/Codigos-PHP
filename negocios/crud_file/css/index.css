@@ -1,0 +1,85 @@
+
+body{
+
+	background-color: #fafafa;
+	font-family: 'Raleway';
+	margin:0;
+	padding:0;
+
+}
+
+
+main{
+
+	/*background-color: transparent;*/
+	
+	width:100%;
+	position:absolute;
+	top:40%;
+	
+}
+
+
+nav{
+
+	
+	width:90%;
+	margin:0 auto;
+	
+
+
+
+
+}
+
+
+nav ul{
+
+	margin:0 auto;
+	padding:0;
+	width:90%;
+	list-style:none;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	
+
+}
+
+
+nav ul li {
+
+	float:left;
+	position: relative;
+	
+	
+
+
+
+}
+
+nav ul li a {
+
+	display:inline-block;
+	text-decoration:none;
+	background-color: transparent;
+	color:black;
+	padding:5px 10px;
+	border-radius: 3px;
+	width:200px;
+	text-align: center;
+	margin:5px;
+
+	
+
+
+}
+
+nav ul li a:hover{
+
+	transition: background-color 0.5s linear;
+	background-color: black;
+	box-shadow: 3px 3px 8px #aaa;
+	color:white;
+
+}
