@@ -1509,7 +1509,7 @@ go
 	 Como se coportam os arquivos que compo~em o banco de dados
 	 
 	 NOME LÓGICO : nome que vemos o arquivo no management studio
-	 NOME DO ARQUIVO : como está salvo no HD
+	 NOME DO ARQUIVO ( FÍSICO ) : como está salvo no HD
 	 
 	 Pasta DATA : Guarda os arquivos referentes a todos os bancos de dados que temos no mangement studio
 	 
@@ -1527,17 +1527,278 @@ go
 	 de log e nada ocorre
 	 
 	 
-	 É uma boa prática deixa o .mdf apenas para dados do sistema ( dicionaário de dados )
+	 É uma boa prática deixar o .mdf apenas para dados do sistema ( dicionaário de dados )
 	 Usamos .ndf para armazenar os dados
 	 Criamos grupos de arquivos para separar os .ndf -> organização lógica
 	 Fazemos uma separação lógica e também física
 	 
+	 Todo  banco tem um grupo padrão chamado primary. O .mdf fica dentro dele
+	 
+	 arquivos de log (.ldf) não entram em nenhum grupo de arquivos
+	 
 
 */
 
+/* Criando tabelas */
+use empresa
+
+--idAluno int primary key identity(nmrInicial,incremento) - podemos passar essa informação, mas não é obrigatório
+
+create table aluno(
+	
+	idAluno int primary key identity,
+	nome varchar(30) not null,
+	sexo char(1) not null,
+	nascimento date not null,
+	email varchar(30) not null unique
+
+
+)
+go 
+
+-- DEFININDO RELACIONAMENTO 1x1 ENTRE AS TABELAS ALUNO E ENDEREÇO
+
+--colocando o unique no id_Aluno estamos dizendo que ele não pode se repetir, ou seja, um aluno só tem um endereço (1X1)
+
+create table endereco(
+	
+	idEndereco int identity(100,10),
+	bairro varchar(30) not null,
+	uf char(2) not null,
+	id_Aluno int not null unique
+	
+)
+go
+
+--não podemos especificar tamanho de int no sql server
+
+create table telefone(
+
+	idTelefone int identity,
+	ddd char(2),
+	tipo char(3),
+	numero varchar(10),
+	id_Aluno int 
+
+)
+go
+
+
+/* Constraint  - CHECK */
+
+alter table aluno 
+add constraint CK_SEXO 
+check (sexo in('m','f'))
+go
+
+alter table telefone
+add constraint CK_TIPO
+check (tipo in('cel','res','com'))
+go
+
+-- não podemos alterar a PK de aluno  porque ela foi criada junto com a tabela, mas podemos alterar seu nome clicando com o botão direito sobre a chave
+
+/* CONSTRAINT  - PK */
+
+alter table endereco
+add constraint PK_ENDERECO
+primary key (idEndereco)
+go
+
+alter table telefone 
+add constraint PK_TELEFONE
+primary key (idTelefone)
+go
+
+/* CONSTRAINT  - FK */
+
+alter table endereco
+add constraint FK_ENDERECO_ALUNO
+foreign key (id_Aluno) references aluno(idAluno)
+go
+
+alter table telefone 
+add constraint FK_TELEFONE_ALUNO
+foreign key (id_Aluno) references aluno(idAluno)
+go
 
 
 
- 
+/* COMANDOS DE DESCRIÇÃO */
 
+-- no sql server os comandos de descrição são procedures já definidas e armazenadas no sistema que nos trazem informações sobre os bancos e tabelas
+-- SP (storage procedure)
+
+SP_COLUMNS nomeTabela -- traz uma descrição da estrutura da tabela
+go
+
+SP_HELP nomeTabela -- traz uma descrição ainda mais detalhada sobre a tabela 
+go 
+
+
+
+/* INSERTS */
+
+-- formato de date é ano/mes/dia
+
+-- aluno   
+insert into aluno (nome,sexo,nascimento,email) values ('Joao','m','1978/09/13','joao@gmail.com')
+insert into aluno (nome,sexo,nascimento,email) values ('Julia','f','1990/03/18','ju.lia@gmail.com')
+insert into aluno (nome,sexo,nascimento,email) values ('Juscelino','m','1902/08/12','jk@gmail.com')
+insert into aluno (nome,sexo,nascimento,email) values ('Jandira','m','1994/11/22','jandira@gmail.com')
+go
+
+--endereco
+insert into endereco (bairro,uf,id_Aluno) values ('Eldorado','MG',1);
+insert into endereco (bairro,uf,id_Aluno) values ('Agua Branca','MG',2);
+insert into endereco (bairro,uf,id_Aluno) values ('Tropical','MG',3);
+insert into endereco (bairro,uf,id_Aluno) values ('Glória','MG',4);
+go
+
+--telefone 
+insert into telefone (ddd,tipo,numero,id_Aluno) values ('31','cel','996584702',1)
+insert into telefone (ddd,tipo,numero,id_Aluno) values ('31','cel','998745124',2)
+go
+
+
+
+-- Pegar data e hora do sistema
+select getdate()
+go
+
+-- Query  - nossas colunas são nossas projeções
+select a.nome,
+	   isnull(t.ddd,'--') as "ddd",
+	   isnull(t.tipo,'SEM') as "tipo",
+	   isnull(t.numero,'NUMERO') as 'numero',
+	   e.bairro,
+	   e.uf
+from aluno a 
+left join telefone t 
+on a.idAluno = t.id_Aluno
+inner join endereco e
+on a.idAluno = e.id_Aluno 
+go
+
+--IntelliSense verifica erros sintáticos e semânticos
+
+/* FUNÇÕES SQL SERVER - https://www.w3schools.com/sql/sql_ref_sqlserver.asp */
+
+-- DATEDIFF : Calcula a diferenca entre duas datas  DATEDIFF(formato_do_intervalo,dataInicial,DataFinal) 
+select idAluno,
+		  nome,
+		  datediff(year,nascimento,getdate()) as 'idade'  
+		  from aluno
+go
+
+--DATENAME : Traz o nome ( string ) da parte especificada da data passada como argumento
+select idAluno,
+		  nome,
+		  datename(weekday,nascimento) as 'dia de nascimento'  ,
+		  datename(month,nascimento) as 'mes de nascimento'  
+		  from aluno
+go
+
+--DATEPART : traz o numero referente a parte da data especificada 
+select idAluno,
+		  nome,
+		  datepart(weekday,nascimento) as 'dia de nascimento'  ,
+		  datepart(month,nascimento) as 'mes de nascimento'  
+		  from aluno
+go
+
+--DATEADD : Traz uma data somada a outra 
+select idAluno,
+		  nome,
+		  nascimento,
+		  dateadd(year,10,nascimento) as '10 anos depois'  
+		  from aluno
+go
+
+
+/* modelos de formato_do_intervalo  - VÁLIDOS PARA TODAS AS FUNÇÕES DE DATA ACIMA 
+
+	year, yyyy, yy = Year
+	quarter, qq, q = Quarter -> retorna o numero de trimestres
+	month, mm, m = month
+	dayofyear = Day of the year -> dayofyear e day retornam o numero de dias 
+	day, dy, y = Day ->            
+	week, ww, wk = Week
+	weekday, dw, w = Weekday -> traz o dia da semana
+	hour, hh = hour
+	minute, mi, n = Minute
+	second, ss, s = Second
+	millisecond, ms = Millisecond
+
+
+*/
+
+/* CONVERSÃO DE DADOS */
+
+/* + operador lógico de soma e de concatenação de strings 
+	
+	1 + 1 == 2 
+	1 + '1' == 2
+	'1' + '1' == 11
+		
+	O sql server por padrão tenta converter uma string para um número quando usamos o + 	
+	
+*/
+
+select cast('1' as int) + cast('1' as int)
+go
+
+select idAluno,
+		  nome,
+		  concat(day(nascimento),'/',month(nascimento),'/',year(nascimento)) as 'data de nascimento'
+		  datediff(year,nascimento,getdate()) as 'idade'  
+		  from aluno
+go
+
+--CHARINDEX : retorna a o indice da primeira aparição de um caracter dentro de  uma string
+--charindex(oq,onde,posicaoInicial)
+
+select nome, charindex('a',nome) from aluno -- quando não passamos de onde começar inicia em zero
+
+select nome, charindex('a',nome,3) from aluno -- quando passamos de onde começar todos os caracteres antes são desconsiderados na contagem, porém o valor que é retornado é referente a primeira ocorrencia na palavra toda . ex.: charindex('a',nome,3) -> Jandira  7. O primeiro a foi ignorado, pois a contagem se inicia na letra n. como o resultado considera a palavra toda o retorno foi 7 e não 5.
+
+/* BULK INSERT - importando dados de arquivos externos para tabelas */
+
+use empresa
+
+create table banco(
+		conta int,
+		valor int,
+		acao char(1)
+
+)
+go
+
+bulk insert banco
+from 'C:\CONTAS.txt'
+with(
+	
+	firstrow = 2,
+	datafiletype = 'char',
+	fieldterminator = '\t',
+	rowterminator='\n'
+
+)
+go
+
+/* Exibindo o saldo das contas */
+select conta,
+		  valor,
+		  charindex('d',acao) as 'Debito',
+		  charindex('c',acao) as 'Credito'
+		  charindex('c',acao) * 2 - 1 as 'Multiplicador'
+from banco
+go
+
+
+select conta,
+sum(valor * (charindex('c',acao) * 2 - 1)) as saldo
+from banco 
+group by conta 
+go
 
