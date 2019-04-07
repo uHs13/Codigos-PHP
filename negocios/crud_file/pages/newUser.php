@@ -21,8 +21,7 @@
 			<label for='email'><span>Email</span></label>
 			<input type="email" name="email" id="email" >
 
-			<label for='cpf'><span>CPF</span></label>
-			<input type="text" name="cpf" id="cpf" placeholder="Apenas Números">
+			
 
 			<button>Cadastrar</button>
 
@@ -47,31 +46,30 @@
 include_once "../config/Autoloader.php";
 Autoloader::register();
 
-if($_SERVER["REQUEST_METHOD"] === "POST"){
+if($_SERVER["REQUEST_METHOD"] === "POST"){//Se o tipo de requisição de dados feita foi POST, ou seja, o formulário de criação de usuário, então podemos proceder.
 
-	if($_POST['name'] != null && $_POST['name'] != " "){
+	if(isset($_POST['name']) && $_POST['name'] != " "){//verificamos se as chaves do array super global $_POST estão definidas e com valores 
 
-		if($_POST['email'] != null && $_POST['email'] != " "){
+		if(isset($_POST['email']) && $_POST['email'] != " "){
 
-			if($_POST['cpf'] != null && $_POST['cpf'] != " "){
+			
 
-				$user = new User($_POST['name'],$_POST['email'],$_POST['cpf']);
+				$user = new User($_POST['name'],$_POST['email']);//Instanciamos um novo User com os dados para ficar mais simples gravar as informações no nosso arquivo
 
-				$path = '../file/users.csv';
+				$path = '../file/users.csv';//guardamos o caminho do arquivo em uma variável
 
 
-				if(!file_exists($path)){
+				if(!file_exists($path)){//caso esse diretório não exista ele é criado
 
 	
-
 					$file = new Arquivo($path,'a+');
-					$file->write('name;email;cpf');
+					$file->write('name;email');
 
 				}
 
-				$file = new Arquivo($path,'a+');
+				$file = new Arquivo($path,'a+');//inicializamos um objeto Arquivo, lembrando que Arquivo é a nossa classe manipuladora
 
-				$file->write($user);
+				$file->write($user);// Escrevemos o usuário no arquivo. Podemos fazer isso por conta do método mágico __toString() da classe User
 
 				echo "
 					<script>
@@ -83,7 +81,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
 				";
 
-			}
+			
 
 		}
 
@@ -93,7 +91,6 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
 
 
-unset($_POST['name']);
 
 
 ?>

@@ -4,7 +4,7 @@ class User{
 
 	private $name;
 	private $email;
-	private $cpf;
+
 
 
 	//GETTERS AND SETTERS
@@ -24,28 +24,22 @@ class User{
 		return $this->email;
 	}
 
-	public function setCpf($cpf){
-		$this->cpf = $cpf;
-	}
-
-	public function getCpf(){
-		return $this->cpf;
-	}
+	
 	//FIM GETTERS AND SETTERS
 
 
-	function __construct($name,$email,$cpf){
+	function __construct($name,$email){
 
-		$this->setName($name);
-		$this->setEmail($email);
-		$this->setCpf($cpf);
+		$this->setName(trim($name,"\r\n"));
+		$this->setEmail(trim($email,"\r\n"));
+
 
 
 	}
 
 	function __toString(){
 
-		return $this->getName().';'.$this->getEmail().';'.$this->getCpf();
+		return $this->getName().';'.$this->getEmail();
 
 	}
 

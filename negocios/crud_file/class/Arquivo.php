@@ -66,7 +66,6 @@ class Arquivo{
 	public function write($value){
 
 		fwrite($this->getFilePointer(),$value."\r\n" );//Tem que ser com aspas duplas o \r\n 
-
 		return true;
 	}
 
@@ -81,7 +80,7 @@ class Arquivo{
 			//fgets lê uma linha por vez
 			//Adicionamos a primera linha do arquivo ( snome das coluna ) em um array
 			$headers = explode(';',fgets($this->getFilePointer()));
-
+			
 			//Armazena os dados de todas as linhas das tabelas 
 			$fileData = array();
 
