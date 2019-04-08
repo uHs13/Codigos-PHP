@@ -17,7 +17,11 @@ main{
 	
 	padding:5px;
 
+
+
 	text-align: center;
+
+
 
 }
 
@@ -53,6 +57,16 @@ input{
 }
 
 
+input:hover{
+
+	transition: border-color 0.5s linear;
+
+
+	border-color:rgb(113,125,128);
+
+}
+
+
 a{
 
 	display: block;
@@ -85,6 +99,8 @@ a{
 
 .btn-search:hover{
 
+	transition: background-color 0.5s linear;
+		
 	background-color: rgb(119,193,36);
 	
 	color:#fff;
@@ -92,6 +108,8 @@ a{
 	box-shadow: 3px 3px 8px #bbb;
 
 	cursor:pointer;
+
+
 }
 
 
@@ -141,5 +159,7 @@ a{
 	box-shadow: 3px 3px 8px #bbb;
 
 	cursor:pointer;
+
+	transition: background-color 0.5s linear;
 
 }
