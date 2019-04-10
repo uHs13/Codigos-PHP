@@ -1802,3 +1802,137 @@ from banco
 group by conta 
 go
 
+
+/* TRIGGERS DML */
+
+use school
+go
+
+create table categoria (
+	
+	idCategoria int identity,
+	nome varchar(30) not null
+	
+)
+go 
+
+create table produto(
+	
+	idProduto int identity,
+	nome varchar(30) not null,
+	preco number(6,2) not null,
+	id_Categoria int
+
+)
+go
+
+create table registro(
+	
+	idRegistro int identity,
+	nomeProduto varchar(30) not null,
+	nomeCategoria varchar(30) not null,
+	precoAntigo numeric(6,2) not null,
+	precoNovo numeric(6,2) not null,
+	idCategoria int,
+	horario datetime,
+	usuario varchar(30),
+	detalhe varchar(100)
+	
+)
+go
+
+-- constraints
+
+alter table categoria
+add constraint PK_CATEGORIA 
+primary key (idCategoria)
+go
+
+alter table produto 
+add constraint FK_PRODUTO_CATEGORIA
+foreign key (id_Categoria) references categoria(idCategoria)
+go
+
+alter table registro 
+add constraint PK_REGISTRO
+primary key (idRegistro)
+go 
+
+
+--insert 
+
+--categoria 
+insert into categoria (nome) values ('Alimento')
+insert into categoria (nome) values ('Limpeza')
+insert into categoria (nome) values ('Higiene')
+go
+
+--produto 
+insert into produto (nome,preco,id_Categoria) values ('Pão',9.9,1)
+insert into produto (nome,preco,id_Categoria) values ('Farinha de milho',2.5,1)
+insert into produto (nome,preco,id_Categoria) values ('Desinfetante',8,2)
+insert into produto (nome,preco,id_Categoria) values ('Cloro',5,2)
+insert into produto (nome,preco,id_Categoria) values ('Desodorante',10,3)
+insert into produto (nome,preco,id_Categoria) values ('Polvilho Antisséptico',10,3)
+go
+
+
+-- query 
+select p.nome as "Produto",
+	   p.preco as "Preco",
+	   c.nome as "Categoria"
+from produto p 
+inner join categoria c 
+on p.id_Categoria = c.idCategoria 
+go	   
+
+
+
+
+-- TRIGGER
+
+create trigger trg_controle_registro
+on dbo.produto
+for update as
+if (update preco) 
+begin 
+
+	declare @nomeProduto varchar(30)
+	declare @nomeCategoria varchar(30)
+	declare @precoAntigo numeric(6,2)
+	declare @precoNovo numeric(6,2)
+	declare @idCategoria int 
+	declare @horario datetime 
+	declare @usuario varchar(30)
+	declare @detalhe varchar(100)
+
+	--Valores vindos de tabelas são atribuidos pelo select 
+	select @nomeProduto = nome from inserted
+	select @idCategoria = id_Categoria from inserted 
+	select @precoAntigo = preco from deleted
+	select @precoNovo = preco from inserted 
+	
+	--valores de retorno de funções e literais são atribuidos pelo set 
+	set @nomeCategoria = (select nome from categoria  where idCategoria = @idCategoria)
+	set @horario = getdate()
+	set @usuario = suser_name()
+	set @detalhe = 'trg_controle_registro data'
+	
+	insert into registro (nomeProduto,nomeCategoria,precoAntigo,precoNovo,idCategoria,horario,usuario,detalhe) 
+	values (@nomeProduto,@nomeCategoria,@precoAntigo,@precoNovo,@idCategoria,@horario,@usuario,@detalhe)
+	
+	print 'trg_controle_registro executada'
+end
+go
+
+-- query 
+select nomeProduto,nomeCategoria,precoAntigo,precoNovo,idCategoria,horario,usuario,detalhe from registro 
+go
+
+select idProduto,nome,preco,id_Categoria from produto
+go
+
+
+/* Refatorando a trigger */
+drop trigger trg_controle_registro
+go
