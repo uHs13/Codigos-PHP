@@ -11,6 +11,12 @@
 
 	<main>
 
+		<section class='form-title'>
+
+			<h1>Editar Usuário</h1>
+
+		</section>
+
 		<form method="POST" class='search-form'>
 		
 			<input type="text" name="search" placeholder='E-mail'>
@@ -19,14 +25,7 @@
 
 		</form>
 
-		<a href="../index.html">Voltar</a>
-
-	</main>
-
-</body>
-
-</html>
-<?php 
+		<?php 
 
 require_once "../config/Autoloader.php";
 Autoloader::register();
@@ -135,3 +134,14 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){//Se os dados vêm do formulário de p
 
 
 ?>
+
+
+		<a href="../index.html">Voltar</a>
+
+
+
+	</main>
+
+</body>
+
+</html>

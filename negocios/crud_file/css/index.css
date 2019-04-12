@@ -1,10 +1,14 @@
 
 body{
 
-	background-color: #fafafa;
+	/*background-color: #fafafa;*/
 	font-family: 'Raleway';
 	margin:0;
 	padding:0;
+	background: url(../_res/csvimg.png) no-repeat;
+	background-position: 50% 0%;
+	
+
 
 }
 
@@ -16,6 +20,7 @@ main{
 	width:100%;
 	position:absolute;
 	top:40%;
+
 	
 }
 
