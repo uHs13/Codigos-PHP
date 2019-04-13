@@ -41,7 +41,7 @@ class GraphicDesign{
 		$fontColor = imagecolorallocate($this->getImage(), 130, 0, 41);
 
 		// imagestring($this->getImage(), 5, /*esquerda*/120,/*topo*/ 100, utf8_decode($content), $fontColor);
-
+									//tamanho da fonte,angulo de inclinação,esquerda,topo  
 		imagettftext($this->getImage(), 10, 0, 120, 100, $fontColor, __DIR__.DIRECTORY_SEPARATOR."fonts".DIRECTORY_SEPARATOR."Bevan".DIRECTORY_SEPARATOR."Bevan-Regular.ttf", $content);
 		
 		imagettftext($this->getImage(), 10, 0, 120, 120, $fontColor, __DIR__.DIRECTORY_SEPARATOR."fonts".DIRECTORY_SEPARATOR."Bevan".DIRECTORY_SEPARATOR."Bevan-Regular.ttf", date('d/m/Y'));
