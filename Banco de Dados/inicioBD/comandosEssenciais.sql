@@ -1891,12 +1891,14 @@ go
 
 -- TRIGGER
 
+--bloco de programação nomeado
 create trigger trg_controle_registro
 on dbo.produto
 for update as
-if (update preco) 
+if update (preco) 
 begin 
-
+	
+	--bloco de declaração de variáveis
 	declare @nomeProduto varchar(30)
 	declare @nomeCategoria varchar(30)
 	declare @precoAntigo numeric(6,2)
@@ -1905,6 +1907,8 @@ begin
 	declare @horario datetime 
 	declare @usuario varchar(30)
 	declare @detalhe varchar(100)
+	
+	--bloco de atibuição de valores 
 
 	--Valores vindos de tabelas são atribuidos pelo select 
 	select @nomeProduto = nome from inserted
@@ -1935,4 +1939,178 @@ go
 
 /* Refatorando a trigger */
 drop trigger trg_controle_registro
+go
+
+-- OBS
+/*
+	A trigger é um exemplo de bloco de programação nomeado, pois ela recebe um identificador ( nome ) e é salva no banco.
+	Um bloco de programação anônimo só é executado uma vez e não é armazenado no banco 
+
+*/
+
+--bloco anônimo 
+
+declare
+	@resultado int 
+	select @resultado = (select 13*13) 
+	print 'Resultado:'+cast(@resultado as varchar)
+	go
+	
+-- FIM OBS
+
+create table funcionario (
+	
+	idFuncionario int identity,
+	nome varchar(30) not null,
+	salario money not null,
+	idGerente int 
+
+) 
+go
+
+-- constraints 
+alter table funcionario 
+add constraint FK_FUNCIONARIO_GERENTE 
+foreign key (idGerente) references funcionario(idFuncionario) 
+go 
+
+alter table funcionario 
+add constraint PK_FUNCIONARIO 
+primary key (idFuncionario)
+go
+
+-- insert 
+insert into funcionario (nome,salario) values ('Joaquim',2876.33) 
+insert into funcionario (nome,salario) values ('Francisca',3214.69) 
+insert into funcionario (nome,salario,idGerente) values ('Alfredo',2200.00,2) 
+insert into funcionario (nome,salario,idGerente) values ('Marina',2345.90,1)
+go
+
+--query 
+ 
+select f.nome as 'Nome',
+	      f.salario as 'Salario',
+	      isnull(fs.nome,'---') as 'GERENTE' -- conversão de int para varchar 
+from funcionario f
+left join funcionario fs 
+on  f.idGerente = fs.idFuncionario
+go
+
+create table hist_salario(
+	
+	idHist_salario int identity,
+	nome varchar(30) not null,
+	salarioAn money not null,
+	salarioNv money not null, 
+	data_hora datetime 
+)
+go
+
+
+--constraints 
+alter table hist_salario 
+add constraint PK_HIST_SALARIO 
+primary key (idHist_salario)
+go 
+
+
+create trigger trg_att_salario 
+on dbo.funcionario 
+for update as 
+if update(salario) 
+begin 
+	
+	insert into hist_salario (nome,salarioAn,salarioNv,data_hora)
+	select d.nome,d.salario,i.salario,getdate() 
+	from deleted d 
+	inner join inserted i 
+	on d.idFuncionario = i.idFuncionario 
+	print 'trg_att_salario executada'
+	
+end 
+go
+
+update funcionario 
+set salario*=1.1 
+where salario < 3000 
+go -- afeta marina, alfredo e joaquim 
+
+
+--query 
+select idHist_salario, nome,salarioAn,salarioNv,data_hora from hist_salario 
+go
+
+
+create table range_salario(
+	
+	idRange_salario int identity,
+	piso money,
+	teto money
+
+)
+go
+
+--constraint
+alter table range_salario 
+add constraint PK_RANGE_SALARIO 
+primary key (idRange_salario)
+go
+
+--insert 
+insert into range_salario (piso,teto) values (998.00,4000) 
+go
+
+/* trigger de controle de salário */
+create trigger trg_controla_salario
+on dbo.funcionario 
+for insert,update
+as
+	declare
+		@mins money,
+		@maxs money,
+		@curr money 
+	
+	select @mins = piso, @maxs = teto from range_salario 
+	
+	select @curr = i.salario 
+	from inserted i 
+	
+	
+	
+	if(@curr < @mins)
+	begin 
+		
+		raiserror('Salario menor que o piso',16,1)
+		rollback transaction
+			
+	end 
+	
+	if(@curr > @maxs)
+	begin 
+		
+		raiserror('Salario maior que o teto',16,1)
+		rollback transaction
+		
+	end 
+	print 'trg_controla_salario executada'
+go
+
+update funcionario 
+set salario = 9970 
+where idFuncionario = 1
+go
+
+update funcionario 
+set salario = 997
+where idFuncionario = 1
+go
+
+select idFuncionario,nome,salario from funcionario 
+go
+
+
+/* Verificando o código de uma trigger */
+SP_HELPTEXT nomeTrigger
+
+SP_HELPTEXT trg_controla_salario
 go
