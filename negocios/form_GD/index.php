@@ -27,7 +27,7 @@
 
 				<input type="text" name="officer" placeholder="Registro" required>
 
-				<textarea name='incident' placeholder="Incidente"></textarea>
+				<textarea name='incident' placeholder="Incidente" required></textarea>
 
 				<button>Enviar</button>
 

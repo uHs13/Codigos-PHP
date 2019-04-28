@@ -1,0 +1,15 @@
+{
+    "name": "uhs13/composer",
+    "description": "first steps in composer",
+    "type": "project",
+    "authors": [
+        {
+            "name": "uHs13",
+            "email": "heitorhenriquedias@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "monolog/monolog":"1.0.*"
+    }
+}

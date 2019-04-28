@@ -79,7 +79,7 @@ textarea:hover{
 
 }
 
-textarea:focus{
+textarea:focus,textarea:valid{
 
 	height: 200px;
 	transition: height 0.4s ease-in-out;

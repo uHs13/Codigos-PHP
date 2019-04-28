@@ -1506,7 +1506,7 @@ go
 
 /* Arquitetura 
 
-	 Como se coportam os arquivos que compo~em o banco de dados
+	 Como se coportam os arquivos que compõem o banco de dados
 	 
 	 NOME LÓGICO : nome que vemos o arquivo no management studio
 	 NOME DO ARQUIVO ( FÍSICO ) : como está salvo no HD
@@ -2060,6 +2060,8 @@ go
 insert into range_salario (piso,teto) values (998.00,4000) 
 go
 
+-- TRIGGER 
+
 /* trigger de controle de salário */
 create trigger trg_controla_salario
 on dbo.funcionario 
@@ -2110,7 +2112,357 @@ go
 
 
 /* Verificando o código de uma trigger */
-SP_HELPTEXT nomeTrigger
+SP_HELPTEXT nomeTrigger ou nomeProcedure 
+go
 
 SP_HELPTEXT trg_controla_salario
 go
+
+-- substring 
+select substring('frase',1,5) as 'substring' /* A primeira posição da string é 1 */
+go
+
+-- projetar todos os bancos de uma instância sql server 
+select name, database_id, create_date 
+from sys.databases
+go
+
+-- projetar todas as tabelas de determinado banco
+select table_catalog,
+	   table_schema,
+	   table_name,
+	   table_type 
+from information_schema.tables
+where table_catalog = 'school'
+go
+
+
+-- PROCEDURE ( Stored procedures )
+
+use school 
+
+-- tabelas --
+create table pessoa(
+
+	idPessoa int identity,
+	nome varchar(30) not null,
+	sexo char(1) not null,
+	nascimento date not null  -- formato padrão ano-mes-dia
+
+)
+go
+
+create table telefone(
+
+	idTelefone int identity,
+	ddd varchar(3) not null,
+	tipo char(3) not null,
+	numero varchar(10) not null,
+	id_Pessoa int
+
+)
+go
+
+-- constraints  --
+
+--pessoa
+alter table pessoa
+add constraint PK_PESSOA
+primary key (idPessoa)
+go 
+
+alter table pessoa 
+add constraint CK_SEXO 
+check (sexo in('m','f'))
+go 
+
+--telefone 
+alter table telefone 
+add constraint PK_TELEFONE 
+primary key (idTelefone)
+go 
+
+alter table telefone 
+add constraint CK_TIPO 
+check (tipo in('cel','com','res'))
+go 
+
+alter table telefone
+add constraint FK_TELEFONE_PESSOA 
+foreign key (id_Pessoa) references pessoa(idPessoa)
+go
+
+-- inserts -- 
+
+/*
+pt.fakenamegenerator.com 
+http://www.geradordepessoas.com.br
+
+*/
+
+--pessoa
+insert into pessoa (nome,sexo,nascimento) values ('Jeans Daecher','m','1960-06-30')
+insert into pessoa (nome,sexo,nascimento) values ('Amedeo Piazza','m','1941-06-02')
+insert into pessoa (nome,sexo,nascimento) values ('Malene S. Ericksen','f','1969-04-12')
+insert into pessoa (nome,sexo,nascimento) values ('Majer Virag','f','1998-02-15') 
+go
+
+-- telefone 
+insert into telefone (ddd,tipo,numero,id_Pessoa) values ('61','cel','97802-9412',1)
+insert into telefone (ddd,tipo,numero,id_Pessoa) values ('19','res','9961-9536',2)
+insert into telefone (ddd,tipo,numero,id_Pessoa) values ('11','cel','95297-3702',3)
+insert into telefone (ddd,tipo,numero,id_Pessoa) values ('82','res','9572-0271',4)
+go
+
+--query 
+select p.nome,
+	   p.sexo,
+	   p.nascimento,
+	   t.ddd,
+	   t.tipo,
+	   t.numero
+from pessoa p 
+inner join telefone t 
+on p.idPessoa = t.id_Pessoa 
+go
+
+
+
+-- criando procedures 
+create proc nome_procedure 
+as 
+  ...
+go 
+
+create proc conta 
+as 
+	select 10 + 10 as 'soma'
+go 
+
+create proc somar @num1, @num2 
+as 
+	select @num1 + @num2  as 'soma'
+go 
+
+-- chamando procedures 
+exec nome_procedure 
+go 
+
+exec conta 
+go 
+
+exec somar 44, 53
+go 
+
+-- apagando procedures
+drop proc nome_procedure 
+go
+drop proc conta 
+go
+drop proc somar 
+go 
+
+-- procedure para trazer os dados de pessoa e telefone relacionados 
+-- parâmetros de input
+
+create proc showData 
+as 
+		select p.nome,
+		   p.sexo,
+		   p.nascimento,
+		   t.ddd,
+		   t.tipo,
+		   t.numero
+	from pessoa p 
+	inner join telefone t 
+	on p.idPessoa = t.id_Pessoa 
+go
+
+exec showData 
+go 
+
+/*
+
+nome                           sexo nascimento ddd  tipo numero
+------------------------------ ---- ---------- ---- ---- ----------
+Jeans Daecher                  m    1960-06-30 61   cel  97802-9412
+Amedeo Piazza                  m    1941-06-02 19   res  9961-9536
+Malene S. Ericksen             f    1969-04-12 11   cel  95297-3702
+Majer Virag                    f    1998-02-15 82   res  9572-0271
+
+
+*/
+
+
+-- mostra os numeros do tipo passado como parâmetro 
+create proc showNumber @typeN char(3) 
+as 
+		select p.nome,
+		   p.sexo,
+		   p.nascimento,
+		   t.ddd,
+		   t.tipo,
+		   t.numero
+	from pessoa p 
+	inner join telefone t 
+	on p.idPessoa = t.id_Pessoa 
+	where t.tipo = @typeN 
+go
+
+exec showNumber 'cel'
+go
+
+/*
+
+nome                           sexo nascimento ddd  tipo numero
+------------------------------ ---- ---------- ---- ---- ----------
+Jeans Daecher                  m    1960-06-30 61   cel  97802-9412
+Malene S. Ericksen             f    1969-04-12 11   cel  95297-3702
+
+*/
+
+exec showNumber 'res'
+go
+
+/*
+
+nome                           sexo nascimento ddd  tipo numero
+------------------------------ ---- ---------- ---- ---- ----------
+Amedeo Piazza                  m    1941-06-02 19   res  9961-9536
+Majer Virag                    f    1998-02-15 82   res  9572-0271
+
+*/
+
+create proc showNumber_S @sexo char(1)
+as
+	select p.nome,
+		   p.sexo,
+		   p.nascimento,
+		   t.ddd,
+		   t.tipo,
+		   t.numero
+	from pessoa p 
+	inner join telefone t 
+	on p.idPessoa = t.id_Pessoa 
+	where p.sexo = @sexo 
+go 
+
+exec showNumber_S 'f'
+
+/*
+
+nome                           sexo nascimento ddd  tipo numero
+------------------------------ ---- ---------- ---- ---- ----------
+Malene S. Ericksen             f    1969-04-12 11   cel  95297-3702
+Majer Virag                    f    1998-02-15 82   res  9572-0271
+
+*/
+
+exec showNumber_S 'm'
+
+/*
+
+nome                           sexo nascimento ddd  tipo numero
+------------------------------ ---- ---------- ---- ---- ----------
+Jeans Daecher                  m    1960-06-30 61   cel  97802-9412
+Amedeo Piazza                  m    1941-06-02 19   res  9961-9536
+
+*/
+
+-- parâmetros de output  
+
+-- essa query retorna os tipos de numero salvos na tabela telefone e as quantidades de cada um 
+select tipo, count(tipo) as 'Quantidade' from telefone
+group by tipo
+go
+
+-- procedure que retorna a quantidade de numeros de determinado tipo
+create procedure getTipo @tipo char(3), @resultado int output 
+as 
+
+	select @resultado =  count(tipo) 
+	from telefone 
+	where tipo=@tipo
+
+go
+
+declare @saida int 
+exec getTipo @tipo = 'cel', @resultado = @saida output
+select @saida as 'Quantidade'
+go
+
+-- executando getTipo
+declare @saida int 
+exec getTipo 'res',@saida output -- a palavra reservada output é necessária na chamada da procedure
+select @saida as 'Quantidade'
+go
+
+/*
+
+Quantidade
+-----------
+2
+	
+*/
+
+-- procedure que retorna a quantidade de pessoas de determinado sexo 
+create proc getSexo @sexo char(1), @resultado int output
+as 
+	select @resultado = count(sexo) from pessoa 
+	where sexo= @sexo 
+go
+
+-- executando getSexo 
+declare @quantidade int 
+exec getSexo 'f', @quantidade output 
+select @quantidade as 'numero de pessoas'
+go
+
+/*
+
+numero de pessoas
+-----------------
+2
+
+*/
+
+
+-- procedure de cadastro de pessoa e telefone ao mesm o tempo 
+
+select @@identity -- retorna o último indice inserido na sessão
+go
+
+create proc cadastro @nome varchar(30), @sexo char(3), @nascimento date,
+					 @ddd varchar(3), @tipo char(3), @numero varchar(10) 
+as 
+
+		declare @FK int 
+		
+		insert into pessoa(nome,sexo,nascimento) values (@nome, @sexo, @nascimento)
+		
+		-- set é utilizado para valores literais e retornos de funções 
+		-- atribui o último indice atribuido na sessão (última inserção na tabela pessoa) a FK 
+		set @FK = (select idPessoa from pessoa where idPessoa = @@identity)
+	    
+		insert into telefone (ddd,tipo,numero,id_Pessoa) values (@ddd,@tipo,@numero,@FK)
+		
+go
+
+
+exec cadastro 'Heitor Souza','m','2000-08-29','31','cel','996584702'
+go
+
+exec showData
+go
+
+/*
+nome                           sexo nascimento ddd  tipo numero
+------------------------------ ---- ---------- ---- ---- ----------
+Jeans Daecher                  m    1960-06-30 61   cel  97802-9412
+Amedeo Piazza                  m    1941-06-02 19   res  9961-9536
+Malene S. Ericksen             f    1969-04-12 11   cel  95297-3702
+Majer Virag                    f    1998-02-15 82   res  9572-0271
+Heitor Souza                   m    2000-08-29 31   cel  996584702
+*/
+
+
