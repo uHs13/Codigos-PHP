@@ -1,6 +1,16 @@
 <?php 
 
-require_once __DIR__."/vendor/autoload.php";
+use phpmailer\phpmailer\PHPMailer;
+
+use phpmailer\phpmailer\Exception;
+
+
+
+require_once "vendor/phpmailer/phpmailer/src/Exception.php";
+
+require_once "vendor/phpmailer/phpmailer/src/PHPMailer.php";
+
+require_once "vendor/phpmailer/phpmailer/src/SMTP.php";
 
 //Create a new PHPMailer instance
 $mail = new PHPMailer;
@@ -11,6 +21,8 @@ $mail->isSMTP();
 // 1 = client messages
 // 2 = client and server messages
 $mail->SMTPDebug = 2;
+
+
 //Set the hostname of the mail server
 $mail->Host = 'smtp.gmail.com';
 // use
@@ -18,29 +30,37 @@ $mail->Host = 'smtp.gmail.com';
 // if your network does not support SMTP over IPv6
 //Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
 $mail->Port = 587;
+
+$mail->SMTPOptions = array(
+    'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+    )
+);
 //Set the encryption system to use - ssl (deprecated) or tls
 $mail->SMTPSecure = 'tls';
 //Whether to use SMTP authentication
 $mail->SMTPAuth = true;
 //Username to use for SMTP authentication - use full email address for gmail
-$mail->Username = "bilada1313@gmail.com";
+$mail->Username = "email_que_vai_enviar";
 //Password to use for SMTP authentication
-$mail->Password = "HeitorSouza13";
+$mail->Password = "senha";
 //Set who the message is to be sent from
-$mail->setFrom('bilada1313@gmail.com', 'Heitor Souza');
+$mail->setFrom('email_que_vai_enviar', 'alias');
 //Set an alternative reply-to address
 //$mail->addReplyTo('replyto@example.com', 'First Last');
 //Set who the message is to be sent to
-$mail->addAddress('whoto@example.com', 'John Doe');
+$mail->addAddress('destinatario', 'alias');
 //Set the subject line
-$mail->Subject = 'PHPMailer GMail SMTP test';
+$mail->Subject = 'E-mail teste';
 //Read an HTML message body from an external file, convert referenced images to embedded,
 //convert HTML into a basic plain-text alternative body
 $mail->msgHTML(file_get_contents('contents.html'), __DIR__);
 //Replace the plain text body with one created manually
-$mail->AltBody = 'This is a plain-text message body';
+$mail->AltBody = 'E-mail teste';
 //Attach an image file
-$mail->addAttachment('images/phpmailer_mini.png');
+//$mail->addAttachment('images/phpmailer_mini.png');
 //send the message, check for errors
 if (!$mail->send()) {
     echo "Mailer Error: " . $mail->ErrorInfo;

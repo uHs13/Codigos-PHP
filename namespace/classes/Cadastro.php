@@ -1,5 +1,6 @@
 <?php  
 class Cadastro{//Nome da classe igual ao nome do arquivo;
+	
 	private $nome;//variável tem que ter $;
 	private $email;
 	private $senha;
