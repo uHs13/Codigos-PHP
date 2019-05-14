@@ -2467,3 +2467,48 @@ Heitor Souza                   m    2000-08-29 31   cel  996584702
 */
 
 
+/* TSQL */
+/* 
+	Transact-SQL é um bloco de programação que pode ser nomeado ou anônimo.
+	A diferença entre os dois tipo é que o bloco anônimo não é salvo no banco,
+	ele é apenas executado.
+*/
+
+-- Blocos TSQL 
+
+begin 
+
+end 
+go
+
+
+begin 
+	print 'Daria um filme'
+end
+go
+
+-- bloco de atribuição de variáveis 
+declare
+	@music varchar(30) 
+begin 
+	set @music = 'Capítulo 4 versículo 3'
+	print @music 
+end 
+go
+
+
+declare
+	@v_numerico numeric(10,2) = 113.13,
+	@v_data datetime = '20190510'
+begin 
+	
+	print 'valor numerico ' + cast(@v_numerico as varchar)
+	print 'valor numerico ' + convert(varchar,@v_numerico)	-- mais usado na conversão de datas
+	
+	print 'valor data ' + cast(@v_data as varchar)
+	print 'valor data ' + convert(varchar,@v_data, 121) -- data  e hora completa (H:m:s:ms)
+	print 'valor data ' + convert(varchar,@v_data, 120)	-- data  e hora  (H:m:s)
+	print 'valor data ' + convert(varchar,@v_data, 105)	-- data em formato pt-BR
+
+end 
+go
