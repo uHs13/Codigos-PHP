@@ -2512,3 +2512,115 @@ begin
 
 end 
 go
+
+-- Atribuindo resultados a variáveis 
+
+create table carros(
+	
+	idCarros int identity,
+	modelo varchar(30) not null,
+	montadora varchar(30) not null
+		
+)
+go
+
+
+-- constraints
+alter table carros 
+add constraint PK_CARROS
+primary key (idCarros)
+go
+
+-- inserts 
+insert into carros(modelo,montadora) values ('Opala','Chevrolet')
+insert into carros(modelo,montadora) values ('Ômega','Chevrolet')
+insert into carros(modelo,montadora) values ('Uno','Fiat')
+insert into carros(modelo,montadora) values ('Palio','Fiat')
+insert into carros(modelo,montadora) values ('Mustang 68 GT','Ford')
+insert into carros(modelo,montadora) values ('Fusion','Ford')
+insert into carros(modelo,montadora) values ('Civic','Honda')
+insert into carros(modelo,montadora) values ('Corolla','Toyota')
+go
+
+-- query
+select idCarros,modelo,montadora from carros
+go
+
+-- procedure 
+create proc showCar 
+as
+		
+	select idCarros,modelo,montadora from carros
+	
+
+go
+
+exec showCar 
+go 
+
+create proc insertCar @modelo varchar(30), @montadora varchar(30)
+as
+	
+	insert into carros (modelo,montadora) values (@modelo,@montadora)
+	
+go
+
+exec insertCar 'Hilux','Toyota'
+go
+
+select count(idCarros) as 'Modelos Toyota' from carros where montadora='Toyota' 
+go
+
+-- atribuição de valor a variáveis
+
+--abrindo o bloco anônimo T-SQL 
+declare
+	
+	@v_cont_Chevrolet int,
+	@v_cont_Fiat int,
+	@v_cont_Ford int,
+	@v_cont_Honda int,
+	@v_cont_Toyota int,
+	@v_cont_total int
+	
+begin
+	/* método 1 - O select tem que retornar um simples coluna e um único resultado*/
+	-- o set atribui a variável o resultado de uma query
+	set @v_cont_Chevrolet = (select count(idCarros) from carros where montadora='Chevrolet')
+	set @v_cont_Fiat = (select count(idCarros) from carros where montadora='Fiat')
+	set @v_cont_Ford = (select count(idCarros) from carros where montadora='Ford')
+	set @v_cont_Honda = (select count(idCarros) from carros where montadora='Honda')
+	set @v_cont_Toyota = (select count(idCarros) from carros where montadora='Toyota')
+	set @v_cont_total = (select count(idCarros) from carros)
+	
+	print 'MÉTODO 1:'
+	print 'Modelos Chevrolet: '+ cast(@v_cont_Chevrolet as varchar)
+	print 'Modelos Fiat: '+ cast(@v_cont_Fiat as varchar)
+	print 'Modelos Ford: '+ cast(@v_cont_Ford as varchar)
+	print 'Modelos Honda: '+ cast(@v_cont_Honda as varchar)
+	print 'Modelos Toyota: '+ cast(@v_cont_Toyota as varchar)
+	print 'Total de carros: '+ cast(@v_cont_total as varchar) + char(13)+char(10)
+		
+		
+	/* método 2 -  Utilizamos a variável dentro do select para definir o seu valor*/
+	
+	select @v_cont_Chevrolet = count(idCarros) from carros where montadora='Chevrolet'
+	select @v_cont_Fiat = count(idCarros)from carros where montadora='Fiat'
+	select @v_cont_Ford = count(idCarros)from carros where montadora='Ford'
+	select @v_cont_Honda = count(idCarros)from carros where montadora='Honda'
+	select @v_cont_Toyota = count(idCarros)from carros where montadora='Toyota'
+	select @v_cont_total = count(idCarros) from carros
+			
+	print 'MÉTODO 2:'
+	print 'Modelos Chevrolet: '+ cast(@v_cont_Chevrolet as varchar)
+	print 'Modelos Fiat: '+ cast(@v_cont_Fiat as varchar)
+	print 'Modelos Ford: '+ cast(@v_cont_Ford as varchar)
+	print 'Modelos Honda: '+ cast(@v_cont_Honda as varchar)
+	print 'Modelos Toyota: '+ cast(@v_cont_Toyota as varchar)
+	print 'Total de carros: '+ cast(@v_cont_total as varchar)
+	
+end
+go 
+--fechando o bloco anônimo T-SQL
+
+
