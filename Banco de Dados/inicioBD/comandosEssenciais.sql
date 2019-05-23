@@ -2624,3 +2624,71 @@ go
 --fechando o bloco anônimo T-SQL
 
 
+/* IF E ELSE */
+
+declare
+	@numero int = 101
+begin
+		if @numero % 2 = 0 
+			print 'É PAR'
+		else
+			print 'É IMPAR'
+		
+		if @numero >= 5 
+			print 'MAIOR OU IGUAL A 5'
+		else
+			print 'MENOR QUE 5'
+end 
+go
+
+
+/* CASE */
+ -- O case representa uma coluna 
+begin 
+	
+	select 
+	case 
+		when montadora = 'Fiat' then  'FIAT'
+		when montadora = 'Chevrolet' then 'CHEVROLET'
+		when montadora = 'Ford' then  'FORD'
+		else  'OUTRAS'
+	end as 'INFORMAÇÕES',
+	modelo,
+	montadora
+	from carros 
+end 
+go
+
+
+
+create proc verificaNumero @p_numero int 
+as
+begin
+		if @p_numero % 2 = 0 
+			print 'É PAR'
+		else
+			print 'É IMPAR'
+		
+		if @p_numero >= 5 
+			print 'MAIOR OU IGUAL A 5'
+		else
+			print 'MENOR QUE 5'
+end 
+go
+
+exec verificaNumero 5 
+go 
+
+/* WHILE */
+create proc incrementar @num int
+as
+declare 
+@n = @num+10 
+begin 
+	while (@num < @n)
+	begin 
+		print 'valor do numero: '+ cast(@num as varchar)
+		set @num=@num+1
+	end
+end 
+go
