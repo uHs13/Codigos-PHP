@@ -1472,6 +1472,8 @@ begin
 end
 $	
 
+--select user(); mostra o usuário atual no mysql
+
 /* SQL SERVER*/
 
 -- comentário é a mesma coisa /**/ -- 

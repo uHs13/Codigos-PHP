@@ -3,6 +3,7 @@
 class Sql extends PDO{
 
 	private $connection;
+	public $errorArray = array();
 
 	public function __construct(){
 
@@ -32,7 +33,11 @@ class Sql extends PDO{
 
 		$this->setParameters($statement,$parameters);//Chamamos o método da nossa classe que vincula os parâmetros da query com os seus respectivos valores;
 
-		$statement->execute();
+		if(!$statement->execute()){
+				
+			$this->errorArray = $statement->errorInfo();//retorna um log com o erro ocorrido
+			return false;	
+		}
 
 		return $statement;
 
@@ -68,7 +73,10 @@ class Sql extends PDO{
 	//declaração de tipo de retorno da função;
 
 		$dataSet = $this->query($rawQuery,$parameters);
-
+		
+		//caso ocorra algum erro é retornado o log do mesmo
+		if(!$dataSet) return $this->errorArray;
+		
 		return $dataSet->fetchAll(PDO::FETCH_ASSOC);
 
 	}//Fim select
