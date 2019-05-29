@@ -8,7 +8,11 @@ $app->config('debug', true);//configurando como true mostra o log completo do er
 
 $app->get('/', function() {
    
-   
+   $sql = new Hcode\DB\Sql();
+
+   $results = $sql->select('SELECT * FROM tb_users');
+
+   echo json_encode($results);
 	
 });
 
