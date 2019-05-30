@@ -2,18 +2,19 @@
 
 require_once("vendor/autoload.php");//require do autoloader do composer
 
-$app = new \Slim\Slim();//instancia uma nova aplicação slim
+use \Slim\Slim; 
+use Hcode\Page;
+
+$app = new Slim();//instancia uma nova aplicação slim
 
 $app->config('debug', true);//configurando como true mostra o log completo do erro
 
 $app->get('/', function() {
    
-   $sql = new Hcode\DB\Sql();
+   	$page = new Page();
 
-   $results = $sql->select('SELECT * FROM tb_users');
-
-   echo json_encode($results);
-	
+   	$page->setTpl("index");
+   
 });
 
 $app->run();
