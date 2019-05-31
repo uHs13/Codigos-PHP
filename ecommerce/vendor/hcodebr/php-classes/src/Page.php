@@ -25,7 +25,7 @@ class Page
 
 
 	//as variáveis que serão adicionadas as páginas vão variar de acordo com a rota, logo precisamos recebê-las como parâmetro de inicialização do objeto
-	public function __construct($opts = array()) // Primeiro método a ser executado na classe
+	public function __construct($opts = array(), $tpl_dir = "/views/") // Primeiro método a ser executado na classe
 	{
 		//array_merge -> função que junta dois arrays. Sobreescreve o primeiro com os dados passados no segundo e retorna o novo array ( Semelhante ao Object.assign do JavaScript ) 
 		$this->options =  array_merge($this->defaults, $opts);
@@ -35,7 +35,7 @@ class Page
 		// config
 		$config = array(//configurando as opções do RainTpl
 			
-			"tpl_dir"   => $path."/views/",//pasta onde o rain vai procurar os arquivos HTML
+			"tpl_dir"   => $path.$tpl_dir,//pasta onde o rain vai procurar os arquivos HTML
 			"cache_dir" => $path."/views-cache/",//página de cache onde o rain armazena os templates já com php
 			"debug"     => false // set to false to improve the speed
 		
