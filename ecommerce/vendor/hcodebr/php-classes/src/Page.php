@@ -19,7 +19,8 @@ class Page
 		'data'=> [
 
 		],
-
+		'header'=>true,//opções que vão controlar se o carregamento dos templates do header e footer vão acontecer
+		'footer'=>true
 
 	];
 
@@ -49,7 +50,7 @@ class Page
 		$this->setData($this->options["data"]);
 
 		//draw recebe o nome do arquivo que vamos carregar
-		$this->tpl->draw("header");//arquivo que está dentro da pasta views
+		if($this->options['header']) $this->tpl->draw("header");//arquivo que está dentro da pasta views
 
 	}
 
@@ -87,7 +88,7 @@ class Page
 	public function __destruct() // último método a ser executado
 	{
 
-		$this->tpl->draw("footer");//arquivo que está dentro da pasta views
+		if($this->options['footer']) $this->tpl->draw("footer");//arquivo que está dentro da pasta views
 
 	}
 

@@ -2,7 +2,7 @@
 
 namespace Hcode\DB;
 				  
-				  //Tem que colocar \ em todo lugar que aparece PDO ( porque? boa pergunta... )
+				  //Tem que colocar \ em todo lugar que aparece PDO porque essa classe está no namespace principal do PHP e não no Hcode\DB.
 class Sql extends \PDO{
 
 	private $connection;
