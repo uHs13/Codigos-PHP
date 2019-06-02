@@ -43,22 +43,22 @@ $mail->SMTPSecure = 'tls';
 //Whether to use SMTP authentication
 $mail->SMTPAuth = true;
 //Username to use for SMTP authentication - use full email address for gmail
-$mail->Username = "email_que_vai_enviar";
+$mail->Username = "email remetente";
 //Password to use for SMTP authentication
-$mail->Password = "senha";
+$mail->Password = "senha remetente";
 //Set who the message is to be sent from
-$mail->setFrom('email_que_vai_enviar', 'alias');
+$mail->setFrom('remetente','alias');
 //Set an alternative reply-to address
 //$mail->addReplyTo('replyto@example.com', 'First Last');
 //Set who the message is to be sent to
-$mail->addAddress('destinatario', 'alias');
+$mail->addAddress('destinatário', 'alias');
 //Set the subject line
-$mail->Subject = 'E-mail teste';
+$mail->Subject = 'Assunto do E-mail';
 //Read an HTML message body from an external file, convert referenced images to embedded,
 //convert HTML into a basic plain-text alternative body
 $mail->msgHTML(file_get_contents('contents.html'), __DIR__);
 //Replace the plain text body with one created manually
-$mail->AltBody = 'E-mail teste';
+$mail->AltBody = 'Corpo do Email';
 //Attach an image file
 //$mail->addAttachment('images/phpmailer_mini.png');
 //send the message, check for errors

@@ -71,14 +71,91 @@ class User extends Model
 
 	}// verifyLogin()
 
-	public static function logout()
+	public static function logout()//métooo para encerrar a sessão do usuário
 	{
 
 		$_SESSION[User::SESSION] = NULL;
 
+	}// logout()
+
+	public static function listAll()//método que retorna todos os usuários cadastrados no banco
+	{
+
+		$sql = new Sql();
+
+		return $sql->select("SELECT * FROM tb_users u INNER JOIN tb_persons p ON u.idperson = p.idperson ORDER BY p.desperson");
+
+	}// listAll()
+
+	public function save()//método para salvar um usuário no banco
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select('CALL sp_users_save(:pdesperson,:pdeslogin,:pdespassword,:pdesemail,:pnrphone,:pinadmin)',array(
+
+			':pdesperson'=>$this->getdesperson(),
+			':pdeslogin'=>$this->getdeslogin(),
+			':pdespassword'=>$this->getdespassword(),
+			':pdesemail'=>$this->getdesemail(),
+			':pnrphone'=>$this->getnrphone(),
+			':pinadmin'=>$this->getinadmin()
+
+		));
+
+		$this->setData($results[0]);
+
+	}// save()
+
+	public function get($iduser)
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select('SELECT * FROM tb_users u INNER JOIN tb_persons p ON u.idperson = p.idperson WHERE u.iduser = :iduser', array(
+
+			':iduser'=>$iduser
+		));
+
+		// var_dump($results);
+
+		$this->setData($results[0]);
+
+	}// get()
+
+	public function update()
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select('CALL sp_usersupdate_save(:piduser,:pdesperson,:pdeslogin,:pdespassword,:pdesemail,:pnrphone,:pinadmin)',array(
+			':piduser'=>$this->getiduser(),
+			':pdesperson'=>$this->getdesperson(),
+			':pdeslogin'=>$this->getdeslogin(),
+			':pdespassword'=>$this->getdespassword(),
+			':pdesemail'=>$this->getdesemail(),
+			':pnrphone'=>$this->getnrphone(),
+			':pinadmin'=>$this->getinadmin()
+
+		));
+
+		$this->setData($results[0]);
+
+	}// update()
+
+	public function delete()
+	{
+
+		$sql = new Sql();
+
+		//usando o método query porque não é necessário retornar nada
+		$sql->query("CALL sp_users_delete(:p_iduser)",array(
+
+			":p_iduser"=>$this->getiduser()
+
+		));
+
 	}
-
-
 
 }
 
