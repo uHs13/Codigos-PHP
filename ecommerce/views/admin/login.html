@@ -67,7 +67,7 @@
     </div>
     <!-- /.social-auth-links -->
 
-    <a href="#">I forgot my password</a><br>
+    <a href="forgot">I forgot my password</a><br>
     <a href="register.html" class="text-center">Register a new membership</a>
 
   </div>
@@ -76,11 +76,11 @@
 <!-- /.login-box -->
 
 <!-- jQuery 2.2.3 -->
-<script src="../res/admin/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="http://localhost/PHP/ecommerce/res/admin/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="../res/admin/bootstrap/js/bootstrap.min.js"></script>
+<script src="http://localhost/PHP/ecommerce/res/admin/bootstrap/js/bootstrap.min.js"></script>
 <!-- iCheck -->
-<script src="../res/admin/plugins/iCheck/icheck.min.js"></script>
+<script src="http://localhost/PHP/ecommerce/res/admin/plugins/iCheck/icheck.min.js"></script>
 <script>
   $(function () {
     $('input').iCheck({

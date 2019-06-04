@@ -157,6 +157,43 @@ class User extends Model
 
 	}
 
+	public static function getForgot($email)
+	{
+
+		$sql = new Sql();
+
+		$result = $sql->select("
+			SELECT p.idperson,
+			p.desperson,
+			p.desemail,
+			p.nrphone,
+			p.dtregister,
+			u.iduser,
+			u.deslogin,
+			u.despassword,
+			u.inadmin,
+			u.dtregister
+			from tb_persons p
+			inner join tb_users u 
+			on p.idperson = u.idperson 
+			where p.desemail = :email;
+		", array(
+			":email"=>$email
+		));
+
+
+		if(count($results) === 0){
+			
+			throw new \Exception("Não foi possível recuperar a senha", 1);
+
+		}	
+
+
+
+
+
+	}// getForgot()
+
 }
 
 ?>

@@ -7,6 +7,7 @@ use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Model\User;
 
+
 $app = new Slim();//instancia uma nova aplicação slim
 
 $app->config('debug', true);//configurando como true mostra o log completo do erro
@@ -43,6 +44,7 @@ $app->get('/admin/login', function() {//ROTA DA PÁGINA DE LOGIN DA ADMINISTRAÇ
 
 	$page->setTpl("login");
 
+	
 });
 
 
@@ -145,6 +147,7 @@ $app->post('/admin/users/create', function(){//Rota para salvar um usuário no b
 
  	]);
 
+
  	/* VERIFICAR E ATRIBUIR O VALOR PARA A PERMISSÃO DE ADMIN */
  	$_POST['inadmin'] = (isset($_POST['inadmin']))?0:1;
 
@@ -174,6 +177,27 @@ $app->post('/admin/users/:iduser', function($iduser){//Rota para salvar alteraç
 
 	header("Location: ../users");
 	exit;
+
+});
+
+
+$app->get('/admin/forgot', function(){// Forgot about dre. Rota para tela de recuperação de senha
+
+	$page = new PageAdmin([
+		
+		"header"=>false,
+		"footer"=>false
+
+	]);
+
+	$page->setTpl("forgot");
+
+});
+
+
+$app->post('/admin/forgot', function(){
+
+	$user = User::getForgot($_POST['email']);
 
 });
 
