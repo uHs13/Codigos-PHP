@@ -9,6 +9,8 @@ class User extends Model
 {
 
 	const SESSION = "User";
+	define('SECRET', pack('a16','encryptpass'));
+	define('SECRET_IV', pack('a16','encryptpass'));
 
 	public static function login($login, $password)
 	{
@@ -182,15 +184,42 @@ class User extends Model
 		));
 
 
-		if(count($results) === 0){
+		if (count($results) === 0) {
 			
 			throw new \Exception("Não foi possível recuperar a senha", 1);
 
-		}	
+		} else {
+
+			$data = results[0];
+
+			$results2 = $sql->select('CALL sp_userspasswordsrecoveries(:piduser, :pdesip)', array(
+
+				":piduser"=>$data['iduser'],
+				":pdesip"=>$_SERVER['REMOTE_ADDR']
+
+			));
+
+			if (count($results2) === 0) {
+
+				throw new \Exception("Não foi possível recuperar a senha", 1);
+				
+			} else {
+
+				$dataRecoveries = $results2[0];
+
+				$code = base64_encode(openssl_encrypt(
+					$dataRecoveries['idrecovery'], 
+					'AES-128-CBC', 
+					SECRET, 
+					0, 
+					SECRET_IV
+				));
 
 
 
+			}
 
+		}
 
 	}// getForgot()
 
