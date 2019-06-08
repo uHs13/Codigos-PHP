@@ -1,16 +1,25 @@
 <?php 
 session_start();
+
 require_once("vendor/autoload.php");//require do autoloader do composer
+require_once("vendor/secrets.php");
 
 use \Slim\Slim; 
 use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Model\User;
+use Hcode\Mailer;
 
 
 $app = new Slim();//instancia uma nova aplicação slim
 
 $app->config('debug', true);//configurando como true mostra o log completo do erro
+
+$app->notfound(function () {// mensagem caso a rota não exista
+
+	echo json_encode(array('Info'=>'Page not found'));
+
+});
 
 $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
    
@@ -43,12 +52,11 @@ $app->get('/admin/login', function() {//ROTA DA PÁGINA DE LOGIN DA ADMINISTRAÇ
 	]);
 
 	$page->setTpl("login");
-
 	
 });
 
 
-$app->post('/admin/login', function(){// verifica o login e inicia a sessão
+$app->post('/admin/login', function () {// verifica o login e inicia a sessão
 
 	User::login($_POST['login'], $_POST['password']);
 
@@ -58,7 +66,7 @@ $app->post('/admin/login', function(){// verifica o login e inicia a sessão
 
 });
 
-$app->get('/admin/logout',function(){//rota para encerrar a sessão
+$app->get('/admin/logout', function () {//rota para encerrar a sessão
 
 	User::logout();
 
@@ -68,7 +76,7 @@ $app->get('/admin/logout',function(){//rota para encerrar a sessão
 });
 
 
-$app->get("/admin/users",function(){//Rota para listar todos os usuários
+$app->get("/admin/users", function () {//Rota para listar todos os usuários
 
 	User::verifyLogin();
 
@@ -79,11 +87,11 @@ $app->get("/admin/users",function(){//Rota para listar todos os usuários
 	$page->setTpl("users",array(
 		'users'=>$users
 	));
-
+ 
 });
 
 
-$app->get("/admin/users/create",function(){//Rota para criar um novo usuário
+$app->get("/admin/users/create", function () {//Rota para criar um novo usuário
 
 	User::verifyLogin();
 
@@ -94,7 +102,7 @@ $app->get("/admin/users/create",function(){//Rota para criar um novo usuário
 });
 
 
-$app->get('/admin/users/:iduser/delete', function($iduser){//Rota para deletar
+$app->get('/admin/users/:iduser/delete', function ($iduser) {//Rota para deletar
 
 	User::verifyLogin();
 
@@ -110,7 +118,7 @@ $app->get('/admin/users/:iduser/delete', function($iduser){//Rota para deletar
 });
 
 
-$app->get("/admin/users/:iduser",function($iduser){//Rota para atualizar um usuário
+$app->get("/admin/users/:iduser", function ($iduser) {//Rota para atualizar um usuário
 
 	User::verifyLogin();
 	
@@ -131,7 +139,7 @@ $app->get("/admin/users/:iduser",function($iduser){//Rota para atualizar um usu�
 });
 
 
-$app->post('/admin/users/create', function(){//Rota para salvar um usuário no banco
+$app->post('/admin/users/create', function () {//Rota para salvar um usuário no banco
 
 	User::verifyLogin();
 
@@ -147,11 +155,9 @@ $app->post('/admin/users/create', function(){//Rota para salvar um usuário no b
 
  	]);
 
-
- 	/* VERIFICAR E ATRIBUIR O VALOR PARA A PERMISSÃO DE ADMIN */
- 	$_POST['inadmin'] = (isset($_POST['inadmin']))?0:1;
-
 	$user->setData($_POST);
+
+	// var_dump($_POST);
 
 	$user->save();
 
@@ -162,7 +168,7 @@ $app->post('/admin/users/create', function(){//Rota para salvar um usuário no b
 });
 
 
-$app->post('/admin/users/:iduser', function($iduser){//Rota para salvar alterações em um usuário no banco
+$app->post('/admin/users/:iduser', function ($iduser) {//Rota para salvar alterações em um usuário no banco
 
 	User::verifyLogin();
 	
@@ -181,8 +187,8 @@ $app->post('/admin/users/:iduser', function($iduser){//Rota para salvar alteraç
 });
 
 
-$app->get('/admin/forgot', function(){// Forgot about dre. Rota para tela de recuperação de senha
-
+$app->get('/admin/forgot', function () {// Forgot about dre. Rota para tela de recuperação de senha
+ 
 	$page = new PageAdmin([
 		
 		"header"=>false,
@@ -195,9 +201,26 @@ $app->get('/admin/forgot', function(){// Forgot about dre. Rota para tela de rec
 });
 
 
-$app->post('/admin/forgot', function(){
+$app->post('/admin/forgot', function () {
 
 	$user = User::getForgot($_POST['email']);
+
+	header('Location: forgot/sent');
+	exit;
+	
+});
+
+
+$app->get('/admin/forgot/sent', function () {
+
+	$page = new PageAdmin([
+		
+		"header"=>false,
+		"footer"=>false
+
+	]);
+
+	$page->setTpl("forgot-sent");
 
 });
 

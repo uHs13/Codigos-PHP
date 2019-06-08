@@ -1,16 +1,17 @@
 <?php  
-
 namespace Hcode\Model;
+
 
 use Hcode\DB\Sql;
 use Hcode\Model;
+use Hcode\Mailer;
+
 
 class User extends Model
 {
 
 	const SESSION = "User";
-	define('SECRET', pack('a16','encryptpass'));
-	define('SECRET_IV', pack('a16','encryptpass'));
+	
 
 	public static function login($login, $password)
 	{
@@ -105,6 +106,7 @@ class User extends Model
 
 		));
 
+		// var_dump($results);
 		$this->setData($results[0]);
 
 	}// save()
@@ -164,7 +166,7 @@ class User extends Model
 
 		$sql = new Sql();
 
-		$result = $sql->select("
+		$results = $sql->select("
 			SELECT p.idperson,
 			p.desperson,
 			p.desemail,
@@ -190,14 +192,15 @@ class User extends Model
 
 		} else {
 
-			$data = results[0];
+			$data = $results[0];
 
-			$results2 = $sql->select('CALL sp_userspasswordsrecoveries(:piduser, :pdesip)', array(
+			$results2 = $sql->select('CALL sp_userspasswordsrecoveries_create(:piduser, :pdesip)', array(
 
 				":piduser"=>$data['iduser'],
 				":pdesip"=>$_SERVER['REMOTE_ADDR']
 
 			));
+
 
 			if (count($results2) === 0) {
 
@@ -215,7 +218,24 @@ class User extends Model
 					SECRET_IV
 				));
 
+				$link = "http://localhost/PHP/ecommerce/admin/forgot/reset?code=$code";
 
+				$mailer = new Mailer(
+					$data['desemail'], //email destinatário
+					$data['desperson'], //nome destinatário
+					"The GS - Password Recovery", // assunto
+                    "forgot", //nome do template
+                    array(
+
+                    	'name'=>$data['desperson'],
+                    	'link'=>$link
+
+                    ) //variáveis que vão no template
+                );
+
+				$mailer->send();
+
+				return $data;
 
 			}
 
