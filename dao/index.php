@@ -1,10 +1,9 @@
 <?php 
 
 // Para poder usar o Autoloader temos que incluir o arquivo onde ele está...
-
 require_once "config/Autoloader.php";
-
 Autoloader::register();
+
 
 /*
 $sql = new Sql();

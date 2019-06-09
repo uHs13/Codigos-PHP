@@ -243,6 +243,84 @@ class User extends Model
 
 	}// getForgot()
 
-}
+	public static function validForgotDecrypt($code)
+	{
+
+		$idrecovery = openssl_decrypt(
+			base64_decode($code), 
+			'AES-128-CBC', 
+			SECRET,
+			0,
+			SECRET_IV
+		);
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT * FROM tb_userspasswordsrecoveries pr
+			INNER JOIN tb_users u using (iduser)
+			INNER JOIN tb_persons p using (idperson)
+			WHERE pr.idrecovery = :idrecovery AND 
+			pr.dtrecovery is NULL AND
+			date_add(pr.dtregister, INTERVAL 1 hour) >= NOW();
+
+		", array(
+			":idrecovery"=>$idrecovery
+		));
+
+		if (count($results) === 0) {
+
+			throw new \Exception("Não foi possível recuperar a senha", 1);
+			
+
+		} else {
+
+			return $results[0];
+
+		}
+
+	}//validForgotDecrypt
+
+	public static function setForgotUsed($idrecovery)
+	{
+
+		$sql = new Sql();
+
+		$sql->query("
+
+			UPDATE tb_userspasswordsrecoveries 
+			SET dtrecovery = NOW()
+			WHERE idrecovery = :idrecovery;
+
+		", array(
+			":idrecovery" => $idrecovery
+		));
+
+	}//setForgotUsed
+
+	public function setPassword($password)
+	{
+
+		$sql = new Sql();
+
+		$sql->query("
+
+			UPDATE tb_users 
+			SET despassword = :password
+			WHERE iduser = :iduser;
+
+		", array(
+
+			":password" => $password,
+			":iduser" => $this->getiduser()
+
+		));
+
+
+
+	}
+
+}//User
 
 ?>

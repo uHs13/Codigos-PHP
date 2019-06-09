@@ -1,7 +1,7 @@
 <?php 
+namespace Produtos\DB;
 
-
-class Sql extends PDO
+class Sql extends \PDO
 {
 
 	private $connection;
@@ -16,7 +16,7 @@ class Sql extends PDO
 	private function setConnection(){
 	//Método que liga a nossa classe ao banco de dados
 
-		$this->connection = new PDO('sqlsrv:Database=db_products;server=localhost\SQLEXPRESS_1;ConnectionPooling=0','sa','Heitor13');
+		$this->connection = new \PDO('sqlsrv:Database=db_products;server=localhost\SQLEXPRESS_1;ConnectionPooling=0','sa','Heitor13');
 
 	}//Fim setConnection
 
@@ -79,7 +79,7 @@ class Sql extends PDO
 		//caso ocorra algum erro é retornado o log do mesmo
 		if(!$dataSet) return $this->errorArray;
 		
-		return $dataSet->fetchAll(PDO::FETCH_ASSOC);
+		return $dataSet->fetchAll(\PDO::FETCH_ASSOC);
 
 	}//Fim select
 
