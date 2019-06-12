@@ -11,7 +11,6 @@ class User extends Model
 {
 
 	const SESSION = "User";
-	
 
 	public static function login($login, $password)
 	{
@@ -316,8 +315,6 @@ class User extends Model
 			":iduser" => $this->getiduser()
 
 		));
-
-
 
 	}
 

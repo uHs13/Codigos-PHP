@@ -60,9 +60,9 @@ desired effect
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>LT</span>
+      <span class="logo-mini"><b>T</b>GS</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>LTE</span>
+      <span class="logo-lg"><b>THE </b>GS</span>
     </a>
 
     <!-- Header Navbar -->
@@ -90,15 +90,15 @@ desired effect
                     <a href="#">
                       <div class="pull-left">
                         <!-- User Image -->
-                        <img src="http://localhost/PHP/ecommerce/res/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="http://localhost/PHP/arquivos/_download/ice-cube-and-nwa.jpg" class="img-circle" alt="User Image">
                       </div>
                       <!-- Message title and timestamp -->
                       <h4>
-                        Support Team
+                        West Side
                         <small><i class="fa fa-clock-o"></i> 5 mins</small>
                       </h4>
                       <!-- The message -->
-                      <p>Why not buy a new awesome theme?</p>
+                      <p>You better check yourself</p>
                     </a>
                   </li>
                   <!-- end message -->
@@ -174,18 +174,18 @@ desired effect
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="http://localhost/PHP/ecommerce/res/admin/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <img src="http://localhost/PHP/arquivos/_download/atletico-mg.jpeg" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs">Heitor Souza</span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="http://localhost/PHP/ecommerce/res/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="http://localhost/PHP/arquivos/_download/atletico-mg.jpeg" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  Heitor Souza
+                  <small>Member since May. 2019</small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -231,12 +231,12 @@ desired effect
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="http://localhost/PHP/ecommerce/res/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="http://localhost/PHP/arquivos/_download/atletico-mg.jpeg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
+          <p>Heitor Souza</p>
           <!-- Status -->
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="#"><i class="fa fa-circle text-success"></i> I´m On</a>
         </div>
       </div>
 
@@ -256,8 +256,8 @@ desired effect
       <ul class="sidebar-menu">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="/PHP/ecommerce/admin/users"><i class="fa fa-users"></i> <span>Listar Usuários</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+        <li><a href="/PHP/ecommerce/admin/users"><i class="fa fa-users"></i> <span>Listar Usuários</span></a></li>
+        <li><a href="/PHP/ecommerce/admin/categories"><i class="fa fa-link"></i> <span>Categorias</span></a></li>
         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
             <span class="pull-right-container">

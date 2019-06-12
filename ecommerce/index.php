@@ -9,6 +9,7 @@ use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Model\User;
 use Hcode\Mailer;
+use Hcode\Model\Category;
 
 
 $app = new Slim();//instancia uma nova aplicação slim
@@ -20,6 +21,7 @@ $app->notfound(function () {// mensagem caso a rota não exista
 	echo json_encode(array('Info'=>'Page not found'));
 
 });
+
 
 $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
    
@@ -270,6 +272,28 @@ $app->post('/admin/forgot/reset', function () {
 	]);
 
 	$page->setTpl("forgot-reset-success");
+
+});
+
+
+$app->get('/admin/categories', function () {
+
+	$page = new PageAdmin();
+
+	$categories = Category::listAll();
+
+	$page->setTpl("categories", array(
+		"categories" => $categories
+	));
+
+});
+
+
+$app->get('/admin/categories/create', function () {
+
+	$page = new PageAdmin();
+
+	$page->setTpl("categories-create");
 
 });
 
