@@ -19,7 +19,49 @@ class Category extends Model
 
 	}// listAll()
 
+	public function save()
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select('CALL sp_categories_save(:id, :descat)', array(
+			':id' => 0,
+			':descat' => $this->getdescategory()
+		));
+
+		$this->setData($results[0]);
+
+	}//save()
+
+
+	public function get($idcategory)
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select('SELECT * FROM tb_categories WHERE idcategory = :idcategory', array(
+
+			':idcategory' => $idcategory
+
+		));
+
+		$this->setData($results[0]);
 	
+	}
+
+	public function delete()
+	{
+
+		$sql = new Sql();
+
+		$sql->query('DELETE FROM tb_categories WHERE idcategory = :idcategory', array(
+
+			':idcategory' => $this->getidcategory()
+
+		));
+
+	}//delete()
+
 }//User
 
 ?>

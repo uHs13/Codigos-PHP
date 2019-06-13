@@ -297,6 +297,35 @@ $app->get('/admin/categories/create', function () {
 
 });
 
+
+/* métodos de requisição HTTP: GET, POST, PUT, DELETE */
+$app->post('/admin/categories/create', function () {
+
+	$category = new Category();
+
+	$category->setData($_POST);
+
+	$category->save();
+
+	header('Location: ../categories');
+	exit;
+
+});
+
+
+$app->get('/admin/categories/:idcategory/delete', function ($idcategory) {
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$category->delete();
+
+	header('Location: ../../categories');
+	exit;
+
+});
+
 $app->run();
 
 ?>
