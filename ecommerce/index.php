@@ -68,6 +68,7 @@ $app->post('/admin/login', function () {// verifica o login e inicia a sessão
 
 });
 
+
 $app->get('/admin/logout', function () {//rota para encerrar a sessão
 
 	User::logout();
@@ -246,6 +247,7 @@ $app->get('/admin/forgot/reset', function () {
 
 });
 
+
 $app->post('/admin/forgot/reset', function () {
 
 	$forgot = User::validForgotDecrypt($_POST['code']);
@@ -278,6 +280,8 @@ $app->post('/admin/forgot/reset', function () {
 
 $app->get('/admin/categories', function () {
 
+	User::verifyLogin();
+
 	$page = new PageAdmin();
 
 	$categories = Category::listAll();
@@ -291,6 +295,8 @@ $app->get('/admin/categories', function () {
 
 $app->get('/admin/categories/create', function () {
 
+	User::verifyLogin();
+
 	$page = new PageAdmin();
 
 	$page->setTpl("categories-create");
@@ -300,6 +306,8 @@ $app->get('/admin/categories/create', function () {
 
 /* métodos de requisição HTTP: GET, POST, PUT, DELETE */
 $app->post('/admin/categories/create', function () {
+
+	User::verifyLogin();
 
 	$category = new Category();
 
@@ -315,6 +323,8 @@ $app->post('/admin/categories/create', function () {
 
 $app->get('/admin/categories/:idcategory/delete', function ($idcategory) {
 
+	User::verifyLogin();
+
 	$category = new Category();
 
 	$category->get((int)$idcategory);
@@ -322,6 +332,43 @@ $app->get('/admin/categories/:idcategory/delete', function ($idcategory) {
 	$category->delete();
 
 	header('Location: ../../categories');
+	exit;
+
+});
+
+
+$app->get('/admin/categories/:idcategory', function ($idcategory) {
+
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$page = new PageAdmin();
+
+	$page->setTpl('categories-update', [
+
+		'category' => $category->getValues()
+
+	]);
+
+});
+
+
+$app->post('/admin/categories/:idcategory', function ($idcategory) {
+
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->get($idcategory);
+
+	$category->setData(['descategory' => $_POST['descategory']]);
+
+	$category->save();
+
+	header('Location: ../categories');
 	exit;
 
 });

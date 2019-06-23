@@ -21,12 +21,14 @@ class Category extends Model
 
 	public function save()
 	{
-
+		
 		$sql = new Sql();
 
 		$results = $sql->select('CALL sp_categories_save(:id, :descat)', array(
-			':id' => 0,
+
+			':id' => (isset($this->getValues()['idcategory'])) ? $this->getValues()['idcategory'] : 0,
 			':descat' => $this->getdescategory()
+
 		));
 
 		$this->setData($results[0]);
@@ -61,6 +63,8 @@ class Category extends Model
 		));
 
 	}//delete()
+
+
 
 }//User
 
