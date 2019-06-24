@@ -15,15 +15,15 @@
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
     
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="res/site/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost/PHP/ecommerce/res/site/css/bootstrap.min.css">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="res/site/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://localhost/PHP/ecommerce/res/site/css/font-awesome.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="res/site/css/owl.carousel.css">
-    <link rel="stylesheet" href="res/site/css/style.css">
-    <link rel="stylesheet" href="res/site/css/responsive.css">
+    <link rel="stylesheet" href="http://localhost/PHP/ecommerce/res/site/css/owl.carousel.css">
+    <link rel="stylesheet" href="http://localhost/PHP/ecommerce/res/site/css/style.css">
+    <link rel="stylesheet" href="http://localhost/PHP/ecommerce/res/site/css/responsive.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -79,7 +79,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="logo">
-                        <h1><a href="#"><img src="res/site/img/logo.png"></a></h1>
+                        <h1><a href="#"><img src="http://localhost/PHP/ecommerce/res/site/img/logo.png"></a></h1>
                     </div>
                 </div>
                 
@@ -105,7 +105,7 @@
                 </div> 
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="http://localhost/PHP/ecommerce/">Home</a></li>
                         <li><a href="#">Produtos</a></li>
                         <li><a href="#">Carrinho</a></li>
                     </ul>
