@@ -85,6 +85,6 @@ class Category extends Model
 
 	}
 
-}//User
+}//Category
 
 ?>
