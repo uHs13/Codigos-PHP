@@ -17,6 +17,22 @@ class Products extends Model
 
 	}// listAll()
 
+	public static function checkList($list)
+	{
+
+		foreach ($list as &$value) {
+			
+			$product = new Products();
+			$product->setData($value);
+
+			$value = $product->getValues();
+
+		}
+
+		return $list;
+
+	}
+
 	public function save()
 	{
 		
@@ -91,11 +107,11 @@ class Products extends Model
 
 		if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" )) {
 
-			$url = "../../res/site/img/products/" .  $this->getidproduct() . ".jpg";
+			$url = "/PHP/ecommerce/res/site/img/products/" .  $this->getidproduct() . ".jpg";
 
 		} else {
 
-			$url = "../../res/site/img/product.jpg";
+			$url = "/PHP/ecommerce/res/site/img/product.jpg";
 
 		}
 
