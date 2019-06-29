@@ -37,7 +37,7 @@ $app->post('/admin/products/create', function () {
 
 	$product = new Products();
 
-	$product->setData($_POST);
+	$product->setData($_POST);	
 
 	$product->save();
 
@@ -77,6 +77,8 @@ $app->post('/admin/products/:idproduct', function ($idproduct) {
 	$product->setData($_POST);
 
 	$product->save();
+
+	$product->setPhoto($_FILES['file']);
 
 	header('Location: /PHP/ecommerce/admin/products');
 	exit;

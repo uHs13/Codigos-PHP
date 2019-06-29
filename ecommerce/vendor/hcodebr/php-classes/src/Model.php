@@ -20,7 +20,7 @@ class Model
 
 			case 'get':
 
-				return $this->values[$fieldName];//caso exista um atributo com o nome capturado pelo __call dentro do array $values ele é retornado 
+				return (isset($this->values[$fieldName]))? $this->values[$fieldName] : 0;//caso exista um atributo com o nome capturado pelo __call dentro do array $values ele é retornado 
 			
 			break;
 
