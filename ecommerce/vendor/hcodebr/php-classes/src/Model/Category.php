@@ -1,11 +1,8 @@
 <?php  
 namespace Hcode\Model;
 
-
 use Hcode\DB\Sql;
 use Hcode\Model;
-use Hcode\Mailer;
-
 
 class Category extends Model
 {
@@ -85,6 +82,47 @@ class Category extends Model
 
 	}
 
-}//Category
+	public function getProducts($related)
+	{
 
-?>
+		$sql = new Sql();
+
+		if ($related === true) {
+
+			return $sql->select("
+
+				SELECT * from tb_products where idproduct in(
+					SELECT p.idproduct from tb_products p
+					inner join tb_categoriesproducts cp
+					on  p.idproduct = cp.idproduct
+					where idcategory = :idcategory
+				);
+			
+			", [
+
+				':idcategory' => $this->getidcategory()
+
+			]);
+
+		} else {
+
+			return $sql->select("
+
+				SELECT * from tb_products where idproduct NOT in(
+					SELECT p.idproduct from tb_products p
+					inner join tb_categoriesproducts cp
+					on  p.idproduct = cp.idproduct
+					where idcategory = :idcategory
+				);
+
+			", [
+
+				':idcategory' => $this->getidcategory()
+				
+			]);
+
+		}
+
+	}
+
+}//Category
