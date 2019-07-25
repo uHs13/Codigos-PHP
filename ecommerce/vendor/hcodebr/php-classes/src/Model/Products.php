@@ -67,7 +67,7 @@ class Products extends Model
 	}//save()
 
 
-	public function get($idproduct)
+	public function get(int $idproduct)
 	{
 
 		$sql = new Sql();

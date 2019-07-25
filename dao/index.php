@@ -4,14 +4,19 @@
 require_once "config/Autoloader.php";
 Autoloader::register();
 
-
-/*
 $sql = new Sql();
 
-$dataSet = $sql->select("select idUsuario,login,pass,dtRegister from usuario");
+$id = '1 or 1=1';
 
-echo json_encode($dataSet);
-*/
+$dataSet = $sql->select("SELECT name FROM tb_user WHERE idUser = :id", [
+
+	':id' => '1 or 1=1'
+
+]);
+
+// echo json_encode($dataSet);
+echo $dataSet[0]['name'];
+
 
 
 /*Carrega um usuário específico

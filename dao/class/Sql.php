@@ -16,7 +16,7 @@ class Sql extends PDO
 	private function setConnection(){
 	//Método que liga a nossa classe ao banco de dados
 
-		$this->connection = new PDO('sqlsrv:Database=db_products;server=localhost\SQLEXPRESS_1;ConnectionPooling=0','sa','Heitor13');
+		$this->connection = new PDO('mysql:dbname=php7;server=localhost','root','Heitor13');
 
 	}//Fim setConnection
 

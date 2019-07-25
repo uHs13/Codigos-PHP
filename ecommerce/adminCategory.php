@@ -4,6 +4,7 @@ use Hcode\Model\User;
 use Hcode\PageAdmin;
 use Hcode\Page;
 use Hcode\Model\Category;
+use Hcode\Model\Products;
 
 
 $app->get('/admin/categories', function () {
@@ -124,14 +125,45 @@ $app->get('/admin/categories/:idcategory/products', function ($idcategory) {
 });
 
 
-$app->get('/admin/categories/:idcategory/products/:idproduct/add', function ($idcategory, $idproduct) {
+$app->get('/admin/categories/:idcategory/products/:idproduct/add',
+	function ($idcategory, $idproduct)
+	{
+		User::verifyLogin();
 
-	echo 'ok add';
+		$category = new Category();
 
-});
+		$category->get((int)$idcategory);
+		
+		$product = new Products();
 
-$app->get('/admin/categories/:idcategory/products/:idproduct/remove', function ($idcategory, $idproduct) {
+		//fazer o cast sempre que for passar um parâmetro que precisa ser de determinado tipo
+		$product->get((int)$idproduct);
 
-	echo 'ok remove';
+		$category->addProduct($product);
+		
+		header("Location:/PHP/ecommerce/admin/categories/$idcategory/products");
+		exit;
 
-});
+	});
+
+$app->get('/admin/categories/:idcategory/products/:idproduct/remove',
+	function ($idcategory, $idproduct)
+	{
+
+		User::verifyLogin();
+
+		$category = new Category();
+
+		$category->get((int)$idcategory);
+		
+		$product = new Products();
+
+		//fazer o cast sempre que for passar um parâmetro que precisa ser de determinado tipo
+		$product->get((int)$idproduct);
+
+		$category->removeProduct($product);
+		
+		header("Location:/PHP/ecommerce/admin/categories/$idcategory/products");
+		exit;
+
+	});

@@ -84,7 +84,7 @@ class Category extends Model
 
 	public function getProducts($related)
 	{
-
+		/* $realted indica se serão retornados os produtos de determinada categoria ou todos */
 		$sql = new Sql();
 
 		if ($related === true) {
@@ -93,7 +93,7 @@ class Category extends Model
 
 				SELECT * from tb_products where idproduct in(
 					SELECT p.idproduct from tb_products p
-					inner join tb_categoriesproducts cp
+					inner join tb_productscategories cp
 					on  p.idproduct = cp.idproduct
 					where idcategory = :idcategory
 				);
@@ -110,7 +110,7 @@ class Category extends Model
 
 				SELECT * from tb_products where idproduct NOT in(
 					SELECT p.idproduct from tb_products p
-					inner join tb_categoriesproducts cp
+					inner join tb_productscategories cp
 					on  p.idproduct = cp.idproduct
 					where idcategory = :idcategory
 				);
@@ -124,5 +124,47 @@ class Category extends Model
 		}
 
 	}
+	//.getProducts
+
+	public function addProduct(Products $product)
+	{
+
+		$sql = new Sql();
+
+		$sql->query("
+		
+			INSERT INTO tb_productscategories (idcategory, idproduct)
+			values (:idcategory, :idproduct)
+
+		", array(
+
+			":idcategory" => $this->getidcategory(),
+			":idproduct" => $product->getidproduct()
+
+		));
+
+	}
+	//addProduct
+
+	public function removeProduct(Products $product)
+	{
+
+		$sql = new Sql();
+
+		$sql->query("
+		
+			DELETE FROM tb_productscategories
+			WHERE idcategory = :idcategory and
+			idproduct = :idproduct
+
+		", array(
+
+			":idcategory" => $this->getidcategory(),
+			":idproduct" => $product->getidproduct()
+
+		));
+
+	}
+	//removeProduct
 
 }//Category
