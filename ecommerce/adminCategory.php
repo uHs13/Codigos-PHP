@@ -133,14 +133,14 @@ $app->get('/admin/categories/:idcategory/products/:idproduct/add',
 		$category = new Category();
 
 		$category->get((int)$idcategory);
-		
+
 		$product = new Products();
 
 		//fazer o cast sempre que for passar um parâmetro que precisa ser de determinado tipo
 		$product->get((int)$idproduct);
 
 		$category->addProduct($product);
-		
+
 		header("Location:/PHP/ecommerce/admin/categories/$idcategory/products");
 		exit;
 
@@ -155,14 +155,14 @@ $app->get('/admin/categories/:idcategory/products/:idproduct/remove',
 		$category = new Category();
 
 		$category->get((int)$idcategory);
-		
+
 		$product = new Products();
 
 		//fazer o cast sempre que for passar um parâmetro que precisa ser de determinado tipo
 		$product->get((int)$idproduct);
 
 		$category->removeProduct($product);
-		
+
 		header("Location:/PHP/ecommerce/admin/categories/$idcategory/products");
 		exit;
 

@@ -4,7 +4,6 @@ use Hcode\Page;
 use Hcode\Model\Products;
 use Hcode\Model\Category;
 
-
 $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
    	
 	$product = Products::checkList(Products::listAll());
@@ -26,10 +25,13 @@ $app->get("/category/:idcategory", function ($idcategory) {
 
 	$page = new Page();
 
+	// var_dump($category->getProducts());
+	// exit;
+
 	$page->setTpl('category', [
 
 		'category' => $category->getValues(),
-		'products' => []
+		'products' => Products::checkList($category->getProducts())
 
 	]);
 

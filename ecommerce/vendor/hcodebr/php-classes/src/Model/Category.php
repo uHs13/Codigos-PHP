@@ -82,7 +82,7 @@ class Category extends Model
 
 	}
 
-	public function getProducts($related)
+	public function getProducts($related = true)
 	{
 		/* $realted indica se serão retornados os produtos de determinada categoria ou todos */
 		$sql = new Sql();
