@@ -19,19 +19,34 @@ $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
 
 $app->get("/category/:idcategory", function ($idcategory) {
 
+	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+
 	$category = new Category();
 
 	$category->get((int)$idcategory);
 
-	$page = new Page();
+	$pagination = $category->getProductPage($page);
 
-	// var_dump($category->getProducts());
-	// exit;
+	$pages = [];
+
+	for ($i=1; $i <= (int)$pagination["pages"]; $i++) { 
+
+		array_push($pages, [
+
+			"link" => "../category/".$category->getidcategory()."?page=$i",
+			"page" => $i
+
+		]);
+
+	}
+
+	$page = new Page();
 
 	$page->setTpl('category', [
 
 		'category' => $category->getValues(),
-		'products' => Products::checkList($category->getProducts())
+		'products' => $pagination["data"],
+		'pages' => $pages
 
 	]);
 

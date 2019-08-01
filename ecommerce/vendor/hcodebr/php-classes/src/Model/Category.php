@@ -47,7 +47,7 @@ class Category extends Model
 		));
 
 		$this->setData($results[0]);
-	
+
 	}
 
 	public function delete()
@@ -92,34 +92,34 @@ class Category extends Model
 			return $sql->select("
 
 				SELECT * from tb_products where idproduct in(
-					SELECT p.idproduct from tb_products p
-					inner join tb_productscategories cp
-					on  p.idproduct = cp.idproduct
-					where idcategory = :idcategory
+				SELECT p.idproduct from tb_products p
+				inner join tb_productscategories cp
+				on  p.idproduct = cp.idproduct
+				where idcategory = :idcategory
 				);
-			
-			", [
 
-				':idcategory' => $this->getidcategory()
+				", [
 
-			]);
+					':idcategory' => $this->getidcategory()
+
+				]);
 
 		} else {
 
 			return $sql->select("
 
 				SELECT * from tb_products where idproduct NOT in(
-					SELECT p.idproduct from tb_products p
-					inner join tb_productscategories cp
-					on  p.idproduct = cp.idproduct
-					where idcategory = :idcategory
+				SELECT p.idproduct from tb_products p
+				inner join tb_productscategories cp
+				on  p.idproduct = cp.idproduct
+				where idcategory = :idcategory
 				);
 
-			", [
+				", [
 
-				':idcategory' => $this->getidcategory()
-				
-			]);
+					':idcategory' => $this->getidcategory()
+
+				]);
 
 		}
 
@@ -132,16 +132,16 @@ class Category extends Model
 		$sql = new Sql();
 
 		$sql->query("
-		
+
 			INSERT INTO tb_productscategories (idcategory, idproduct)
 			values (:idcategory, :idproduct)
 
-		", array(
+			", array(
 
-			":idcategory" => $this->getidcategory(),
-			":idproduct" => $product->getidproduct()
+				":idcategory" => $this->getidcategory(),
+				":idproduct" => $product->getidproduct()
 
-		));
+			));
 
 	}
 	//addProduct
@@ -152,19 +152,55 @@ class Category extends Model
 		$sql = new Sql();
 
 		$sql->query("
-		
+
 			DELETE FROM tb_productscategories
 			WHERE idcategory = :idcategory and
 			idproduct = :idproduct
 
-		", array(
+			", array(
 
-			":idcategory" => $this->getidcategory(),
-			":idproduct" => $product->getidproduct()
+				":idcategory" => $this->getidcategory(),
+				":idproduct" => $product->getidproduct()
 
-		));
+			));
 
 	}
 	//removeProduct
+
+	public function getProductPage($page = 1, $itensPage = 3)
+	{
+
+		$start = ($page - 1) * $itensPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select(
+			"select sql_calc_found_rows
+			p.idproduct,
+			p.desproduct,
+			p.vlprice,
+			p.desurl
+			from tb_products p
+			inner join tb_productscategories pc
+			on pc.idproduct = p.idproduct
+			inner join tb_categories c
+			on pc.idcategory = c.idcategory
+			where pc.idcategory = :idCategory
+			limit $start, $itensPage
+			"
+			,
+			array(
+				":idCategory" => $this->getidcategory()
+			));
+
+		$resultTotal = $sql->select("select found_rows() as 'nrtotal';");
+
+		return [
+			'data' => Products::checkList($results),
+			'total' => (int)$resultTotal[0]['nrtotal'],
+			'pages' => ceil( $resultTotal[0]['nrtotal'] / $itensPage)
+		];
+
+	}
 
 }//Category
