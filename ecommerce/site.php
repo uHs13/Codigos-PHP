@@ -51,3 +51,23 @@ $app->get("/category/:idcategory", function ($idcategory) {
 	]);
 
 });
+
+$app->get("/products/:desurl", function ($desurl) {
+
+	$product = new Products();
+
+	$product->getFromURL((String)$desurl);
+
+	// var_dump($product->getCategories());
+	// exit;
+
+	$page = new Page();
+
+	$page->setTpl("product-detail", array(
+
+		"product" => $product->getValues(),
+		"categories" => $product->getCategories()
+
+	));
+
+});

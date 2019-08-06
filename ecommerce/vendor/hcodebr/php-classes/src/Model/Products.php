@@ -32,6 +32,7 @@ class Products extends Model
 		return $list;
 
 	}
+	//.checkList
 
 	public function save()
 	{
@@ -64,7 +65,8 @@ class Products extends Model
 
 		$this->setData($results[0]);
 
-	}//save()
+	}
+	//.save
 
 
 	public function get(int $idproduct)
@@ -79,8 +81,9 @@ class Products extends Model
 		));
 
 		$this->setData($results[0]);
-	
+
 	}
+	//.get
 
 	public function delete()
 	{
@@ -93,7 +96,8 @@ class Products extends Model
 
 		));
 
-	}//delete()
+	}
+	//.delete
 
 
 	public function checkPhoto()
@@ -105,19 +109,19 @@ class Products extends Model
 		
 		*/
 
-		if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" )) {
+			if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" )) {
 
-			$url = "/PHP/ecommerce/res/site/img/products/" .  $this->getidproduct() . ".jpg";
+				$url = "/PHP/ecommerce/res/site/img/products/" .  $this->getidproduct() . ".jpg";
 
-		} else {
+			} else {
 
-			$url = "/PHP/ecommerce/res/site/img/product.jpg";
+				$url = "/PHP/ecommerce/res/site/img/product.jpg";
 
-		}
+			}
 
-		return $this->setdesphoto($url);
+			return $this->setdesphoto($url);
 
-	}
+	}//.checkPhoto
 
 	public function getValues() 
 	{
@@ -128,45 +132,104 @@ class Products extends Model
 
 		return $values;
 
-	}
+		}//.getValues
 
-	public function setPhoto($file) 
-	{
+		public function setPhoto($file) 
+		{
 
-		// var_dump($file);
+			// var_dump($file);
 
-		if (strlen($file['name']) === 0) return false;
+			if (strlen($file['name']) === 0) return false;
 
-		$extension = explode('.', $file['name']);
-		$extension = end($extension);
+			$extension = explode('.', $file['name']);
+			$extension = end($extension);
 
-		switch ($extension) {
+			switch ($extension) {
 
-			case 'jpg':
-			case 'jpeg':
+				case 'jpg':
+				case 'jpeg':
 				$image = imagecreatefromjpeg($file['tmp_name']);
 				break;
-			
-			case 'gif':
+
+				case 'gif':
 				$image = imagecreatefromgif($file['tmp_name']);
 				break;
 
-			case 'png':
+				case 'png':
 				$image = imagecreatefrompng($file['tmp_name']);
 				break;
 
-		}
+			}
 
-		$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" ;
+			$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" ;
 
-		imagejpeg($image, $dist);
+			imagejpeg($image, $dist);
 
-		imagedestroy($image);
+			imagedestroy($image);
 
-		$this->checkPhoto();
+			$this->checkPhoto();
 
-	}
+		}//.setPhoto
 
-}//Products
+		public function getFromURL(string $desurl)
+		{
 
-?>
+			$sql = new Sql();
+
+			$results = $sql->select("
+
+				SELECT 
+				idproduct,
+				desproduct,
+				vlprice,
+				vlwidth,
+				vlheight,
+				vllength
+				vlweight,
+				desurl
+				FROM tb_products
+				WHERE desurl = :desurl
+				LIMIT 1
+
+				", array(
+
+					":desurl" => $desurl
+
+				)); 
+
+			if (count($results) === 0) {
+
+				return false;
+
+			} else {
+
+				$this->setData($results[0]);
+
+			}
+
+		}//.getFromURL
+
+		public function getCategories()
+		{
+
+			$sql = new Sql();
+
+			$results = $sql->select(
+				"SELECT
+					c.descategory,
+					c.idcategory
+				FROM tb_categories c
+				INNER JOIN tb_productscategories pc
+				ON c.idcategory = pc.idcategory
+				WHERE pc.idproduct = :idproduct",
+
+				array(
+					":idproduct" => (int)$this->getidproduct()
+				)
+			);
+
+			return $results;
+
+		}//.getCategories
+
+}//.Products
