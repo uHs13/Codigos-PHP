@@ -83,7 +83,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="latest-product">
+                    <div class="latest-product" id="produtos">
                         <h2 class="section-title">Produtos</h2>
                         <div class="product-carousel">
 

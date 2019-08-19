@@ -12,6 +12,64 @@ class User extends Model
 
 	const SESSION = "User";
 
+	public static function getFromSession()
+	{
+
+		$user = new User();
+
+		if (
+
+			isset($_SESSION[User::SESSION])
+			&&
+			//se for vazio, no cast pra inteiro vira 0
+			(int)$_SESSION[User::SESSION]["iduser"] > 0
+
+		) {
+
+			$user->setData($_SESSION[User::SESSION]);
+
+		}
+
+		return $user;
+
+	}
+	//.getFromSession
+
+	public static function checkLogin($inadmin = true)
+	{
+
+		if (
+
+			!isset($_SESSION[User::SESSION])//se a sessão não estiver definida
+			||
+			!($_SESSION[User::SESSION])// se a sessão estiver definida mas estiver vazia
+			||
+			!(int)$_SESSION[User::SESSION]['iduser'] > 0 // se estiver vazio e for feito o cast vira 0, logo só é um usuário válido se o iduser for > 0
+
+		) {
+
+			return false;
+
+		} else {
+
+			if ($inadmin === true && (bool)$_SESSION[User::SESSION]["inadmin"] === true) {
+
+				return true;
+
+			} elseif ($inadmin === false) {
+
+				return true;
+
+			} else {
+
+				return false;
+
+			}
+
+		}
+		
+	}
+
 	public static function login($login, $password)
 	{
 
@@ -43,9 +101,8 @@ class User extends Model
 
 		} else {
 
-			 throw new \Exception("Usuário inexistente ou senha inválida", 1);
+			throw new \Exception("Usuário inexistente ou senha inválida", 1);
 			 //é necessário colocar \Exception para indicar ao PHP que essa classe está no namespace principal do próprio PHP
-
 
 		}
 
@@ -54,17 +111,7 @@ class User extends Model
 	public static function verifyLogin($inadmin = true) // método para verificar a validade da sessão
 	{
 
-		if(
-
-			!isset($_SESSION[User::SESSION])//se a sessão não estiver definida
-			||
-			!($_SESSION[User::SESSION])// se a sessão estiver definida mas estiver vazia
-			||
-			!(int)$_SESSION[User::SESSION]['iduser'] > 0 // se estiver vazio e for feito o cast vira 0, logo só é um usuário válido se o iduser for > 0
-			||
-			(bool)$_SESSION[User::SESSION]['inadmin'] !== $inadmin //se não tiver permissão de acesso a página de adminstração
-
-		){
+		if(!User::checkLogin($inadmin)){
 
 			header('Location: admin/login');
 			exit;
@@ -94,16 +141,26 @@ class User extends Model
 
 		$sql = new Sql();
 
-		$results = $sql->select('CALL sp_users_save(:pdesperson,:pdeslogin,:pdespassword,:pdesemail,:pnrphone,:pinadmin)',array(
+		$results = $sql->select('
+			CALL sp_users_save(
+			:pdesperson,
+			:pdeslogin,
+			:pdespassword,
+			:pdesemail,
+			:pnrphone,
+			:pinadmin
+			)
+			',
+			array(
 
-			':pdesperson'=>$this->getdesperson(),
-			':pdeslogin'=>$this->getdeslogin(),
-			':pdespassword'=>$this->getdespassword(),
-			':pdesemail'=>$this->getdesemail(),
-			':pnrphone'=>$this->getnrphone(),
-			':pinadmin'=>$this->getinadmin()
+				':pdesperson'=>$this->getdesperson(),
+				':pdeslogin'=>$this->getdeslogin(),
+				':pdespassword'=>$this->getdespassword(),
+				':pdesemail'=>$this->getdesemail(),
+				':pnrphone'=>$this->getnrphone(),
+				':pinadmin'=>$this->getinadmin()
 
-		));
+			));
 
 		// var_dump($results);
 		$this->setData($results[0]);
@@ -180,9 +237,9 @@ class User extends Model
 			inner join tb_users u 
 			on p.idperson = u.idperson 
 			where p.desemail = :email;
-		", array(
-			":email"=>$email
-		));
+			", array(
+				":email"=>$email
+			));
 
 
 		if (count($results) === 0) {
@@ -264,9 +321,9 @@ class User extends Model
 			pr.dtrecovery is NULL AND
 			date_add(pr.dtregister, INTERVAL 1 hour) >= NOW();
 
-		", array(
-			":idrecovery"=>$idrecovery
-		));
+			", array(
+				":idrecovery"=>$idrecovery
+			));
 
 		if (count($results) === 0) {
 
@@ -292,9 +349,9 @@ class User extends Model
 			SET dtrecovery = NOW()
 			WHERE idrecovery = :idrecovery;
 
-		", array(
-			":idrecovery" => $idrecovery
-		));
+			", array(
+				":idrecovery" => $idrecovery
+			));
 
 	}//setForgotUsed
 
@@ -309,12 +366,12 @@ class User extends Model
 			SET despassword = :password
 			WHERE iduser = :iduser;
 
-		", array(
+			", array(
 
-			":password" => $password,
-			":iduser" => $this->getiduser()
+				":password" => $password,
+				":iduser" => $this->getiduser()
 
-		));
+			));
 
 	}
 
