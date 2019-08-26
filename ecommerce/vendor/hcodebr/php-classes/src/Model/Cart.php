@@ -4,6 +4,7 @@ namespace Hcode\Model;
 use Hcode\DB\Sql;
 use Hcode\Model;
 use Hcode\Model\User;
+use Hcode\Model\Products;
 
 class Cart extends Model
 {
@@ -164,5 +165,120 @@ class Cart extends Model
 
 	}
 	//.save
+
+	public function addProduct(Products $product)
+	{
+
+		$sql = new Sql();
+
+		$res = $sql->select("
+
+			INSERT INTO tb_cartsproducts (idcart, idproduct)
+			VALUES (:idcart, :idproduct);
+
+			", [
+
+				":idcart" => $this->getidcart(),
+				":idproduct" => $product->getidproduct()
+
+			]);
+
+	}
+	//.addProduct
+
+	public function removeProduct(Products $product, $all = false)
+	{
+
+		$sql = new Sql();
+
+		if ($all) {
+
+			$res = $sql->select("
+
+				UPDATE tb_cartsproducts
+				SET dtremoved = NOW()
+				WHERE idcart = :idcart AND
+				idproduct = :idproduct AND
+				dtremoved IS NULL
+
+				", [
+
+					":idcart" => $this->getidcart(),
+					":idproduct" => $product->getidproduct()
+
+
+				]);
+
+
+
+		} else {
+
+			$res = $sql->select("
+
+				UPDATE tb_cartsproducts
+				SET dtremoved = NOW()
+				WHERE idcart = :idcart AND
+				idproduct = :idproduct AND
+				dtremoved IS NULL
+				LIMIT 1
+
+				", [
+
+					":idcart" => $this->getidcart(),
+					":idproduct" => $product->getidproduct()
+
+
+				]);
+
+		}
+
+	}
+	//.removeProduct
+
+	public function getProducts()
+	{
+
+		$sql = new Sql();
+
+		$products = $sql->select("
+
+			SELECT
+				p.idproduct,
+				p.vlprice,
+				p.desproduct,
+				p.vlprice,
+				p.vlwidth,
+				p.vlheight,
+				p.vllength,
+				p.vlweight,
+				p.desurl,
+				COUNT(*) as 'nrqtd',
+				SUM(p.vlprice) as 'vltotal'
+			FROM tb_cartsproducts cp
+			INNER JOIN tb_products p
+			ON cp.idproduct = p.idproduct
+			WHERE cp.idcart = :idcart AND
+			cp.dtremoved IS NULL
+			GROUP BY 
+				p.idproduct,
+				p.vlprice,
+				p.desproduct,
+				p.vlprice,
+				p.vlwidth,
+				p.vlheight,
+				p.vllength,
+				p.vlweight
+			ORDER BY p.desproduct;
+
+			", [
+
+				":idcart" => $this->getidcart()
+
+			]);
+
+		return Products::checkList($products);
+
+	}
+	//.getProducts
 
 }//Cart
