@@ -16,12 +16,12 @@ $app->notfound(function () {// mensagem caso a rota não exista
 
 });
 
-require_once("functions.php");
-require_once("site.php");
-require_once("admin.php");
-require_once("adminCategory.php");
-require_once("adminUser.php");
-require_once("adminProduct.php");
+require_once("utils/functions.php");
+require_once("routes/site.php");
+require_once("routes/admin.php");
+require_once("routes/adminCategory.php");
+require_once("routes/adminUser.php");
+require_once("routes/adminProduct.php");
 
 $app->run();
 

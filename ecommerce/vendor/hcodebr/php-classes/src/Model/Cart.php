@@ -243,31 +243,31 @@ class Cart extends Model
 		$products = $sql->select("
 
 			SELECT
-				p.idproduct,
-				p.vlprice,
-				p.desproduct,
-				p.vlprice,
-				p.vlwidth,
-				p.vlheight,
-				p.vllength,
-				p.vlweight,
-				p.desurl,
-				COUNT(*) as 'nrqtd',
-				SUM(p.vlprice) as 'vltotal'
+			p.idproduct,
+			p.vlprice,
+			p.desproduct,
+			p.vlprice,
+			p.vlwidth,
+			p.vlheight,
+			p.vllength,
+			p.vlweight,
+			p.desurl,
+			COUNT(*) as 'nrqtd',
+			SUM(p.vlprice) as 'vltotal'
 			FROM tb_cartsproducts cp
 			INNER JOIN tb_products p
 			ON cp.idproduct = p.idproduct
 			WHERE cp.idcart = :idcart AND
 			cp.dtremoved IS NULL
 			GROUP BY 
-				p.idproduct,
-				p.vlprice,
-				p.desproduct,
-				p.vlprice,
-				p.vlwidth,
-				p.vlheight,
-				p.vllength,
-				p.vlweight
+			p.idproduct,
+			p.vlprice,
+			p.desproduct,
+			p.vlprice,
+			p.vlwidth,
+			p.vlheight,
+			p.vllength,
+			p.vlweight
 			ORDER BY p.desproduct;
 
 			", [
@@ -280,5 +280,54 @@ class Cart extends Model
 
 	}
 	//.getProducts
+
+	public function getProductTotal()
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT
+				SUM(vlprice) as vlprice,
+				SUM(vlwidth) as vlwidth,
+				SUM(vlheight) as vlheight,
+				SUM(vllength) as vllength,
+				SUM(vlweight) as vlweight,
+				COUNT(vlprice) as nrqtd
+			FROM tb_products p
+			INNER JOIN tb_cartsproducts cp
+			ON p.idproduct = cp.idproduct AND
+			cp.dtremoved IS NULL AND
+			cp.idcart = :idcart;
+
+			", [
+
+				":idcart" => $this->getidcart()
+
+			]);
+
+		return (count($results) > 0) ? $results[0] : [];
+
+	}
+	//.getProductTotal
+
+	//postcode == CEP
+	public function setFreight($postcode)
+	{
+
+		$postcode = str_replace("-", "", $postcode);
+
+		$total = $this->getProductTotal();
+
+		// verificando se existem produtos no carrinho. Se não tiver nrqtd é 0.
+		if ($total["nrqtd"] > 0) {
+
+			
+			
+		}
+
+	}
+	//.setFreight
 
 }//Cart
