@@ -5,6 +5,7 @@ use Hcode\DB\Sql;
 use Hcode\Model;
 use Hcode\Model\User;
 use Hcode\Model\Products;
+use Hcode\Utils\Utils;
 
 class Cart extends Model
 {
@@ -118,7 +119,8 @@ class Cart extends Model
 			dessessionid,
 			iduser,
 			vlfreight,
-			nrdays
+			nrdays,
+			deszipcode
 			FROM tb_carts
 			WHERE idcart = :idcart;
 			", [
@@ -142,7 +144,7 @@ class Cart extends Model
 		$sql = new Sql();
 
 		$results = $sql->select("
-			
+
 			call sp_carts_save(
 			:idcart,
 			:dessessionid,
@@ -182,6 +184,8 @@ class Cart extends Model
 				":idproduct" => $product->getidproduct()
 
 			]);
+
+		$this->calculatTotal();
 
 	}
 	//.addProduct
@@ -231,6 +235,8 @@ class Cart extends Model
 				]);
 
 		}
+
+		$this->calculateTotal();
 
 	}
 	//.removeProduct
@@ -289,12 +295,12 @@ class Cart extends Model
 		$results = $sql->select("
 
 			SELECT
-				SUM(vlprice) as vlprice,
-				SUM(vlwidth) as vlwidth,
-				SUM(vlheight) as vlheight,
-				SUM(vllength) as vllength,
-				SUM(vlweight) as vlweight,
-				COUNT(vlprice) as nrqtd
+			SUM(vlprice) as vlprice,
+			SUM(vlwidth) as vlwidth,
+			SUM(vlheight) as vlheight,
+			SUM(vllength) as vllength,
+			SUM(vlweight) as vlweight,
+			COUNT(vlprice) as nrqtd
 			FROM tb_products p
 			INNER JOIN tb_cartsproducts cp
 			ON p.idproduct = cp.idproduct AND
@@ -318,16 +324,121 @@ class Cart extends Model
 
 		$postcode = str_replace("-", "", $postcode);
 
-		$total = $this->getProductTotal();
+		$values = $this->getProductTotal();
 
 		// verificando se existem produtos no carrinho. Se não tiver nrqtd é 0.
-		if ($total["nrqtd"] > 0) {
+		if ($values["nrqtd"] > 0) {
 
-			
-			
+			if ((float)$values["vlheight"] < (float)2) {
+
+				$values["vlheight"] = (float)2;
+
+			}
+
+			if ((float)$values["vlwidth"] < 11) {
+
+				$values["vlwidth"] = (float)11;
+
+			}
+
+			if ((float)$values["vllength"] < 16) {
+
+				$values["vllength"] = (float)16;
+
+			}
+
+			//configurando os valores que serão passados pro web service do correios
+			$queryString = http_build_query([
+
+				"nCdEmpresa" => "",
+				"sDsSenha" => "",
+				"nCdServico" => "40010",
+				"sCepOrigem" => "32340030",
+				"sCepDestino" => $postcode,
+				"nVlPeso" => $values["vlweight"],
+				"nCdFormato" => 1,
+				"nVlComprimento" => (float)$values["vllength"],
+				"nVlAltura" => (float)$values["vlheight"],
+				"nVlLargura" => (float)$values["vlwidth"],
+				"nVlDiametro" => "0",
+				"sCdMaoPropria" => "N",
+				"nVlValorDeclarado" => $values["vlprice"],
+				"sCdAvisoRecebimento" => "N"
+
+			]);
+
+			//enviando os dados para o web service e obtendo a resposta
+			$xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?$queryString");
+			//interpolação de variáveis
+
+			$result = $xml->Servicos->cServico;
+
+			//caso o web Service retorne algum erro
+			if (strlen($result->MsgErro) > 0) {
+
+				Utils::setSessionMsgError($result->MsgErro);
+
+				return false;
+
+			} else {
+
+				Utils::clearSessionMsgError();
+
+			}
+
+			$this->setnrdays($result->PrazoEntrega);
+
+			$this->setvlfreight(Utils::formatValueToDBDecimal($result->Valor));
+
+			$this->setdeszipcode($postcode);
+
+			$this->save();
+
+			return $result;
+
+		} else {
+
+
+
 		}
 
 	}
 	//.setFreight
 
-}//Cart
+	public function updateFreight()
+	{
+
+		if ($this->getdeszipcode() != 0) {
+
+			$this->setFreight($this->getdeszipcode());
+
+		}
+
+	}
+	//.updateFreight
+
+	public function getValues()
+	{
+
+		$this->calculateTotal();
+
+		return parent::getValues();
+
+	}
+	//.getValues
+
+	public function calculateTotal()
+	{
+
+		$this->updateFreight();
+		
+		$total = $this->getProductTotal();
+
+		$this->setsubTotal($total["vlprice"]);
+		$this->setTotal($total["vlprice"] + $this->getvlfreight());
+
+	}
+	//.calculateTotal
+
+}
+//.Cart

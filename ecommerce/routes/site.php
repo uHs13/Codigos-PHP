@@ -58,12 +58,7 @@ $app->get("/products/:desurl", function ($desurl) {
 
 	$product = new Products();
 
-	// var_dump($desurl);
-	// exit;
-
 	$product->getFromURL((String)$desurl);
-
-	
 
 	$page = new Page();
 
@@ -85,9 +80,12 @@ $app->get("/cart", function () {
 	$page->setTpl("cart", [
 
 		"cart" => $cart->getValues(),
-		"products" => $cart->getProducts()
+		"products" => $cart->getProducts(),
+		"error" => Utils::getSessionMsgError()
 
 	]);
+
+
 
 });
 
