@@ -2,20 +2,22 @@
 
 use Hcode\Page;
 use Hcode\Model\Cart;
+use Hcode\Model\User;
 use Hcode\Model\Products;
 use Hcode\Model\Category;
+use Hcode\Model\Address;
 use Hcode\Utils\Utils;
 
 $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
-   	
+
 	$product = Products::checkList(Products::listAll());
 	
 	$page = new Page();
 
-   	$page->setTpl("index", [
-   		'products' => $product
-   	]);
-   
+	$page->setTpl("index", [
+		'products' => $product
+	]);
+
 });
 
 
@@ -153,3 +155,45 @@ $app->post("/cart/freight", function () {
 
 });
 
+$app->get("/checkout", function () {
+
+	User::verifyLogin(false, 2);
+
+	$cart = Cart::getFromSession();
+
+	$address = new Address();
+
+	$page = new Page();
+
+	$page->setTpl("checkout", [
+
+		"cart" => $cart->getValues(),
+		"address" => $address->getValues()
+
+	]);
+
+});
+
+$app->get("/login", function () {
+
+	$page = new Page();
+
+	$page->setTpl("login");
+
+});
+
+$app->post("/login", function () {
+
+	$_POST = Utils::safeEntry($_POST);
+
+	try {
+		
+		User::login($_POST["login"], $_POST["password"]);
+
+	} catch (Exception $e) {
+
+		var_dump($e);
+
+	}
+
+});

@@ -19,7 +19,7 @@
                 <div class="product-content-right">
                     <div class="woocommerce">
 
-                        <form>
+                        <form action="/PHP/ecommerce/checkout">
 
                             <?php if( $error != '' ){ ?>
 

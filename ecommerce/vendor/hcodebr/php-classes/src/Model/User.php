@@ -106,26 +106,31 @@ class User extends Model
 
 		}
 
-	}// login()
+	}
+	//.login
 
-	public static function verifyLogin($inadmin = true) // método para verificar a validade da sessão
+	public static function verifyLogin($inadmin = true, $location = 1) // método para verificar a validade da sessão
 	{
+
+		$location = ((int)$location === 1) ? '/PHP/ecommerce/admin/login' : '/PHP/ecommerce/login';
 
 		if(!User::checkLogin($inadmin)){
 
-			header('Location: admin/login');
+			header("Location: $location");
 			exit;
 
 		}
 
-	}// verifyLogin()
+	}
+	//.verifyLogin
 
 	public static function logout()//métooo para encerrar a sessão do usuário
 	{
 
 		$_SESSION[User::SESSION] = NULL;
 
-	}// logout()
+	}
+	//.logout
 
 	public static function listAll()//método que retorna todos os usuários cadastrados no banco
 	{
