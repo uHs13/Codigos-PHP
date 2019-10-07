@@ -21,7 +21,7 @@ class Utils
 	public static function getSessionMsgError()
 	{
 
-		$msg = (isset($_SESSION[Utils::SESSION_ERROR])) ? $_SESSION[Utils::SESSION_ERROR] : "";
+		$msg = (isset($_SESSION[Utils::SESSION_ERROR]) && $_SESSION[Utils::SESSION_ERROR]) ? $_SESSION[Utils::SESSION_ERROR] : "";
 
 		self::clearSessionMsgError();
 
@@ -77,6 +77,15 @@ class Utils
 
 	}
 	//.formatValueToDecimal
+
+	public static function redirect($path)
+	{
+
+		header("Location: $path");
+		exit;
+
+	}
+	//.redirect
 
 }
 //.Utils

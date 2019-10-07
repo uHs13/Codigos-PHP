@@ -109,17 +109,25 @@ class User extends Model
 	}
 	//.login
 
-	public static function verifyLogin($inadmin = true, $location = 1) // método para verificar a validade da sessão
+	public static function verifyLogin($inadmin = true, $location = 1, $redirect = true) // método para verificar a validade da sessão
 	{
 
 		$location = ((int)$location === 1) ? '/PHP/ecommerce/admin/login' : '/PHP/ecommerce/login';
 
 		if(!User::checkLogin($inadmin)){
 
-			header("Location: $location");
-			exit;
+			if ($redirect) {
+
+				header("Location: $location");
+				exit;
+
+			}
+
+			return false;
 
 		}
+
+		return true;
 
 	}
 	//.verifyLogin

@@ -176,9 +176,15 @@ $app->get("/checkout", function () {
 
 $app->get("/login", function () {
 
+	User::logout();
+
 	$page = new Page();
 
-	$page->setTpl("login");
+	$page->setTpl("login", [
+
+		"error" => Utils::getSessionMsgError()
+
+	]);
 
 });
 
@@ -187,13 +193,25 @@ $app->post("/login", function () {
 	$_POST = Utils::safeEntry($_POST);
 
 	try {
-		
+
 		User::login($_POST["login"], $_POST["password"]);
+
+		Utils::redirect("/PHP/ecommerce/checkout");
 
 	} catch (Exception $e) {
 
-		var_dump($e);
+		Utils::setSessionMsgError($e->getMessage());
+
+		Utils::redirect("/PHP/ecommerce/login");
 
 	}
+
+});
+
+$app->get("/logout", function () {
+
+	User::logout();
+
+	Utils::redirect("/PHP/ecommerce/");
 
 });

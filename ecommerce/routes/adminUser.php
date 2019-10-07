@@ -84,8 +84,6 @@ $app->post('/admin/users/create', function () {//Rota para salvar um usuário no
 
 	$user->setData($_POST);
 
-	// var_dump($_POST);
-
 	$user->save();
 
 	header("Location: ../users");
@@ -98,7 +96,7 @@ $app->post('/admin/users/create', function () {//Rota para salvar um usuário no
 $app->post('/admin/users/:iduser', function ($iduser) {//Rota para salvar alterações em um usuário no banco
 
 	User::verifyLogin();
-	
+
 	$user = new User();
 
 	$user->get((int)$iduser);
