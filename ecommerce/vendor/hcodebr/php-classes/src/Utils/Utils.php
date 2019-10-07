@@ -87,5 +87,17 @@ class Utils
 	}
 	//.redirect
 
+	public static function encrypt($str)
+	{
+
+		return password_hash($str, PASSWORD_DEFAULT, [
+
+ 			"cost"=>12
+
+ 		]);
+
+	}
+	//.encrypt
+
 }
 //.Utils

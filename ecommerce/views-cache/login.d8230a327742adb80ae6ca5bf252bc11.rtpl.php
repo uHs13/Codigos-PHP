@@ -14,79 +14,76 @@
 <div class="single-product-area">
     <div class="zigzag-bottom"></div>
     <div class="container">
-        <div class="row">                
-            <div class="col-md-6">
+        
+        <div class="row">         
+           <?php if( $error != '' && $error ){ ?>
 
-                <?php if( $error != '' ){ ?>
+           <div class="alert alert-danger col-lg-12 text-center">
+            <?php echo htmlspecialchars( $error, ENT_COMPAT, 'UTF-8', FALSE ); ?>
 
-                <div class="alert alert-danger">
-                    <?php echo htmlspecialchars( $error, ENT_COMPAT, 'UTF-8', FALSE ); ?>
-
-                </div>
-                <?php } ?>
+        </div>
+        <?php } ?>
 
 
-                <form action="/PHP/ecommerce/login" id="login-form-wrap" class="login" method="post">
-                    <h2>Acessar</h2>
-                    <p class="form-row form-row-first">
-                        <label for="login">E-mail <span class="required">*</span>
-                        </label>
-                        <input type="text" id="login" name="login" class="input-text">
-                    </p>
-                    <p class="form-row form-row-last">
-                        <label for="senha">Senha <span class="required">*</span>
-                        </label>
-                        <input type="password" id="senha" name="password" class="input-text">
-                    </p>
-                    <div class="clear"></div>
-                    <p class="form-row">
-                        <input type="submit" value="Login" class="button">
-                        <label class="inline" for="rememberme"><input type="checkbox" value="forever" id="rememberme" name="rememberme"> Manter conectado </label>
-                    </p>
-                    <p class="lost_password">
-                        <a href="/forgot">Esqueceu a senha?</a>
-                    </p>
+        <div class="col-md-6">
 
-                    <div class="clear"></div>
-                </form>                    
-            </div>
-            <div class="col-md-6">
-                
-                <div class="alert alert-danger">
-                    Error!
-                </div>
+            <form action="/PHP/ecommerce/login" id="login-form-wrap" class="login" method="post">
+                <h2>Acessar</h2>
+                <p class="form-row form-row-first">
+                    <label for="login">E-mail <span class="required">*</span>
+                    </label>
+                    <input type="text" id="login" name="login" class="input-text">
+                </p>
+                <p class="form-row form-row-last">
+                    <label for="senha">Senha <span class="required">*</span>
+                    </label>
+                    <input type="password" id="senha" name="password" class="input-text">
+                </p>
+                <div class="clear"></div>
+                <p class="form-row">
+                    <input type="submit" value="Login" class="button">
+                    <label class="inline" for="rememberme"><input type="checkbox" value="forever" id="rememberme" name="rememberme"> Manter conectado </label>
+                </p>
+                <p class="lost_password">
+                    <a href="/forgot">Esqueceu a senha?</a>
+                </p>
 
-                <form id="register-form-wrap" action="/register" class="register" method="post">
-                    <h2>Criar conta</h2>
-                    <p class="form-row form-row-first">
-                        <label for="nome">Nome Completo <span class="required">*</span>
-                        </label>
-                        <input type="text" id="nome" name="name" class="input-text" value="">
-                    </p>
-                    <p class="form-row form-row-first">
-                        <label for="email">E-mail <span class="required">*</span>
-                        </label>
-                        <input type="email" id="email" name="email" class="input-text" value="">
-                    </p>
-                    <p class="form-row form-row-first">
-                        <label for="phone">Telefone
-                        </label>
-                        <input type="text" id="phone" name="phone" class="input-text" value="">
-                    </p>
-                    <p class="form-row form-row-last">
-                        <label for="senha">Senha <span class="required">*</span>
-                        </label>
-                        <input type="password" id="senha" name="password" class="input-text">
-                    </p>
-                    <div class="clear"></div>
+                <div class="clear"></div>
+            </form>                    
+        </div>
+        <div class="col-md-6">
 
-                    <p class="form-row">
-                        <input type="submit" value="Criar Conta" name="login" class="button">
-                    </p>
+            <form id="register-form-wrap" action="/PHP/ecommerce/register" class="register w-100" method="post">
+                <h2>Criar conta</h2>
+                <p class="form-row form-row-first">
+                    <label for="nome">Nome Completo <span class="required">*</span>
+                    </label>
+                    <input type="text" id="nome" name="name" class="input-text" value="">
+                </p>
+                <p class="form-row form-row-first">
+                    <label for="email">E-mail <span class="required">*</span>
+                    </label>
+                    <input type="email" id="email" name="email" class="input-text" value="">
+                </p>
+                <p class="form-row form-row-first">
+                    <label for="phone">Telefone
+                    </label>
+                    <input type="text" id="phone" name="phone" class="input-text" value="">
+                </p>
+                <p class="form-row form-row-last">
+                    <label for="senha">Senha <span class="required">*</span>
+                    </label>
+                    <input type="password" id="senha" name="password" class="input-text">
+                </p>
+                <div class="clear"></div>
 
-                    <div class="clear"></div>
-                </form>               
-            </div>
+                <p class="form-row">
+                    <input type="submit" value="Criar Conta" name="login" class="button">
+                </p>
+
+                <div class="clear"></div>
+            </form>               
         </div>
     </div>
+</div>
 </div>

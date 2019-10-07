@@ -5,6 +5,7 @@ namespace Hcode\Model;
 use Hcode\DB\Sql;
 use Hcode\Model;
 use Hcode\Mailer;
+use Hcode\Utils\Utils;
 
 
 class User extends Model
@@ -87,7 +88,7 @@ class User extends Model
 		//atribui a tupla retornada pelo banco
 		$data = $results[0];
 
-		if(password_verify($password, $data['despassword']) === true){//caso o que foi digitado coincida com o que está salvo no banco
+		if(password_verify($password, $data['despassword']) === true) {//caso o que foi digitado coincida com o que está salvo no banco
 
 			$user = new User();
 
@@ -168,7 +169,7 @@ class User extends Model
 
 				':pdesperson'=>$this->getdesperson(),
 				':pdeslogin'=>$this->getdeslogin(),
-				':pdespassword'=>$this->getdespassword(),
+				':pdespassword'=>Utils::encrypt($this->getdespassword()),
 				':pdesemail'=>$this->getdesemail(),
 				':pnrphone'=>$this->getnrphone(),
 				':pinadmin'=>$this->getinadmin()
@@ -205,7 +206,7 @@ class User extends Model
 			':piduser'=>$this->getiduser(),
 			':pdesperson'=>$this->getdesperson(),
 			':pdeslogin'=>$this->getdeslogin(),
-			':pdespassword'=>$this->getdespassword(),
+			':pdespassword'=>Utils::encrypt($this->getdespassword()),
 			':pdesemail'=>$this->getdesemail(),
 			':pnrphone'=>$this->getnrphone(),
 			':pinadmin'=>$this->getinadmin()
@@ -387,6 +388,57 @@ class User extends Model
 			));
 
 	}
+	//.setPassword
+
+	public function verifyAttributes()
+	{
+
+		$array = [
+			"desperson",
+			"deslogin",
+			"despassword",
+			"desemail",
+			"nrphone"
+		];
+
+		foreach ($array as $value) {
+
+			if (strlen($this->getValues()[$value]) <= 0 || $this->getValues()[$value] === 0){
+
+				return false;
+
+				Utils::setSessionMsgError("Informe seus dados corretamente");
+
+			};
+
+		}
+
+		return true;
+
+	}
+	//.verifyAttributes
+
+	public function checkLoginExists()
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT iduser FROM tb_users WHERE deslogin = :login", [
+
+			":login" => $this->getdeslogin()
+
+		]);
+
+		if (count($results) > 0) {
+
+			Utils::setSessionMsgError("E-mail inválido");
+
+		}
+
+		return (count($results) > 0);
+
+	}
+	//.checkLoginExists
 
 }//User
 

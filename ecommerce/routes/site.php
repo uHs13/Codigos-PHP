@@ -215,3 +215,36 @@ $app->get("/logout", function () {
 	Utils::redirect("/PHP/ecommerce/");
 
 });
+
+$app->post("/register", function() {
+
+	Utils::safeEntry($_POST);
+
+	$user = new User();
+
+	$user->setData([
+
+		"desperson" => $_POST["name"],
+		"deslogin" => $_POST["email"],
+		"despassword" => $_POST["password"],
+		"desemail" => $_POST["email"],
+		"nrphone" => $_POST["phone"],
+		"inadmin" => 0
+
+	]);
+
+	if ($user->verifyAttributes() && !$user->checkLoginExists()) {
+
+		$user->save();
+
+		$user->login($_POST["email"], $_POST["password"]);
+
+		Utils::redirect("/PHP/ecommerce/checkout");
+
+	} else {
+
+		Utils::redirect("/PHP/ecommerce/login");
+
+	}
+
+});
