@@ -2,8 +2,10 @@
 
 use Hcode\Model\User;
 
-function formatPrice(float $price)
+function formatPrice($price)
 {
+
+	if (!$price > 0) $price = 0;
 
 	return number_format($price, 2, ',', '.');
 
@@ -23,7 +25,7 @@ function getUserName()
 
 	$user = User::getFromSession();
 
-	return ucfirst($user->getdeslogin());
+	return $user->getdeslogin();
 
 }
 //.getUserName

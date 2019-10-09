@@ -231,7 +231,7 @@ class User extends Model
 
 	}
 
-	public static function getForgot($email)
+	public static function getForgot($email, $inadmin = true)
 	{
 
 		$sql = new Sql();
@@ -287,8 +287,18 @@ class User extends Model
 					0, 
 					SECRET_IV
 				));
+				
 
-				$link = "http://localhost/PHP/ecommerce/admin/forgot/reset?code=$code";
+				if ($inadmin === true) {
+
+					$link = "http://localhost/PHP/ecommerce/admin/forgot/reset?code=$code";	
+
+				} else {
+
+					$link = "http://localhost/PHP/ecommerce/forgot/reset?code=$code";
+
+				}
+				
 
 				$mailer = new Mailer(
 					$data['desemail'], //email destinatário

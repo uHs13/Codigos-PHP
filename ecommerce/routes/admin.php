@@ -53,7 +53,7 @@ $app->get('/admin/logout', function () {//rota para encerrar a sessão
 $app->get('/admin/forgot', function () {// Forgot about dre. Rota para tela de recuperação de senha
  
 	$page = new PageAdmin([
-		
+
 		"header"=>false,
 		"footer"=>false
 
@@ -136,5 +136,3 @@ $app->post('/admin/forgot/reset', function () {
 	$page->setTpl("forgot-reset-success");
 
 });
-
-?>

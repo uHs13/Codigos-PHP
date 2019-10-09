@@ -110,7 +110,3 @@ $app->post('/admin/users/:iduser', function ($iduser) {//Rota para salvar altera
 	exit;
 
 });
-
-
-
-?>
