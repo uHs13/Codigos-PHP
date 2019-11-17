@@ -1,0 +1,21 @@
+{
+    "name": "uhs13/produtos",
+    "description": "system developed for CRUD products on SqlServer",
+    "type": "project",
+    "authors": [
+        {
+            "name": "uHs13",
+            "email": "heitorhenriquedias@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "slim/slim":"2.0",
+        "rain/raintpl":"3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Produtos\\": "vendor\\classes\\src"
+        }
+    }
+}

@@ -1,0 +1,143 @@
+body{
+
+	margin:0;
+	padding:0;
+	background-color: #fafafa;
+
+}
+
+main{
+
+	width:40%;
+	margin:50px auto;
+
+	background-color: #fff;
+
+
+	box-shadow: 3px 3px 8px 1px rgb(200,200,200);
+	border-radius: 5px;
+
+
+	text-align: center;
+	font-family: 'Raleway';
+
+	padding-bottom: 10px;
+
+}
+
+h3{
+
+	background-color: red;
+	color:#fff;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	line-height: 30px;
+
+
+
+}
+
+
+input{
+
+	border:1px solid rgb(200,200,200);
+	width:40%;
+	height: 25px;
+	font-family: 'Raleway';
+	padding-left: 5px;
+	border-radius: 4px;
+	outline:none;
+	margin:20px 0;
+	
+	
+
+}
+
+
+input:hover{
+
+	border-color:rgb(150,150,150);
+	transition: border-color 0.3s linear;
+
+}
+
+
+a{
+
+	position:absolute;
+	bottom:100px;
+	left:660px;
+	margin:0 auto;
+	text-decoration: none;
+	color:rgb(160,160,160);
+
+}
+
+a:hover{
+
+	color:black;
+	transition: color 0.5s linear;
+
+
+}
+
+
+.btn-search{
+
+	width:90px;
+	font-family: 'Raleway';
+	line-height: 25px;
+	border:1px solid rgb(119,193,36);
+	background-color: #fff;
+	color:rgb(119,193,36);
+	border-radius: 4px;
+
+}
+
+
+.btn-search:hover{
+
+	background-color: rgb(119,193,36);
+	color:#fff;
+	box-shadow: 3px 3px 8px 1px rgb(130,130,130);
+	cursor: pointer;
+	transition: box-shadow 0.2s linear;
+
+
+
+
+}
+
+.inpt-edit{
+
+	display: block;
+	margin: 10px auto;
+
+
+}
+
+
+.btn-delete{
+
+	background-color: #fff;
+	width:90px;
+	line-height: 25px;
+	border:1px solid red;
+	border-radius: 4px;
+	color:red;
+	font-family: 'Raleway';
+	margin:10px 0;
+
+
+}
+
+.btn-delete:hover{
+
+	cursor:pointer;
+	background-color: red;
+	color:#fff;
+	box-shadow: 3px 3px 8px 1px rgb(130,130,130);
+	transition: box-shadow 0.2s linear;
+
+
+}

@@ -1,0 +1,198 @@
+body{
+
+	margin:0;
+	padding:0;
+
+	background-color: #fafafa;
+
+	font-family: 'Raleway';
+
+
+}
+
+main{
+
+	width:60%;
+	margin:60px auto;
+	
+	
+
+	box-shadow:3px 3px 8px 1px rgb(200,200,200);
+
+	text-align: center;
+
+	min-height: 400px;
+
+	background-color: #fff;
+
+	border-radius: 5px;
+
+	position: static;
+
+}
+
+form{
+
+	width: 50%;
+	margin:30px auto;
+	
+	text-align: center;
+
+
+	
+
+
+}
+
+input{
+
+	width:50%;
+	height: 25px;
+	
+	margin:10px auto;
+	
+	padding-left: 5px;
+
+
+	border:1px solid #bbb;
+	border-radius: 5px;
+	outline: none;
+
+	font-family: 'Raleway';
+	
+}
+
+
+input:hover{
+
+	transition: border-color 0.5s linear;
+
+
+	border-color:rgb(113,125,128);
+
+}
+
+
+a{
+
+	display: block;
+	
+	text-decoration: none;
+	color:rgb(180,180,180);
+
+	position: absolute;
+	bottom:50px;
+	left:630px;
+	width: 100px;
+	margin:0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+
+}
+
+a:hover{
+
+	color:black;
+	transition: color 0.5s linear;
+
+
+}
+
+.form-title{
+
+	background-color: rgb(85,196,165);
+	line-height: 50px;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	color:#fff;
+
+
+}
+
+
+.btn-search{
+
+	width: 100px;
+	height: 30px;
+
+	border:1px solid rgb(119,193,36);
+	border-radius: 5px;
+
+	font-family: 'Raleway';
+	background-color: #fff;
+	color:rgb(119,193,36);
+
+
+}
+
+.btn-search:hover{
+
+	transition: background-color 0.5s linear;
+		
+	background-color: rgb(119,193,36);
+	
+	color:#fff;
+	
+	box-shadow: 3px 3px 8px #bbb;
+
+	cursor:pointer;
+
+
+}
+
+
+.form-edit{
+
+	margin-top: 50px;
+
+	
+
+	width:80%;
+
+	padding:5px;
+
+
+}
+
+.inpt-edit{
+
+	display: block;
+	width:40%;
+
+}
+
+.btn-save{
+
+	width: 100px;
+	height: 30px;
+
+	margin:10px 5px;
+
+
+	border:1px solid rgb(15,189,240);
+	border-radius: 5px;
+
+	font-family: 'Raleway';
+	background-color: #fff;
+	color: rgb(15,189,240);
+
+
+
+}
+
+.btn-save:hover{
+
+
+	background-color: rgb(15,189,240);
+	
+	color:#fff;
+	
+	box-shadow: 3px 3px 8px #bbb;
+
+	cursor:pointer;
+
+	transition: background-color 0.5s linear;
+
+}

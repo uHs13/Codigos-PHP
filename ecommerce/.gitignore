@@ -1,0 +1,7 @@
+vendor/composer
+vendor/phpmailer
+vendor/rain
+vendor/slim
+vendor/autoload.php
+vendor/composer dump-autoload
+yarn.lock

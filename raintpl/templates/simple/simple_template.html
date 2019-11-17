@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Simple template</title>
+        <link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+<body>
+
+	<h2>Notices</h2>
+	<p> Hi <b>{$name}</b>, this is a beautiful day for a walk! </p>
+	<p> <b>{$age}</b>, you are growing older </p>
+	<p> <b>{$birth}</b>, 2 months for birthday </p> 
+
+	<br>
+	<br>
+
+	<h2>Random things</h2>
+	<ul>
+		{loop="$random"}
+		<li>
+			{$value}
+		</li>
+		{/loop}
+	</ul>
+
+</body>
+</html>

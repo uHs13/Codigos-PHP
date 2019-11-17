@@ -1,0 +1,68 @@
+body{
+
+	background-color: #fafafa;
+	margin:0;
+	padding:0;
+	
+
+}
+
+main{
+
+	width:90%;
+	margin:0 auto;
+	
+
+
+}
+
+table{
+
+	margin:30px auto;
+	box-shadow: 3px 3px 8px #bbb;
+	border-radius: 5px;
+
+
+}
+
+table thead tr{
+
+	background-color: rgb(15,153,227);
+
+	
+
+
+}
+
+
+
+table tr{
+
+	background-color: #fff;
+	font-family: 'Raleway';
+
+}
+
+.option-box{
+
+	
+	text-align: center;
+	margin:10px;
+
+}
+
+.option-box a{
+
+	color:#bbb;
+	font-family: 'Raleway';
+
+
+}
+
+.option-box a:hover{
+
+	text-decoration: none;
+	color:black;
+	transition:color 0.5s linear;
+
+}
