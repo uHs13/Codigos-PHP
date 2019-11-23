@@ -212,8 +212,6 @@ class Cart extends Model
 
 				]);
 
-
-
 		} else {
 
 			$res = $sql->select("
@@ -285,6 +283,52 @@ class Cart extends Model
 
 	}
 	//.getProducts
+
+	public function getProductsCount()
+	{
+
+		$cart = $this->getFromSession()->getidcart();
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT COUNT(cp.idcartproduct) as nmr
+			FROM tb_cartsproducts cp
+			INNER JOIN tb_carts c
+			ON cp.idcart = c.idcart
+			WHERE ISNULL(cp.dtremoved) AND
+			cp.idcart = :idcart;
+
+			", [
+
+				":idcart" => $cart
+
+			]);
+
+		if ((int)$results[0]["nmr"] === 0) {
+
+			$sql->query("
+
+				UPDATE tb_carts
+				SET deszipcode = :deszipcode,
+				vlfreight = :vlfreight,
+				nrdays = :nrdays
+				WHERE idcart = :idcart;
+
+				", [
+
+					":deszipcode" => (string)0,
+					":vlfreight" => (float)0,
+					"nrdays" => 0,
+					":idcart" => $cart
+
+				]);
+
+		}
+
+	}
+	//.getProductsCount
 
 	public function getProductTotal()
 	{
@@ -430,7 +474,7 @@ class Cart extends Model
 	{
 
 		$this->updateFreight();
-		
+
 		$total = $this->getProductTotal();
 
 		$this->setsubTotal($total["vlprice"]);

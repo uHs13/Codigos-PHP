@@ -29,6 +29,24 @@ class User extends Model
 
 			$user->setData($_SESSION[User::SESSION]);
 
+			$sql = new Sql();
+
+			$results = $sql->select("
+
+				SELECT desperson,  desemail, nrphone
+				FROM tb_persons tp
+				INNER JOIN tb_users tu
+				ON tu.idperson = tp.idperson
+				WHERE tu.idperson = :idperson;
+
+				", [
+
+					":idperson" => $user->getidperson()
+
+				]);
+
+			$user->setData($results[0]);
+
 		}
 
 		return $user;
@@ -223,11 +241,7 @@ class User extends Model
 		$sql = new Sql();
 
 		//usando o método query porque não é necessário retornar nada
-<<<<<<< HEAD
 		$results = $sql->query("CALL sp_users_delete(:p_iduser)",array(
-=======
-		$sql->query("CALL sp_users_delete(:p_iduser)",array(
->>>>>>> 187a3166fe5429a77f620e146541a4d547135de3
 
 			":p_iduser"=>$this->getiduser()
 
