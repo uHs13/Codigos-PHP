@@ -468,6 +468,76 @@ class User extends Model
 	}
 	//.checkLoginExists
 
+	public function checkBeforeUpdate($updatedDataArray)
+	{
+
+		if (
+
+			!isset($updatedDataArray["desperson"])
+			||
+			strlen($updatedDataArray["desperson"]) === 0
+
+		) {
+
+			return false;
+
+		} elseif (
+
+			!isset($updatedDataArray["desemail"])
+			||
+			strlen($updatedDataArray["desemail"]) === 0
+
+		) {
+
+			return false;
+
+		} elseif (
+
+			!isset($updatedDataArray["nrphone"])
+			||
+			strlen($updatedDataArray["nrphone"]) === 0
+
+		) {
+
+			return false;
+
+		}
+
+		if ($updatedDataArray["desemail"] != $this->getdesemail()) {
+
+			if ($this->checkEmailExists($updatedDataArray["desemail"])) return false;
+
+		}
+
+		return true;
+
+	}
+	//.checkBeforeUpdate
+
+	public function checkEmailExists($newEmail)
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT idperson
+			FROM tb_persons
+			WHERE desemail = :desemail AND
+			idperson <> :idperson
+
+			", [
+
+				":desemail" => $newEmail,
+				":idperson" => $this->getidperson()
+
+			]);
+
+		return (count($results) > 0);
+
+	}
+	//.checkEmailExists
+
 }//User
 
 ?>

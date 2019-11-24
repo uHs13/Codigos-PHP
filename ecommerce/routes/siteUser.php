@@ -79,7 +79,7 @@ $app->post("/register", function() {
 });
 
 $app->get('/forgot', function () {// Forgot about dre. Rota para tela de recuperação de senha
- 
+
 	$page = new Page();
 
 	$page->setTpl("forgot");
@@ -129,9 +129,9 @@ $app->post('/forgot/reset', function () {
 
 	$password = password_hash($_POST["password"], PASSWORD_DEFAULT, [
 
- 		"cost"=>12
+		"cost"=>12
 
- 	]);
+	]);
 
 	$user->setPassword($password);
 
@@ -153,7 +153,7 @@ $app->get("/profile", function () {
 
 		"user" => $user->getValues(),
 		"profileMsg" => "",
-		"profileError" => ""
+		"profileError" => Utils::getSessionMsgError()
 
 	]);
 
@@ -171,9 +171,26 @@ $app->post("/profile", function () {
 
 	$user->get($userId);
 
-	$user->setData(array_replace($user->getValues(), $_POST));
+	if ($user->checkBeforeUpdate($_POST)) {
 
-	$user->update();
+		$user->setData(
+			array_replace(
+				$user->getValues(), 
+				[
+					"desperson" => $_POST["desperson"],
+					"desemail" => $_POST["desemail"],
+					"nrphone" => $_POST["nrphone"]
+				]
+			)
+		);
+
+		$user->update();
+
+	} else {
+
+		Utils::setSessionMsgError("Erro nos dados informados");
+
+	}
 
 	Utils::redirect("/PHP/ecommerce/profile");
 
