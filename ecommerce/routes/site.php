@@ -161,17 +161,83 @@ $app->get("/checkout", function () {
 
 	User::verifyLogin(false, 2);
 
-	$cart = Cart::getFromSession();
+	//shipping_method é um valor em array retornado do formulário que não tem utilidade para a aplicação. Com ele definido a safeEnetry retorna um erro
+	if (isset($_GET["shipping_method"])) unset($_GET["shipping_method"]);
+
+	$_GET = Utils::safeEntry($_GET);
 
 	$address = new Address();
+
+	$cart = Cart::getFromSession();
+
+	if (isset($_GET["zipcode"])) {
+
+		//recupera as informações do endereço a partir do cep informado no carrinho
+		$address->setAddress($_GET["zipcode"]);
+
+		//sobreescreve o endereço do carrinho
+		$cart->setdeszipcode($_GET["zipcode"]);
+
+		$cart->save();
+
+		//atualiza o valor do frete
+		$cart->calculateTotal();
+
+	}
 
 	$page = new Page();
 
 	$page->setTpl("checkout", [
 
 		"cart" => $cart->getValues(),
-		"address" => $address->getValues()
+		"address" => $address->getValues(),
+		"products" => $cart->getProducts(),
+		"error" => Utils::getSessionMsgError()
 
 	]);
+
+});
+
+$app->post("/checkout", function () {
+
+	User::verifyLogin(false, 2);
+
+	if (isset($_POST["shipping_method"])) {
+
+		unset($_POST["shipping_method"]);
+
+	}
+
+	if ($_POST["woocommerce_checkout_place_order"]) {
+
+		unset($_POST["woocommerce_checkout_place_order"]);
+
+	}
+
+	$user = User::getFromSession();
+
+	$_POST["idperson"] = $user->getiduser();
+
+	$_POST = Utils::safeEntry($_POST);
+
+	foreach ($_POST as $key => $value) {
+
+		if (strlen($value) === 0) {
+
+			Utils::setSessionMsgError("Erro nos dados informados");
+
+			Utils::redirect("/PHP/ecommerce/checkout?zipcode=3234030");
+
+		}
+
+	}
+
+	exit;
+
+	$address = new Address();
+
+	$address->setData($_POST);
+
+	$address->save();
 
 });
