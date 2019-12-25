@@ -25,7 +25,7 @@ $app->post("/login", function () {
 
 		User::login($_POST["login"], $_POST["password"]);
 
-		Utils::redirect("/PHP/ecommerce/checkout");
+		Utils::redirect("/PHP/ecommerce/cart");
 
 	} catch (Exception $e) {
 

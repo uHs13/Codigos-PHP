@@ -161,6 +161,14 @@ $app->get("/checkout", function () {
 
 	User::verifyLogin(false, 2);
 
+	$cart = Cart::getFromSession();
+
+	if (count($cart->getProducts()) === 0) {
+
+		Utils::redirect("/PHP/ecommerce/cart");
+
+	}
+
 	//shipping_method é um valor em array retornado do formulário que não tem utilidade para a aplicação. Com ele definido a safeEnetry retorna um erro
 	if (isset($_GET["shipping_method"])) unset($_GET["shipping_method"]);
 
@@ -168,7 +176,7 @@ $app->get("/checkout", function () {
 
 	$address = new Address();
 
-	$cart = Cart::getFromSession();
+	
 
 	if (isset($_GET["zipcode"])) {
 
