@@ -245,4 +245,22 @@ $app->post("/checkout", function () {
 
 	$address->save();
 
+	$order = new Order();
+
+	Utils::redirect("/PHP/ecommerce/order/". $order->getidorder());
+
+});
+
+$app->get("/order/:id", function ($id) {
+
+	User::verifyLogin(false, 2);
+
+	$page = new Page();
+
+	$page->setTpl("payment", [
+
+
+
+	]);
+
 });
