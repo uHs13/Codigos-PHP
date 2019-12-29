@@ -23,6 +23,8 @@ class Utils
 
 		$msg = (isset($_SESSION[Utils::SESSION_ERROR]) && $_SESSION[Utils::SESSION_ERROR]) ? $_SESSION[Utils::SESSION_ERROR] : "";
 
+		//var_dump(isset($_SESSION[Utils::SESSION_ERROR]), $_SESSION[Utils::SESSION_ERROR]);
+
 		self::clearSessionMsgError();
 
 		return $msg;

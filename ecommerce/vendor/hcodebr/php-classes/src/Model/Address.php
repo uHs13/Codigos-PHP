@@ -68,7 +68,7 @@ class Address extends Model
 
 		$results = $sql->select("
 
-			CALL sp_address_save (
+			CALL sp_addresses_save (
 
 				:PIDADDRESS,
 				:PIDPERSON,
@@ -84,7 +84,7 @@ class Address extends Model
 
 			", [
 
-				":PIDADDRESS" => $this->getdesaddress(),
+				":PIDADDRESS" => $this->getidaddress(),
 				":PIDPERSON" => $this->getidperson(),
 				":PDESADDRESS" => $this->getdesaddress(),
 				":PDESCOMPLEMENT" => $this->getdescomplement(),
@@ -95,6 +95,8 @@ class Address extends Model
 				":PDESDISTRICT" => $this->getdesdistrict()
 
 			]);
+
+		$this->setData($results);
 
 	}
 	// .save

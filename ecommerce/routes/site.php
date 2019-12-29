@@ -20,7 +20,6 @@ $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
 
 });
 
-
 $app->get("/category/:idcategory", function ($idcategory) {
 
 	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
@@ -33,7 +32,7 @@ $app->get("/category/:idcategory", function ($idcategory) {
 
 	$pages = [];
 
-	for ($i=1; $i <= (int)$pagination["pages"]; $i++) { 
+	for ($i = 1; $i <= (int)$pagination["pages"]; $i++) { 
 
 		array_push($pages, [
 
@@ -86,8 +85,6 @@ $app->get("/cart", function () {
 		"error" => Utils::getSessionMsgError()
 
 	]);
-
-
 
 });
 
@@ -161,35 +158,47 @@ $app->get("/checkout", function () {
 
 	User::verifyLogin(false, 2);
 
-	$cart = Cart::getFromSession();
-
-	if (count($cart->getProducts()) === 0) {
-
-		Utils::redirect("/PHP/ecommerce/cart");
-
-	}
-
 	//shipping_method é um valor em array retornado do formulário que não tem utilidade para a aplicação. Com ele definido a safeEnetry retorna um erro
 	if (isset($_GET["shipping_method"])) unset($_GET["shipping_method"]);
 
 	$_GET = Utils::safeEntry($_GET);
 
+	$cart = Cart::getFromSession();
+
+	if (count($cart->getProducts()) === 0) {
+
+		Utils::setSessionMsgError("Adicione produtos ao seu carrinho");
+
+		Utils::redirect("/PHP/ecommerce/cart");
+
+	} elseif (strlen($cart->getdeszipcode()) < 8) {
+
+		Utils::setSessionMsgError("Informe o seu CEP e calcule o frete");
+
+		Utils::redirect("/PHP/ecommerce/cart");
+
+	}
+
 	$address = new Address();
 
-	
-
-	if (isset($_GET["zipcode"])) {
+	if (strlen($cart->getdeszipcode()) === 8) {
 
 		//recupera as informações do endereço a partir do cep informado no carrinho
-		$address->setAddress($_GET["zipcode"]);
+		$address->setAddress($cart->getdeszipcode());
 
 		//sobreescreve o endereço do carrinho
-		$cart->setdeszipcode($_GET["zipcode"]);
+		$cart->setdeszipcode($cart->getdeszipcode());
 
 		$cart->save();
 
 		//atualiza o valor do frete
 		$cart->calculateTotal();
+
+	} else {
+
+		Utils::setSessionMsgError("Informe o seu CEP e calcule o frete");
+
+		Utils::redirect("/PHP/ecommerce/cart");
 
 	}
 
@@ -228,21 +237,9 @@ $app->post("/checkout", function () {
 
 	$_POST = Utils::safeEntry($_POST);
 
-	foreach ($_POST as $key => $value) {
-
-		if (strlen($value) === 0) {
-
-			Utils::setSessionMsgError("Erro nos dados informados");
-
-			Utils::redirect("/PHP/ecommerce/checkout?zipcode=3234030");
-
-		}
-
-	}
-
-	exit;
-
 	$address = new Address();
+
+	$address->validateData();
 
 	$address->setData($_POST);
 

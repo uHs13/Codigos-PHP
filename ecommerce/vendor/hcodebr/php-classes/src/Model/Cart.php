@@ -30,7 +30,6 @@ class Cart extends Model
 			/* carregando o carrinho */
 			$cart->get((int)$_SESSION[Cart::SESSION]["idcart"]);
 
-
 		} else {
 
 			/* carrinho não existente */
