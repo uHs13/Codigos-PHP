@@ -56,6 +56,6 @@ $dadosboleto["cidade_uf"] = "São Bernardo do Campo - SP";
 $dadosboleto["cedente"] = "HCODE TREINAMENTOS LTDA - ME";
 
 // NÃO ALTERAR!
-include("include/funcoes_itau.php"); 
-include("include/layout_itau.php");
+require_once("res/boletophp/include/funcoes_itau.php"); 
+require_once("res/boletophp/include/layout_itau.php");
 ?>

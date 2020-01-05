@@ -70,15 +70,15 @@ class Address extends Model
 
 			CALL sp_addresses_save (
 
-				:PIDADDRESS,
-				:PIDPERSON,
-				:PDESADDRESS,
-				:PDESCOMPLEMENT,
-				:PDESCITY,
-				:PDESSTATE,
-				:PDESCOUNTRY,
-				:PDESZIPCODE,
-				:PDESDISTRICT
+			:PIDADDRESS,
+			:PIDPERSON,
+			:PDESADDRESS,
+			:PDESCOMPLEMENT,
+			:PDESCITY,
+			:PDESSTATE,
+			:PDESCOUNTRY,
+			:PDESZIPCODE,
+			:PDESDISTRICT
 
 			)
 
@@ -96,10 +96,41 @@ class Address extends Model
 
 			]);
 
-		$this->setData($results);
+		if (count($results) > 0) return false;
 
 	}
 	// .save
+
+	public function get($id)
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT
+			idaddress,
+			idperson,
+			desaddress,
+			descomplement,
+			descity,
+			desstate,
+			descountry,
+			deszipcode,
+			desdistrict
+			FROM tb_addresses
+			WHERE idperson = :idperson;
+
+			", [
+
+				":idperson" => $id
+
+			]);
+
+		$this->setData($results[0]);
+
+	}
+	// .get
 
 }
 //.Address

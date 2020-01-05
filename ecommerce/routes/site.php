@@ -6,6 +6,9 @@ use Hcode\Model\User;
 use Hcode\Model\Products;
 use Hcode\Model\Category;
 use Hcode\Model\Address;
+use Hcode\Model\Order;
+use Hcode\Model\OrderStatus;
+use Hcode\Model\Boleto;
 use Hcode\Utils\Utils;
 
 $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
@@ -245,7 +248,25 @@ $app->post("/checkout", function () {
 
 	$address->save();
 
+	$address->get($user->getidperson());
+
+	$cart = Cart::getFromSession();
+
+	$cart->calculateTotal();
+
 	$order = new Order();
+
+	$order->setData([
+
+		"idcart" => $cart->getidcart(),
+		"iduser" => $user->getiduser(),
+		"idstatus" => OrderStatus::EM_ABERTO,
+		"idaddress" => $address->getidaddress(),
+		"vltotal" => $cart->getTotal()
+
+	]);
+
+	$order->save();
 
 	Utils::redirect("/PHP/ecommerce/order/". $order->getidorder());
 
@@ -255,12 +276,30 @@ $app->get("/order/:id", function ($id) {
 
 	User::verifyLogin(false, 2);
 
+	$id = Utils::safeEntry($id);
+
+	$order = new Order();
+
+	$order->get($id);
+
 	$page = new Page();
 
 	$page->setTpl("payment", [
 
-
+		"order" => $order->getValues()
 
 	]);
+
+});
+
+$app->get("/boleto/:id", function ($id) {
+
+	User::verifyLogin(false, 2);
+
+	$id = Utils::safeEntry($id);
+
+	$boleto = new Boleto();
+
+	$boleto->build($id);
 
 });

@@ -31,7 +31,7 @@ class User extends Model
 
 			$results = $sql->select("
 
-				SELECT desperson,  desemail, nrphone
+				SELECT tp.idperson, tp.desperson,  tp.desemail, tp.nrphone
 				FROM tb_persons tp
 				INNER JOIN tb_users tu
 				ON tu.idperson = tp.idperson
