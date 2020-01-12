@@ -536,6 +536,39 @@ class User extends Model
 	}
 	//.checkEmailExists
 
+	public function getOrders() {
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT
+			o.idorder,
+			o.vltotal,
+			os.desstatus,
+			a.desaddress,
+			a.desdistrict,
+			a.descity,
+			a.desstate,
+			a.deszipcode
+			FROM tb_orders o
+			INNER JOIN tb_ordersstatus os
+			ON o.idstatus = os.idstatus
+			INNER JOIN tb_addresses a
+			ON o.idaddress = a.idaddress
+			WHERE o.iduser = :IDUSER
+
+			", [
+
+				":IDUSER" => $this->getiduser()
+
+			]);
+
+		return $results;
+
+	}
+	// .getOrders
+
 }//User
 
 ?>

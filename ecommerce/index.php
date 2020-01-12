@@ -19,6 +19,7 @@ $app->notfound(function () {// mensagem caso a rota não exista
 require_once("utils/functions.php");
 require_once("routes/site.php");
 require_once("routes/siteUser.php");
+require_once("routes/siteOrders.php");
 require_once("routes/admin.php");
 require_once("routes/adminCategory.php");
 require_once("routes/adminUser.php");
