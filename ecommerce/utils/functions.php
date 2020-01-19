@@ -1,6 +1,7 @@
 <?php
 
 use Hcode\Model\User;
+use Hcode\Model\Cart;
 
 function formatPrice($price)
 {
@@ -29,5 +30,29 @@ function getUserName()
 
 }
 //.getUserName
+
+function getCartTotal()
+{
+
+	$cart = Cart::getFromSession();
+
+	$cart->getProducts();
+
+	$cart->calculateTotal();
+
+	return formatPrice($cart->getTotal());
+
+}
+// .getCartTotal
+
+function getCartProductsQuantity()
+{
+
+	$cart = Cart::getFromSession();
+
+	return $cart->getProductsCount();
+
+}
+// .getProductsQuantity
 
 ?>

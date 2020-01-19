@@ -1,6 +1,8 @@
 <?php
 
 use Hcode\Model\User;
+use Hcode\Model\Order;
+use Hcode\Model\Cart;
 use Hcode\Page;
 use Hcode\Utils\Utils;
 
@@ -20,10 +22,30 @@ $app->get("/profile-orders", function () {
 
 });
 
-$app->get("/profile-orders-detail", function () {
+$app->get("/profile/orders/:id", function ($id) {
 
 	User::verifyLogin(false, 2);
 
+	$id = Utils::safeEntry($id);
 
+	$page = new Page();
+
+	$order = new Order();
+
+	$order->get($id);
+
+	$cart = new Cart();
+
+	$cart->get($order->getidcart());
+
+	$cart->calculateTotal();
+
+	$page->setTpl("profile-orders-detail", [
+
+		"order" => $order->getValues(),
+		"products" => $cart->getProducts(),
+		"cart" => $cart->getValues()
+
+	]);
 
 });

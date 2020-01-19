@@ -13,18 +13,18 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-3 col-sm-6">
                     <div class="footer-menu">
                         <h2 class="footer-wid-title">Navegação </h2>
                         <ul>
-                           <li><a href="#">Minha Conta</a></li>
-                           <li><a href="#">Meus Pedidos</a></li>
+                           <li><a href="/PHP/ecommerce/profile">Minha Conta</a></li>
+                           <li><a href="/PHP/ecommerce/profile-orders">Meus Pedidos</a></li>
                            <li><a href="#">Lista de Desejos</a></li>
                         </ul>                        
                     </div>
                 </div>
-                
+
                 <div class="col-md-3 col-sm-6">
                     <div class="footer-menu">
                         <h2 class="footer-wid-title">Categorias</h2>

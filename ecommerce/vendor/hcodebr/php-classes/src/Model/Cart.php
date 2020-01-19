@@ -326,6 +326,8 @@ class Cart extends Model
 
 		}
 
+		return $results[0]["nmr"];
+
 	}
 	//.getProductsCount
 
