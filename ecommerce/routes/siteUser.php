@@ -195,3 +195,30 @@ $app->post("/profile", function () {
 	Utils::redirect("/PHP/ecommerce/profile");
 
 });
+
+$app->get("/profile/change-password", function () {
+
+	User::verifyLogin(false, 2);
+
+	$page = new Page();
+
+	$page->setTpl("profile-change-password", [
+
+		"changePassError" => Utils::getSessionMsgError(),
+		"changePassSuccess" => Utils::getSessionMsgSuccess()
+
+	]);
+
+});
+
+$app->post("/profile/change-password", function () {
+
+	User::verifyLogin(false, 2);
+
+	Utils::safeEntry($_POST);
+
+	$user = new User();
+
+	$user->changePassword($_POST);
+
+});

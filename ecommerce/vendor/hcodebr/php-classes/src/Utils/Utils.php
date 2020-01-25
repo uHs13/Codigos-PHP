@@ -7,6 +7,7 @@ class Utils
 {
 
 	const SESSION_ERROR = "sessionError";
+	const SESSION_SUCCESS = "sessionSuccess";
 
 	//---- GETTERS AND SETTERS ----\\
 
@@ -14,6 +15,14 @@ class Utils
 	{
 
 		$_SESSION[Utils::SESSION_ERROR] = $msg;
+
+	}
+	//.setMsgError
+
+	public static function setSessionMsgSuccess($msg)
+	{
+
+		$_SESSION[Utils::SESSION_SUCCESS] = $msg;
 
 	}
 	//.setMsgError
@@ -32,12 +41,34 @@ class Utils
 	}
 	//.getMsgError
 
+	public static function getSessionMsgSuccess()
+	{
+
+		$msg = (isset($_SESSION[Utils::SESSION_SUCCESS]) && $_SESSION[Utils::SESSION_SUCCESS]) ? $_SESSION[Utils::SESSION_SUCCESS] : "";
+
+		//var_dump(isset($_SESSION[Utils::SESSION_ERROR]), $_SESSION[Utils::SESSION_ERROR]);
+
+		self::clearSessionMsgSuccess();
+
+		return $msg;
+
+	}
+	//.getMsgError
+
 	//---- GETTERS AND SETTERS ----\\
 
 	public static function clearSessionMsgError()
 	{
 
 		$_SESSION[Utils::SESSION_ERROR] = null;
+
+	}
+	//.clearSessionMsgError
+
+	public static function clearSessionMsgSuccess()
+	{
+
+		$_SESSION[Utils::SESSION_SUCCESS] = null;
 
 	}
 	//.clearSessionMsgError
@@ -94,12 +125,26 @@ class Utils
 
 		return password_hash($str, PASSWORD_DEFAULT, [
 
- 			"cost"=>12
+			"cost"=>12
 
- 		]);
+		]);
 
 	}
 	//.encrypt
+
+	public static function hash($str)
+	{
+
+		self::safeEntry($str);
+
+		return password_hash($str, PASSWORD_DEFAULT, [
+
+			"cost"=>12
+
+		]);
+
+	}
+	// .hash
 
 }
 //.Utils

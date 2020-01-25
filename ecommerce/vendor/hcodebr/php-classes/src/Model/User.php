@@ -97,14 +97,14 @@ class User extends Model
 			':LOG'=>$login
 		));
 
-		//caso não tenha nenhum uusário registrado com esse login
+		//caso não tenha nenhum usuário registrado com esse login
 		if(count($results) === 0) throw new \Exception("Usuário inexistente ou senha inválida", 1);
 		//é necessário colocar \Exception para indicar ao PHP que essa classe está no namespace principal do próprio PHP
 
 		//atribui a tupla retornada pelo banco
 		$data = $results[0];
 
-		if(password_verify($password, $data['despassword']) === true) {//caso o que foi digitado coincida com o que está salvo no banco
+		if(password_verify($password, str_replace('"', "'", $data['despassword'])) === true) {//caso o que foi digitado coincida com o que está salvo no banco
 
 			$user = new User();
 
@@ -568,6 +568,86 @@ class User extends Model
 
 	}
 	// .getOrders
+
+	public function changePassword($data)
+	{
+
+		if (!$this->validateData($data)) Utils::redirect("/PHP/ecommerce/profile/change-password");
+
+		$user = User::getFromSession();
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT despassword FROM tb_users WHERE iduser = :idUser", [
+
+			"idUser" => $user->getiduser()
+
+		]);
+
+		if (
+			count($results) === 0
+			||
+			!password_verify($data["current_pass"], $results[0]["despassword"])
+		) {
+
+			Utils::setSessionMsgError("Não foi possível alterar a senha");
+
+			Utils::redirect("/PHP/ecommerce/profile/change-password");
+
+		}
+
+		$user->setPassword(Utils::hash($data["new_pass"]));
+
+		Utils::setSessionMsgSuccess("Senha alterada com sucesso");
+
+		Utils::redirect("/PHP/ecommerce/profile/change-password");
+
+	}
+	// .changePassword
+
+	public function validateData($data)
+	{
+
+		if (
+			isset($data["current_pass"])
+			&&
+			isset($data["new_pass"])
+			&&
+			isset($data["new_pass_confirm"])
+		) {
+
+			foreach ($data as $value) {
+
+				if (strlen($value) === 0 || strlen($value) > 256) {
+
+					Utils::setSessionMsgError("Erro nos dados informados");
+
+					return false;
+
+				};
+
+			}
+
+			if (
+				$data["new_pass"] !== $data["new_pass_confirm"]
+				||
+				$data["current_pass"] === $data["new_pass"]
+			) {
+
+				Utils::setSessionMsgError("Erro na confirmação da senha");
+
+				return false;
+
+			}
+
+			return true;
+
+		}
+
+		return false;
+
+	}
+	// .validateData
 
 }//User
 
