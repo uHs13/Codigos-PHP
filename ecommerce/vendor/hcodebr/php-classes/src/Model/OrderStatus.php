@@ -16,5 +16,19 @@ class OrderStatus extends Model
 	const PAGO = 3;
 	const ENTREGUE = 4;
 
+	public function getStatus()
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT idstatus, desstatus FROM tb_ordersstatus");
+
+		if (count($results) === 0) return false;
+
+		return $results;
+
+	}
+	// .getStatus
+
 }
 // .Order

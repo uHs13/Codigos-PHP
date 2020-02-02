@@ -2,6 +2,7 @@
 
 use Hcode\Model\User;
 use Hcode\Model\Cart;
+use Hcode\Model\OrderStatus;
 
 function formatPrice($price)
 {
@@ -54,5 +55,39 @@ function getCartProductsQuantity()
 
 }
 // .getProductsQuantity
+
+function getStatus($idStatus)
+{
+
+	switch ($idStatus) {
+		
+		case '1':
+
+			return "Em Aberto";
+
+			break;
+
+		case '2':
+
+			return "Aguardando Pagamento";
+
+			break;
+
+		case '3':
+
+			return "Pago";
+
+			break;
+
+		case '4':
+
+			return "Entregue";
+
+			break;
+
+	}
+
+}
+// .getStatus
 
 ?>

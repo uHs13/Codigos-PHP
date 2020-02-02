@@ -24,6 +24,7 @@ require_once("routes/admin.php");
 require_once("routes/adminCategory.php");
 require_once("routes/adminUser.php");
 require_once("routes/adminProduct.php");
+require_once("routes/adminOrders.php");
 
 $app->run();
 

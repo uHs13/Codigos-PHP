@@ -132,80 +132,80 @@ class Products extends Model
 
 		return $values;
 
-		}//.getValues
+	}//.getValues
 
-		public function setPhoto($file) 
-		{
+	public function setPhoto($file) 
+	{
 
 			// var_dump($file);
 
-			if (strlen($file['name']) === 0) return false;
+		if (strlen($file['name']) === 0) return false;
 
-			$extension = explode('.', $file['name']);
-			$extension = end($extension);
+		$extension = explode('.', $file['name']);
+		$extension = end($extension);
 
-			switch ($extension) {
+		switch ($extension) {
 
-				case 'jpg':
-				case 'jpeg':
-				$image = imagecreatefromjpeg($file['tmp_name']);
-				break;
+			case 'jpg':
+			case 'jpeg':
+			$image = imagecreatefromjpeg($file['tmp_name']);
+			break;
 
-				case 'gif':
-				$image = imagecreatefromgif($file['tmp_name']);
-				break;
+			case 'gif':
+			$image = imagecreatefromgif($file['tmp_name']);
+			break;
 
-				case 'png':
-				$image = imagecreatefrompng($file['tmp_name']);
-				break;
+			case 'png':
+			$image = imagecreatefrompng($file['tmp_name']);
+			break;
 
-			}
+		}
 
-			$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" ;
+		$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" ;
 
-			imagejpeg($image, $dist);
+		imagejpeg($image, $dist);
 
-			imagedestroy($image);
+		imagedestroy($image);
 
-			$this->checkPhoto();
+		$this->checkPhoto();
 
-		}//.setPhoto
+	}//.setPhoto
 
-		public function getFromURL(string $desurl)
-		{
+	public function getFromURL(string $desurl)
+	{
 
-			$sql = new Sql();
+		$sql = new Sql();
 
-			$results = $sql->select("
+		$results = $sql->select("
 
-				SELECT 
-				idproduct,
-				desproduct,
-				vlprice,
-				vlwidth,
-				vlheight,
-				vllength
-				vlweight,
-				desurl
-				FROM tb_products
-				WHERE desurl = :desurl
-				LIMIT 1
+			SELECT 
+			idproduct,
+			desproduct,
+			vlprice,
+			vlwidth,
+			vlheight,
+			vllength
+			vlweight,
+			desurl
+			FROM tb_products
+			WHERE desurl = :desurl
+			LIMIT 1
 
-				", array(
+			", array(
 
-					":desurl" => $desurl
+				":desurl" => $desurl
 
-				)); 
+			)); 
 
-			if (count($results) === 0) {
+		if (count($results) === 0) {
 
-				return false;
+			return false;
 
-			} else {
+		} else {
 
-				$this->setData($results[0]);
+			$this->setData($results[0]);
 
-			}
+		}
 
 		}//.getFromURL
 
@@ -216,8 +216,8 @@ class Products extends Model
 
 			$results = $sql->select(
 				"SELECT
-					c.descategory,
-					c.idcategory
+				c.descategory,
+				c.idcategory
 				FROM tb_categories c
 				INNER JOIN tb_productscategories pc
 				ON c.idcategory = pc.idcategory
