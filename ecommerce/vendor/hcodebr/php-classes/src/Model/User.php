@@ -649,6 +649,72 @@ class User extends Model
 	}
 	// .validateData
 
+	public static function getUserPage(int $page = 1, int $itensPage = 10)
+	{
+
+		$start = ($page - 1) * $itensPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_users u
+			INNER JOIN tb_persons p
+			ON u.idperson = p.idperson
+			ORDER BY p.desperson
+			LIMIT $start, $itensPage
+
+			");
+
+		$resultTotal = $sql->select("select found_rows() as 'nrtotal'");
+
+		return [
+			'data' => $results,
+			'total' => (int)$resultTotal[0]['nrtotal'],
+			'pages' => ceil( $resultTotal[0]['nrtotal'] / $itensPage)
+		];
+
+	}
+	// .getUserPage
+
+	public static function getUserPageSearch(string $search, int $page = 1, int $itensPage = 10)
+	{
+
+		$start = ($page - 1) * $itensPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_users u
+			INNER JOIN tb_persons p
+			ON u.idperson = p.idperson
+			WHERE
+			p.desperson LIKE :search OR
+			p.desemail = :search OR
+			u.deslogin LIKE :search 
+			ORDER BY p.desperson
+			LIMIT $start, $itensPage
+
+			", [
+
+				'search' => "%$search%"
+
+			]);
+
+		$resultTotal = $sql->select("select found_rows() as 'nrtotal'");
+
+		return [
+			'data' => $results,
+			'total' => (int)$resultTotal[0]['nrtotal'],
+			'pages' => ceil( $resultTotal[0]['nrtotal'] / $itensPage)
+		];
+
+	}
+	// .getUserPage
+
 }//User
 
 ?>

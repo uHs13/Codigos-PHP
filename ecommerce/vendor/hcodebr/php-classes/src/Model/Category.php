@@ -167,7 +167,7 @@ class Category extends Model
 	}
 	//removeProduct
 
-	public function getProductPage($page = 1, $itensPage = 3)
+	public function getProductPage($page = 1, $itensPage = 10)
 	{
 
 		$start = ($page - 1) * $itensPage;
@@ -196,11 +196,14 @@ class Category extends Model
 		$resultTotal = $sql->select("select found_rows() as 'nrtotal';");
 
 		return [
-			'data' => Products::checkList($results),
+			
+			'data' => $results,
 			'total' => (int)$resultTotal[0]['nrtotal'],
 			'pages' => ceil( $resultTotal[0]['nrtotal'] / $itensPage)
+
 		];
 
 	}
+	// .getProductPage
 
 }//Category

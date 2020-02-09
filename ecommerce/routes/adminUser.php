@@ -2,17 +2,48 @@
 
 use Hcode\PageAdmin;
 use Hcode\Model\User;
+use Hcode\Utils\Utils;
 
 $app->get("/admin/users", function () {//Rota para listar todos os usuários
 
 	User::verifyLogin();
 
-	$users = User::listAll();
+	$search = (isset($_GET['search'])) ? Utils::safeEntry($_GET['search']) : '';
+
+	$page = (isset($_GET['page'])) ? Utils::safeEntry($_GET['page']) : 1;
+
+	if ($search != '') {
+
+			$pagination = User::getUserPageSearch($search, $page);
+
+	} else {
+
+		$pagination = User::getUserPage($page);
+
+	}
+
+	$pages = [];
+
+	for ($i = 0; $i < $pagination['pages']; $i++) {
+
+		array_push($pages, [
+
+			'text' => $i + 1,
+			'href' => '/PHP/ecommerce/admin/users?'. http_build_query([
+				'page' => $i + 1,
+				'search' => $search
+			])
+
+		]);
+
+	}
 
 	$page = new PageAdmin();
 
-	$page->setTpl("users",array(
-		'users'=>$users
+	$page->setTpl('users',array(
+		'users' => $pagination['data'],
+		'search' => $search,
+		'pages' => $pages,
 	));
  
 });
