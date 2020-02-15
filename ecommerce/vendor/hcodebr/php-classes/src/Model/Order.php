@@ -306,12 +306,107 @@ class Order extends Model
 
 		if (
 			array_search($idStatus, array_column($this->getStatus(), "idstatus")) !== false
-		) return true;
+		) {
+
+			return true;
+
+		} 
 
 		return false;
 
 	}
 	// .validateStatus
+
+	public function getOrderPage($page = 1, $itensPage = 5)
+	{
+
+		$start = ($page - 1) * $itensPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT SQL_CALC_FOUND_ROWS
+			tbo.idorder AS idorder,
+			tbp.desperson AS desperson,
+			tbo.vltotal AS vltotal,
+			tbc.vlfreight AS vlfreight,
+			tbc.vlfreight AS vlperson,
+			tbo.idstatus AS idstatus
+			FROM tb_orders tbo
+			INNER JOIN tb_users tbu
+			ON tbo.iduser = tbu.iduser
+			INNER JOIN tb_persons tbp
+			ON tbu.idperson = tbp.idperson
+			INNER JOIN tb_carts tbc
+			ON tbo.idcart = tbc.idcart
+			ORDER BY tbo.dtregister DESC
+			LIMIT $start, $itensPage
+
+			");
+
+		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+		return [
+
+			'data' => $results,
+			'total' => (int)$resultTotal[0]["nrtotal"],
+			'pages' => ceil($resultTotal[0]["nrtotal"] / $itensPage)
+
+		];
+
+	}
+	// .getOrderPage
+
+	public function getOrderPageSearch($search, $page = 1, $itensPage = 5)
+	{
+
+		$start = ($page - 1) * $itensPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT SQL_CALC_FOUND_ROWS
+			tbo.idorder AS idorder,
+			tbp.desperson AS desperson,
+			tbo.vltotal AS vltotal,
+			tbc.vlfreight AS vlfreight,
+			tbc.vlfreight AS vlperson,
+			tbo.idstatus AS idstatus
+			FROM tb_orders tbo
+			INNER JOIN tb_users tbu
+			ON tbo.iduser = tbu.iduser
+			INNER JOIN tb_persons tbp
+			ON tbu.idperson = tbp.idperson
+			INNER JOIN tb_carts tbc
+			ON tbo.idcart = tbc.idcart
+			WHERE
+			tbo.idorder LIKE :STR OR
+			tbp.desperson LIKE :STR2
+			ORDER BY tbo.dtregister DESC
+			LIMIT $start, $itensPage
+
+			", [
+
+				":STR" => $search,
+				":STR2" => "%$search%"
+
+			]);
+
+		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+		return [
+
+			'data' => $results,
+			'total' => (int)$resultTotal[0]["nrtotal"],
+			'pages' => ceil($resultTotal[0]["nrtotal"] / $itensPage)
+
+		];
+
+	}
+		// .getOrderPage
+
 
 }
 // .Order

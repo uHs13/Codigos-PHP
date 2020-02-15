@@ -3,18 +3,51 @@
 use Hcode\PageAdmin;
 use Hcode\Model\User;
 use Hcode\Model\Products;
+use Hcode\Utils\Utils;
 
 
 $app->get('/admin/products', function () {
 
 	User::verifyLogin();
 
+	$search = (isset($_GET['search'])) ? Utils::safeEntry($_GET['search']) : '';
+
+	$page = (isset($_GET['page'])) ? Utils::safeEntry($_GET['page']) : 1;
+
+	$product = new Products();
+
+	if ($search != '') {
+
+		$pagination = $product->getProductPageSearch($search, $page);
+
+	} else {
+
+		$pagination = $product->getProductPage($page);
+
+	}
+
+	$pages = [];
+
+	for ($i = 0; $i < $pagination['pages']; $i++) {
+
+		array_push($pages, [
+
+			'text' => $i + 1,
+			'href' => '/PHP/ecommerce/admin/products?'. http_build_query([
+				'page' => $i + 1,
+				'search' => $search
+			])
+
+		]);
+
+	}
+
 	$page = new PageAdmin();
 
-	$products = Products::listAll();
-
 	$page->setTpl('products', [
-		'products' => $products
+		'products' => $pagination["data"],
+		'search' => $search,
+		'pages' => $pages
 	]);
 
 });

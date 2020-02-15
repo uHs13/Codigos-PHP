@@ -9,13 +9,46 @@ $app->get("/admin/orders", function () {
 
 	User::verifyLogin();
 
+	$search = (isset($_GET['search'])) ? Utils::safeEntry($_GET['search']) : '';
+
+	$page = (isset($_GET['page'])) ? Utils::safeEntry($_GET['page']) : 1;
+
 	$order = new Order();
+
+	if ($search != '') {
+
+		$pagination = $order->getOrderPageSearch($search, $page);
+
+	} else {
+
+		$pagination = $order->getOrderPage($page);
+
+	}
+
+	$pages = [];
+
+	for ($i = 0; $i < $pagination['pages']; $i++) {
+
+		array_push($pages, [
+
+			'text' => $i + 1,
+			'href' => '/PHP/ecommerce/admin/orders?'. http_build_query([
+				'page' => $i + 1,
+				'search' => $search
+			])
+
+		]);
+
+	}
 
 	$page = new PageAdmin();
 
+
 	$page->setTpl("orders", [
 
-		"orders" =>  $order->getAll()
+		"orders" =>  $pagination["data"],
+		"search" => $search,
+		"pages" => $pages
 
 	]);
 

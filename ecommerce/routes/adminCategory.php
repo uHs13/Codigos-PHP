@@ -5,22 +5,54 @@ use Hcode\PageAdmin;
 use Hcode\Page;
 use Hcode\Model\Category;
 use Hcode\Model\Products;
+use Hcode\Utils\Utils;
 
 
 $app->get('/admin/categories', function () {
 
 	User::verifyLogin();
 
+	$search = (isset($_GET['search'])) ? Utils::safeEntry($_GET['search']) : '';
+
+	$page = (isset($_GET['page'])) ? Utils::safeEntry($_GET['page']) : 1;
+
+	$category = new Category();
+
+	if ($search != '') {
+
+		$pagination = $category->getCategoryPageSearch($search, $page);
+
+	} else {
+
+		$pagination = $category->getCategoryPage($page);
+
+	}
+
+	$pages = [];
+
+	for ($i = 0; $i < $pagination['pages']; $i++) {
+
+		array_push($pages, [
+
+			'text' => $i + 1,
+			'href' => '/PHP/ecommerce/admin/categories?'. http_build_query([
+				'page' => $i + 1,
+				'search' => $search
+			])
+
+		]);
+
+	}
+
 	$page = new PageAdmin();
 
-	$categories = Category::listAll();
-
 	$page->setTpl("categories", array(
-		"categories" => $categories
+		"categories" => $pagination["data"],
+		"search" => $search,
+		"pages" => $pages
 	));
 
 });
-
 
 $app->get('/admin/categories/create', function () {
 

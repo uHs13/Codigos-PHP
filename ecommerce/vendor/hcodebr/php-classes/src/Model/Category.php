@@ -206,4 +206,72 @@ class Category extends Model
 	}
 	// .getProductPage
 
+	public function getCategoryPage($page = 1, $itensPage = 5)
+	{
+
+		$start = ($page - 1) * $itensPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT SQL_CALC_FOUND_ROWS
+			idcategory,
+			descategory
+			FROM tb_categories
+			LIMIT $start, $itensPage
+
+			");
+
+		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+		return [
+
+			'data' => $results,
+			'total' => (int)$resultTotal[0]["nrtotal"],
+			'pages' => ceil($resultTotal[0]["nrtotal"] / $itensPage)
+
+		];
+
+	}
+	// .getCategoryPage
+
+	public function getCategoryPageSearch($search, $page = 1, $itensPage = 5)
+	{
+
+		$start = ($page - 1) * $itensPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+
+			SELECT SQL_CALC_FOUND_ROWS
+			idcategory,
+			descategory
+			FROM tb_categories
+			WHERE
+			idcategory = :idcategory OR
+			descategory LIKE :descategory
+			LIMIT $start, $itensPage
+
+			", [
+
+				":idcategory" => $search,
+				":descategory" => "%$search%"
+
+			]);
+
+		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+		return [
+
+			'data' => $results,
+			'total' => (int)$resultTotal[0]["nrtotal"],
+			'pages' => ceil($resultTotal[0]["nrtotal"] / $itensPage)
+
+		];
+
+	}
+	// .getCategoryPage
+
 }//Category

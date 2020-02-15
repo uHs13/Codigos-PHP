@@ -103,23 +103,19 @@ class Products extends Model
 	public function checkPhoto()
 	{
 
-		/*
-			
-			$_SERVER['DOCUMENT_ROOT'] == "C:/xamppPHP7/htdocs"
-		
-		*/
+		//$_SERVER['DOCUMENT_ROOT'] == "C:/xamppPHP7/htdocs"
 
-			if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" )) {
+		if (file_exists($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "PHP" . DIRECTORY_SEPARATOR . "ecommerce" . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg" )) {
 
-				$url = "/PHP/ecommerce/res/site/img/products/" .  $this->getidproduct() . ".jpg";
+			$url = "/PHP/ecommerce/res/site/img/products/" .  $this->getidproduct() . ".jpg";
 
-			} else {
+		} else {
 
-				$url = "/PHP/ecommerce/res/site/img/product.jpg";
+			$url = "/PHP/ecommerce/res/site/img/product.jpg";
 
-			}
+		}
 
-			return $this->setdesphoto($url);
+		return $this->setdesphoto($url);
 
 	}//.checkPhoto
 
@@ -231,5 +227,97 @@ class Products extends Model
 			return $results;
 
 		}//.getCategories
+
+		public function getProductPage($page = 1, $itensPage = 5)
+		{
+
+			$start = ($page - 1) * $itensPage;
+
+			$sql = new Sql();
+
+			$results = $sql->select("
+
+				SELECT SQl_CALC_FOUND_ROWS
+				idproduct,
+				desproduct,
+				vlprice,
+				vlwidth,
+				vlheight,
+				vllength,
+				vlweight,
+				desurl
+				FROM tb_products
+				LIMIT $start, $itensPage
+
+				");
+
+			$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+			return [
+
+				'data' => $results,
+				'total' => (int)$resultTotal[0]["nrtotal"],
+				'pages' => ceil($resultTotal[0]["nrtotal"] / $itensPage)
+
+			];
+
+		}
+		// .getProductPage
+
+		public function getProductPageSearch($search, $page = 1, $itensPage = 5)
+		{
+
+			$start = ($page - 1) * $itensPage;
+
+			$sql = new Sql();
+
+			$results = $sql->select("
+
+				SELECT SQl_CALC_FOUND_ROWS
+				idproduct,
+				desproduct,
+				vlprice,
+				vlwidth,
+				vlheight,
+				vllength,
+				vlweight,
+				desurl
+				FROM tb_products
+				WHERE
+				idproduct = :STR OR
+				desproduct LIKE :STR2 OR
+				vlprice LIKE :STR4 OR
+				vlwidth LIKE :STR5 OR
+				vlheight LIKE :STR6 OR
+				vllength LIKE :STR7 OR
+				vlweight LIKE :STR8 OR
+				desurl LIKE :STR9
+				LIMIT $start, $itensPage
+
+				", [
+
+					":STR" => $search,
+					":STR2" => "%$search%",
+					":STR4" => "%$search%",
+					":STR5" => "%$search%",
+					":STR6" => "%$search%",
+					":STR7" => "%$search%",
+					":STR8" => "%$search%",
+					":STR9" => "%$search%",
+
+				]);
+
+			$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+			return [
+
+				'data' => $results,
+				'total' => (int)$resultTotal[0]["nrtotal"],
+				'pages' => ceil($resultTotal[0]["nrtotal"] / $itensPage)
+
+			];
+			
+		}
+		// .getProductPage
 
 }//.Products
