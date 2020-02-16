@@ -32,7 +32,7 @@
               </div>
             </div>
 
-            <div class="box-body no-padding">
+            <div class="box-body no-padding table-responsive">
               <table class="table table-striped">
                 <thead>
                   <tr>
@@ -41,7 +41,7 @@
                     <th>E-mail</th>
                     <th>Login</th>
                     <th style="width: 60px">Admin</th>
-                    <th style="width: 140px">&nbsp;</th>
+                    <th style="width: 140px">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -52,9 +52,10 @@
                     <td><?php echo htmlspecialchars( $value1["desemail"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                     <td><?php echo htmlspecialchars( $value1["deslogin"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td/>
                     <td><?php if( $value1["inadmin"] == 1 ){ ?>Sim<?php }else{ ?>Não<?php } ?></td>
-                    <td>
-                      <a href="/PHP/ecommerce/admin/admin/users/<?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
-                      <a href="/PHP/ecommerce/admin/admin/users/<?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
+                    <td class="col-lg-12">
+                      <a href="/PHP/ecommerce/admin/users/<?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
+                      <a href="/PHP/ecommerce/admin/users/passwordupdate/<?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-warning btn-xs"><i class="fa fa-lock"></i> Alterar Senha</a>
+                      <a href="/PHP/ecommerce/admin/users/<?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
                     </td>
                   </tr>
                   <?php } ?>

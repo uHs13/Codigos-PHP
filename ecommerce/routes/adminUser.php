@@ -141,3 +141,63 @@ $app->post('/admin/users/:iduser', function ($iduser) {//Rota para salvar altera
 	exit;
 
 });
+
+$app->get("/admin/users/passwordupdate/:id", function ($id) {
+
+	User::verifyLogin();
+
+	$id = Utils::safeEntry($id);
+
+	$user = new User();
+
+	$user->get((int) $id);
+
+	$page = new PageAdmin();
+
+	$page->setTpl("users-password", [
+
+		"msgError" => Utils::getSessionMsgError(),
+		"msgSuccess" => Utils::getSessionMsgSuccess(),
+		"user" => $user->getValues()
+
+	]);
+
+});
+
+$app->post("/admin/users/passwordupdate/:id", function ($id) {
+
+	User::verifyLogin();
+
+	$id = Utils::safeEntry($id);
+
+	$array = Utils::safeEntry($_POST);
+
+	if (!isset($array['despassword']) || !isset($array['despassword-confirm'])) {
+
+		Utils::setSessionMsgError('Formulário inválido');
+
+	} elseif (strlen($array['despassword']) === 0 || strlen($array['despassword-confirm']) === 0) {
+
+		Utils::setSessionMsgError('Informe os dados necessários');
+
+	} elseif ($array['despassword'] !== $array['despassword-confirm']) {
+
+		Utils::setSessionMsgError('As senhas precisam ser idênticas');
+
+	} else {
+
+		$user = new User();
+
+		$user->get($id);
+
+		$user->setdespassword($array["despassword"]);
+
+		$user->update();
+
+		Utils::setSessionMsgSuccess($user->getdeslogin(). " editado com sucesso");
+
+	}
+
+	Utils::redirect("/PHP/ecommerce/admin/users/passwordupdate/$id");
+
+});

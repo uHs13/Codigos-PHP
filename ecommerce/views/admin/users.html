@@ -32,7 +32,7 @@
               </div>
             </div>
 
-            <div class="box-body no-padding">
+            <div class="box-body no-padding table-responsive">
               <table class="table table-striped">
                 <thead>
                   <tr>
@@ -41,7 +41,7 @@
                     <th>E-mail</th>
                     <th>Login</th>
                     <th style="width: 60px">Admin</th>
-                    <th style="width: 140px">&nbsp;</th>
+                    <th style="width: 140px">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -52,9 +52,10 @@
                     <td>{$value.desemail}</td>
                     <td>{$value.deslogin}</td/>
                     <td>{if="$value.inadmin == 1"}Sim{else}Não{/if}</td>
-                    <td>
-                      <a href="/PHP/ecommerce/admin/admin/users/{$value.iduser}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
-                      <a href="/PHP/ecommerce/admin/admin/users/{$value.iduser}/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
+                    <td class="col-lg-12">
+                      <a href="/PHP/ecommerce/admin/users/{$value.iduser}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
+                      <a href="/PHP/ecommerce/admin/users/passwordupdate/{$value.iduser}" class="btn btn-warning btn-xs"><i class="fa fa-lock"></i> Alterar Senha</a>
+                      <a href="/PHP/ecommerce/admin/users/{$value.iduser}/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>
                     </td>
                   </tr>
                   {/loop}

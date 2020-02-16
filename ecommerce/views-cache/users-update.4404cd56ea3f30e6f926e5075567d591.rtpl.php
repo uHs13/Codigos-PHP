@@ -1,24 +1,28 @@
 <?php if(!class_exists('Rain\Tpl')){exit;}?><!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-<!-- Content Header (Page header) -->
-<section class="content-header">
-  <h1>
-    Lista de Usuários
-  </h1>
-</section>
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Lista de Usuários
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/PHP/ecommerce/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li><a href="/PHP/ecommerce/admin/users">Usuários</a></li>
+    </ol>
+  </section>
 
-<!-- Main content -->
-<section class="content">
+  <!-- Main content -->
+  <section class="content">
 
-  <div class="row">
-  	<div class="col-md-12">
-  		<div class="box box-primary">
+    <div class="row">
+     <div class="col-md-12">
+      <div class="box box-primary">
         <div class="box-header with-border">
           <h3 class="box-title">Editar Usuário</h3>
         </div>
         <!-- /.box-header -->
         <!-- form start -->
-        <form role="form" action="../users/<?php echo htmlspecialchars( $user["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" method="post">
+        <form role="form" action="/PHP/ecommerce/admin/users/<?php echo htmlspecialchars( $user["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" method="post">
           <div class="box-body">
             <div class="form-group">
               <label for="desperson">Nome</label>
@@ -48,7 +52,7 @@
           </div>
         </form>
       </div>
-  	</div>
+    </div>
   </div>
 
 </section>

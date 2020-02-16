@@ -6,9 +6,9 @@
     Lista de Usuários
   </h1>
   <ol class="breadcrumb">
-    <li><a href="admin"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="admin/users">Usuários</a></li>
-    <li class="active"><a href="admin/users/create">Cadastrar</a></li>
+    <li><a href="/PHP/ecommerce/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="/PHP/ecommerce/admin/users">Usuários</a></li>
+    <li class="active"><a href="/PHP/ecommerce/admin/users/create">Cadastrar</a></li>
   </ol>
 </section>
 
