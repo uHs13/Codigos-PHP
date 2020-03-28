@@ -29,13 +29,15 @@ $app->get("/category/:idcategory", function ($idcategory) {
 
 	$category = new Category();
 
-	$category->get((int)$idcategory);
+	$idcategory = Utils::safeEntry($idcategory);
+
+	$category->get((int) $idcategory);
 
 	$pagination = $category->getProductPage($page);
 
 	$pages = [];
 
-	for ($i = 1; $i <= (int)$pagination["pages"]; $i++) { 
+	for ($i = 1; $i <= (int)$pagination["pages"]; $i++) {
 
 		array_push($pages, [
 
@@ -188,6 +190,8 @@ $app->get("/checkout", function () {
 
 		//recupera as informações do endereço a partir do cep informado no carrinho
 		$address->setAddress($cart->getdeszipcode());
+
+		$address->setdesnumber(0);
 
 		//sobreescreve o endereço do carrinho
 		$cart->setdeszipcode($cart->getdeszipcode());

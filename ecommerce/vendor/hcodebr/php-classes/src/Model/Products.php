@@ -99,7 +99,6 @@ class Products extends Model
 	}
 	//.delete
 
-
 	public function checkPhoto()
 	{
 
@@ -132,8 +131,6 @@ class Products extends Model
 
 	public function setPhoto($file) 
 	{
-
-			// var_dump($file);
 
 		if (strlen($file['name']) === 0) return false;
 

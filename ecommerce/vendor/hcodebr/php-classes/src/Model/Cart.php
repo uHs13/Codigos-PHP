@@ -30,11 +30,22 @@ class Cart extends Model
 			/* carregando o carrinho */
 			$cart->get((int)$_SESSION[Cart::SESSION]["idcart"]);
 
+			if (User::checkLogin(false)) {
+
+				$user = User::getFromSession();
+
+				$cart->setiduser($user->getiduser());
+
+			}
+
 		} else {
 
 			/* carrinho não existente */
 
 			$cart->getFromSessionId();
+
+			var_dump($cart);
+			exit;
 
 			/* se não conseguir carregar um carrinho temos que criar */
 			if (!(int)$cart->getidcart() > 0) {
@@ -48,6 +59,9 @@ class Cart extends Model
 				if (User::checkLogin(false)) {
 
 					$user = User::getFromSession();
+
+					var_dump($user);
+					exit;
 
 					$data["iduser"] = $user->getiduser();
 

@@ -73,7 +73,7 @@ class User extends Model
 
 				return true;
 
-			} elseif ($inadmin === false) {
+			} elseif ($inadmin === false && (bool)$_SESSION[User::SESSION]["inadmin"] === false) {
 
 				return true;
 
@@ -168,18 +168,6 @@ class User extends Model
 
 	public function save()//método para salvar um usuário no banco
 	{
-
-		var_dump(array(
-
-				':pdesperson'=>$this->getdesperson(),
-				':pdeslogin'=>$this->getdeslogin(),
-				':pdespassword'=>Utils::encrypt($this->getdespassword()),
-				':pdesemail'=>$this->getdesemail(),
-				':pnrphone'=>$this->getnrphone(),
-				':pinadmin'=>$this->getinadmin()
-
-			));
-		exit;
 
 		$sql = new Sql();
 

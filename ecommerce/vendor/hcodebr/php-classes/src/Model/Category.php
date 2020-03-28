@@ -3,6 +3,7 @@ namespace Hcode\Model;
 
 use Hcode\DB\Sql;
 use Hcode\Model;
+use Hcode\Model\Products;
 
 class Category extends Model
 {
@@ -193,6 +194,8 @@ class Category extends Model
 				":idCategory" => $this->getidcategory()
 			));
 
+		$this->getProductPagePhotos($results);
+
 		$resultTotal = $sql->select("select found_rows() as 'nrtotal';");
 
 		return [
@@ -205,6 +208,24 @@ class Category extends Model
 
 	}
 	// .getProductPage
+
+	public function getProductPagePhotos(&$products)
+	{
+
+		foreach ($products as $index => &$product) {
+
+			$prod = new Products();
+
+			$prod->setData($product);
+
+			$prod->getValues();
+
+			$product = $prod->getValues();
+
+		}
+
+	}
+	// .getProductPagePhotos
 
 	public function getCategoryPage($page = 1, $itensPage = 5)
 	{
