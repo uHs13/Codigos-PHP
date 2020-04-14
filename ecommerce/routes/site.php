@@ -14,7 +14,7 @@ use Hcode\Utils\Utils;
 $app->get('/', function() {//ROTA DA PÁGINA PRINCIPAL
 
 	$product = Products::checkList(Products::listAll());
-	
+
 	$page = new Page();
 
 	$page->setTpl("index", [
@@ -199,7 +199,7 @@ $app->get("/checkout", function () {
 		$cart->save();
 
 		//atualiza o valor do frete
-		$cart->calculateTotal();
+		//$cart->calculateTotal();
 
 	} else {
 
@@ -256,7 +256,7 @@ $app->post("/checkout", function () {
 
 	$cart = Cart::getFromSession();
 
-	$cart->calculateTotal();
+	//$cart->calculateTotal();
 
 	$order = new Order();
 
@@ -272,7 +272,31 @@ $app->post("/checkout", function () {
 
 	$order->save();
 
-	Utils::redirect("/PHP/ecommerce/order/". $order->getidorder());
+	Utils::redirect("/PHP/ecommerce/order/". $order->getidorder() . "/pagseguro");
+
+});
+
+$app->get("/order/:id/pagseguro", function ($id) {
+
+	User::verifyLogin(false, 2);
+
+	$id = Utils::safeEntry($id);
+
+	$order = new Order();
+
+	$order->get($id);
+
+	// var_dump($order->getValues());
+	// exit;
+
+	$page = new Page();
+
+	$page->setTpl("payment-pagseguro", [
+
+		"clientData" => $order->getValues(),
+		"products" => $order->getProductdetails($id)
+
+	]);
 
 });
 

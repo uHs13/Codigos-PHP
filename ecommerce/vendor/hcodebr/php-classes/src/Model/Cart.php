@@ -44,9 +44,6 @@ class Cart extends Model
 
 			$cart->getFromSessionId();
 
-			var_dump($cart);
-			exit;
-
 			/* se não conseguir carregar um carrinho temos que criar */
 			if (!(int)$cart->getidcart() > 0) {
 

@@ -1,0 +1,43 @@
+<div style="position: relative; left: 40%; right: 50%;margin: 10px;">
+    <!-- Declaração do formulário -->
+    <form method="post" target="pagseguro" action="https://pagseguro.uol.com.br/v2/checkout/payment.html">
+
+        <!-- Campos obrigatórios -->
+        <input name="receiverEmail" type="hidden" value="heitorhenriquedias@gmail.com">
+        <input name="currency" type="hidden" value="BRL">
+
+        {loop="$products"}
+        <!-- Itens do pagamento (ao menos um item é obrigatório) -->
+        <input name="itemId{$key+1}" type="hidden" value="{$value.idproduct}">
+        <input name="itemDescription{$key+1}" type="hidden" value="{$value.desproduct}">
+        <input name="itemAmount{$key+1}" type="hidden" value="{$value.vltotal}">
+        <input name="itemQuantity{$key+1}" type="hidden" value="{$value.nrqtd}">
+        <input name="itemWeight{$key+1}" type="hidden" value="{$value.vlweight * 1000}">
+        {/loop}
+
+        <!-- Código de referência do pagamento no seu sistema (opcional) -->
+        <input name="reference" type="hidden" value="TGS13">
+
+        <!-- Informações de frete (opcionais) -->
+        <input name="shippingType" type="hidden" value="1">
+        <input name="shippingAddressPostalCode" type="hidden" value="{$clientData.deszipcode}">
+        <input name="shippingAddressStreet" type="hidden" value="{$clientData.desaddress}">
+        <input name="shippingAddressNumber" type="hidden" value="{$clientData.deszipcode}">
+        <input name="shippingAddressComplement" type="hidden" value="{$clientData.descomplement}">
+        <input name="shippingAddressDistrict" type="hidden" value="{$clientData.desdistrict}">
+        <input name="shippingAddressCity" type="hidden" value="{$clientData.descity}">
+        <input name="shippingAddressState" type="hidden" value="{$clientData.desstate}">
+        <input name="shippingAddressCountry" type="hidden" value="BRA">
+
+        <!-- Dados do comprador (opcionais) -->
+        <input name="senderName" type="hidden" value="{$clientData.desperson}">
+        <input name="senderAreaCode" type="hidden" value="{$clientData.iduser}">
+        <input name="senderPhone" type="hidden" value="{$clientData.nrphone}">
+        <input name="senderEmail" type="hidden" value="{$clientData.desemail}">
+
+        <!-- submit do form (obrigatório) -->
+        <input alt="Pague com PagSeguro" name="submit" type="image"
+            src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/pagamentos/120x53-pagar.gif" />
+
+    </form>
+</div>
