@@ -198,7 +198,7 @@ $app->get("/checkout", function () {
 
 		$cart->save();
 
-		//atualiza o valor do frete
+		//atualiza o valor do frete ....
 		//$cart->calculateTotal();
 
 	} else {
