@@ -1,6 +1,6 @@
 <div style="position: relative; left: 40%; right: 50%;margin: 10px;">
     <!-- Declaração do formulário -->
-    <form method="post" target="pagseguro" action="https://pagseguro.uol.com.br/v2/checkout/payment.html">
+    <form method="post" action="https://pagseguro.uol.com.br/v2/checkout/payment.html">
 
         <!-- Campos obrigatórios -->
         <input name="receiverEmail" type="hidden" value="heitorhenriquedias@gmail.com">
@@ -20,13 +20,13 @@
 
         <!-- Informações de frete (opcionais) -->
         <input name="shippingType" type="hidden" value="1">
-        <input name="shippingAddressPostalCode" type="hidden" value="{$clientData.deszipcode}">
-        <input name="shippingAddressStreet" type="hidden" value="{$clientData.desaddress}">
-        <input name="shippingAddressNumber" type="hidden" value="{$clientData.deszipcode}">
-        <input name="shippingAddressComplement" type="hidden" value="{$clientData.descomplement}">
-        <input name="shippingAddressDistrict" type="hidden" value="{$clientData.desdistrict}">
-        <input name="shippingAddressCity" type="hidden" value="{$clientData.descity}">
-        <input name="shippingAddressState" type="hidden" value="{$clientData.desstate}">
+        <input name="shippingAddressPostalCode" type="hidden" value="{function="utf8_decode($clientData.deszipcode)"}">
+        <input name="shippingAddressStreet" type="hidden" value="{function="utf8_decode($clientData.desaddress)"}">
+        <input name="shippingAddressNumber" type="hidden" value="{function="utf8_decode($clientData.deszipcode)"}">
+        <input name="shippingAddressComplement" type="hidden" value="{function="utf8_decode($clientData.descomplement)"}">
+        <input name="shippingAddressDistrict" type="hidden" value="{function="utf8_decode($clientData.desdistrict)"}">
+        <input name="shippingAddressCity" type="hidden" value="{function="utf8_decode($clientData.descity)"}">
+        <input name="shippingAddressState" type="hidden" value="{function="utf8_decode($clientData.desstate)"}">
         <input name="shippingAddressCountry" type="hidden" value="BRA">
 
         <!-- Dados do comprador (opcionais) -->
@@ -41,3 +41,6 @@
 
     </form>
 </div>
+<script>
+    document.forms[0].submit();
+</script>

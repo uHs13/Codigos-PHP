@@ -272,7 +272,7 @@ $app->post("/checkout", function () {
 
 	$order->save();
 
-	Utils::redirect("/PHP/ecommerce/order/". $order->getidorder() . "/pagseguro");
+	Utils::redirect("/PHP/ecommerce/order/". $order->getidorder() . "/paypal");
 
 });
 
@@ -292,6 +292,30 @@ $app->get("/order/:id/pagseguro", function ($id) {
 	$page = new Page();
 
 	$page->setTpl("payment-pagseguro", [
+
+		"clientData" => $order->getValues(),
+		"products" => $order->getProductdetails($id)
+
+	]);
+
+});
+
+$app->get("/order/:id/paypal", function ($id) {
+
+	User::verifyLogin(false, 2);
+
+	$id = Utils::safeEntry($id);
+
+	$order = new Order();
+
+	$order->get($id);
+
+	// var_dump($order->getValues());
+	// exit;
+
+	$page = new Page();
+
+	$page->setTpl("payment-paypal", [
 
 		"clientData" => $order->getValues(),
 		"products" => $order->getProductdetails($id)
